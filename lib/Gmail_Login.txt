@@ -1,0 +1,3 @@
+# Gmail login details
+mail.from=sender@gmail.com
+mail.password=************
