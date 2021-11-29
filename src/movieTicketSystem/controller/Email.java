@@ -11,8 +11,8 @@ public class Email {
     private Properties loginDetails;
 
     private Email() {
-        String smtpSettingsLocation = "lib/Gmail_SMTP_Settings.txt";
-        String loginDetailsLocation = "lib/Gmail_Login.txt";
+        String smtpSettingsLocation = "config/Gmail_SMTP_Settings.txt";
+        String loginDetailsLocation = "config/Gmail_Login.txt";
 
         try {
             this.smtpSettings = new Properties();
