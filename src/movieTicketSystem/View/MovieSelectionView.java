@@ -1,4 +1,4 @@
-package View;
+package movieTicketSystem.View;
 
 import javax.swing.*;
 import java.awt.*;

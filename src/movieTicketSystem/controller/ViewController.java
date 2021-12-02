@@ -1,6 +1,6 @@
 package movieTicketSystem.controller;
 
-import View.MovieSelectionView;
+import movieTicketSystem.View.MovieSelectionView;
 
 import javax.swing.*;
 import java.awt.*;
