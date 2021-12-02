@@ -3,30 +3,30 @@ package movieTicketSystem.controller;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-import movieTicketSystem.model.Theatre;
+import movieTicketSystem.model.Theater;
 
 /**
  * TheaterController class to control system access to Theater, Showtime, and Seat classes.
  */
 public class TheaterController {
 	
-	private ArrayList<Theatre> theatres = new ArrayList<Theatre>();
+	private ArrayList<Theater> theaters = new ArrayList<Theater>();
 	DbController db = new DbController();
 	
 	public TheaterController() {
-		ArrayList<Theatre> theatersdb =	db.selectAllTheatres();
-        this.theatres = theatersdb;
+		ArrayList<Theater> theatersdb =	db.selectAllTheatres();
+        this.theaters = theatersdb;
 	}
 	
 	/**
 	 * Search for theater based on theatreId.
 	 * 
 	 */
-	public Theatre searchTheatreById(int theatreId) {
+	public Theater searchTheatreById(int theatreId) {
 		// search theatre table
-		for (Theatre theatre : this.theatres) {
-			if (theatre.getTheatreId() == theatreId)
-				return theatre;
+		for (Theater theater : this.theaters) {
+			if (theater.getTheatreId() == theatreId)
+				return theater;
 		}
 		return null;
 	}
@@ -36,25 +36,25 @@ public class TheaterController {
 	 * Search for movie based on theatre Id. Returns list of movie objects
 	 * 
 	 */
-	public ArrayList<Theatre> searchTheatresByMovie(int movieId) {
+	public ArrayList<Theater> searchTheatresByMovie(int movieId) {
 		ArrayList<Integer> theatreIds = db.searchTheatresByMovie(movieId);
-		ArrayList<Theatre> filteredTheatres = new ArrayList<Theatre>();
+		ArrayList<Theater> filteredTheaters = new ArrayList<Theater>();
 		
 		for (int id : theatreIds) {
-			for (Theatre theatre : theatres) {
-				if(theatre.getTheatreId()==id) {
-					filteredTheatres.add(theatre);
+			for (Theater theater : theaters) {
+				if(theater.getTheatreId()==id) {
+					filteredTheaters.add(theater);
 				}
 			}
 		}
-		filteredTheatres.stream().forEach(p-> System.out.println(p.getTheatreId()));
-		return filteredTheatres;
+		filteredTheaters.stream().forEach(p-> System.out.println(p.getTheatreId()));
+		return filteredTheaters;
 	}
 
     
 	
-	public ArrayList<Theatre> getTheaters() {
-		return this.theatres;
+	public ArrayList<Theater> getTheaters() {
+		return this.theaters;
 	}
 
 

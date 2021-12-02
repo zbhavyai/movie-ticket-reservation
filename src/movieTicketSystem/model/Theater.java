@@ -8,7 +8,7 @@ import java.util.LinkedHashSet;
  * Theater class to store theater/movie/showtime news and current movie showtimes.
  * 
  */
-public class Theatre {
+public class Theater {
 	private int theatreId;
 	private String theatreName;
 	// show times already contains movieId and TheatreId
@@ -19,7 +19,7 @@ public class Theatre {
 	 * Theater constructor that assigns id.
 	 * @param theaterId (int) id assigned to the theater
 	 */
-	public Theatre(int theaterId, String name) {
+	public Theater(int theaterId, String name) {
 		this.setTheatreId(theaterId);
 		this.setTheatreName(name);
 	}

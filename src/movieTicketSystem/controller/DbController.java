@@ -85,9 +85,9 @@ public class DbController {
         return movieIds;
     }
 
-    public ArrayList<Theatre> selectAllTheatres() {
+    public ArrayList<Theater> selectAllTheatres() {
 
-        ArrayList<Theatre> theatres = new ArrayList<Theatre>();
+        ArrayList<Theater> theaters = new ArrayList<Theater>();
 
         try {
             Statement myStmt = dbConnect.createStatement();
@@ -97,15 +97,15 @@ public class DbController {
 
             // Process the results set
             while (results.next()) {
-                Theatre tr = new Theatre(results.getInt("theatreId"), results.getString("theatreName"));
-                theatres.add(tr);
+                Theater tr = new Theater(results.getInt("theatreId"), results.getString("theatreName"));
+                theaters.add(tr);
             }
             myStmt.close();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
 
-        return theatres;
+        return theaters;
     }
 
     public ArrayList<Integer> searchTheatresByMovie(int movieId) {
