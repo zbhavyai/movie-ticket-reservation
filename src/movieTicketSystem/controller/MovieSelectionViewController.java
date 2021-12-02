@@ -8,7 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 
-public class ViewController {
+public class MovieSelectionViewController {
 
     MovieSelectionView theView;
     movieComboBoxListener movieListener;
@@ -17,7 +17,7 @@ public class ViewController {
     purchaseButtonListener purchaseButtonListener;
 
 
-    public ViewController(MovieSelectionView theView) {
+    public MovieSelectionViewController(MovieSelectionView theView) {
         this.theView = theView;
         movieListener = new movieComboBoxListener();
         theatreListener = new theatreComboBoxListener();
@@ -148,7 +148,7 @@ public class ViewController {
 
     public static void main(String[] args) {
         MovieSelectionView theView = new MovieSelectionView();
-        ViewController x = new ViewController(theView);
+        MovieSelectionViewController x = new MovieSelectionViewController(theView);
     }
 
 }
