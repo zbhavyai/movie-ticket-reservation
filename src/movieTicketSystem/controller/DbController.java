@@ -126,22 +126,106 @@ public class DbController {
         }
 
         return theatreIds;
-    }
-    
-    
-    public ArrayList<String> searchShowtimesByMovieAndTheatre(int theatreId, int movieId){
+    }            
 
-    	ArrayList<String> showTimes = new ArrayList<String>();
-        
-        try {                    
-        	 String query = "SELECT showtime FROM showtime Where movieId = ? AND theatreId = ?";
-             PreparedStatement myStmt = dbConnect.prepareStatement(query);
-         
-             myStmt.setInt(1, movieId);
-             myStmt.setInt(2, theatreId);
-             
-             ResultSet results = myStmt.executeQuery();
-            
+    /**
+     * 
+     * This method is used to get the theatreId from the database by using the theatreName provided 
+     * 
+     * @param theaterName is the name of the theatre to search
+     * @return the Id number of the theatre searched
+     */
+    public int getTheaterIdByName(String theaterName){
+        int theaterId = 0;
+
+        try {
+            String query = "SELECT theatreId FROM theatre Where theatreName = ?";
+            PreparedStatement myStmt = dbConnect.prepareStatement(query);
+            myStmt.setString(1, theaterName);
+
+            ResultSet results = myStmt.executeQuery();
+
+            theaterId = results.getInt("theaterId");
+            myStmt.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return theaterId;
+    }
+
+    /**
+     * 
+     * This method is used to get the movieId from the database by using the movieName provided 
+     * 
+     * @param movieName is the name of the movie to search
+     * @return the Id number of the movie searched
+     */
+    public int getMovieIdByName(String movieName){
+        int movieId = 0;
+
+        try {
+            String query = "SELECT movieId FROM movie Where title = ?";
+            PreparedStatement myStmt = dbConnect.prepareStatement(query);
+            myStmt.setString(1, movieName);
+
+            ResultSet results = myStmt.executeQuery();
+
+            movieId = results.getInt("movieId");
+            myStmt.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return movieId;
+    }
+
+    /**
+     * 
+     * This method is used to retrieve the showtimeId based on the theatreId, movieId and showtimeString
+     * 
+     * @param theatreId is the id of the theatre to search in
+     * @param movieId is the id of the movie to search in
+     * @param showtimeString is the showtime to search in
+     * @return the showtimeId that matches with all three of the input criteria
+     */
+    public int getShowtimeIdByMovieAndTheatreAndShowtime(int theatreId, int movieId, String showtimeString) {
+
+        int showtimeId = 0;
+
+        try {
+            String query = "SELECT showtimeId FROM showtime Where movieId = ? AND theatreId = ? AND showtime = ?";
+            PreparedStatement myStmt = dbConnect.prepareStatement(query);
+
+            myStmt.setInt(1, movieId);
+            myStmt.setInt(2, theatreId);
+            myStmt.setString(2, showtimeString);
+
+            ResultSet results = myStmt.executeQuery();
+
+            showtimeId = results.getInt("showtimeId");
+
+            myStmt.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return showtimeId;
+    }
+
+    public ArrayList<String> searchShowtimesByMovieAndTheatre(int theatreId, int movieId) {
+
+        ArrayList<String> showTimes = new ArrayList<String>();
+
+        try {
+            String query = "SELECT showtime FROM showtime Where movieId = ? AND theatreId = ?";
+            PreparedStatement myStmt = dbConnect.prepareStatement(query);
+
+            myStmt.setInt(1, movieId);
+            myStmt.setInt(2, theatreId);
+
+            ResultSet results = myStmt.executeQuery();
+
             // Process the results set
             while (results.next()){
             	String dtime = results.getDate("showtime").toString() + " "+ results.getTime("showtime").toString();
@@ -260,8 +344,14 @@ public class DbController {
 
     }    
 
-    
-    public ArrayList<Integer> ticketsAtShowtime(int showtimeId){
+    /**
+     * 
+     * This method finds all tickets that have been created for a particular showtime
+     * 
+     * @param showtimeId is the showtime to search for tickets in
+     * @return a list of tickets that have been created for the given showtime
+     */
+    public ArrayList<Integer> ticketsAtShowtime(int showtimeId) {
         ArrayList<Integer> tickets = new ArrayList<Integer>();
         try {    
             String query = "SELECT * FROM ticket Where showtimeId = ?";
@@ -281,8 +371,15 @@ public class DbController {
         }
         return tickets;
     }
-    
-    public int[][] seatGrid(int showtimeId){
+
+    /**
+     * 
+     * This method is used to return a grid of seats for a particular showtime. The grid will show available seats as 1's and unavailable as 0's
+     * 
+     * @param showtimeId is the Id of the showtime to search for
+     * @return a 2d integer array representing the seats and their availability for the showtime
+     */
+    public int[][] seatGrid(int showtimeId) {
 
         ArrayList<Integer> tickets = ticketsAtShowtime(showtimeId);
         ArrayList<Integer> row = new ArrayList<Integer>();
