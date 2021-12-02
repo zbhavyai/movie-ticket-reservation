@@ -158,8 +158,6 @@ public class DbController {
         return theaterId;
     }
 
-<<<<<<< HEAD
-=======
     /**
      * 
      * This method is used to get the movieId from the database by using the movieName provided 
@@ -219,7 +217,6 @@ public class DbController {
         return showtimeId;
     }
 
->>>>>>> showtimeSeatGrid
     public ArrayList<String> searchShowtimesByMovieAndTheatre(int theatreId, int movieId) {
 
         ArrayList<String> showTimes = new ArrayList<String>();
@@ -345,8 +342,6 @@ public class DbController {
 
     }
 
-<<<<<<< HEAD
-=======
     /**
      * 
      * This method finds all tickets that have been created for a particular showtime
@@ -354,7 +349,6 @@ public class DbController {
      * @param showtimeId is the showtime to search for tickets in
      * @return a list of tickets that have been created for the given showtime
      */
->>>>>>> showtimeSeatGrid
     public ArrayList<Integer> ticketsAtShowtime(int showtimeId) {
         ArrayList<Integer> tickets = new ArrayList<Integer>();
         try {
@@ -376,8 +370,6 @@ public class DbController {
         return tickets;
     }
 
-<<<<<<< HEAD
-=======
     /**
      * 
      * This method is used to return a grid of seats for a particular showtime. The grid will show available seats as 1's and unavailable as 0's
@@ -385,7 +377,6 @@ public class DbController {
      * @param showtimeId is the Id of the showtime to search for
      * @return a 2d integer array representing the seats and their availability for the showtime
      */
->>>>>>> showtimeSeatGrid
     public int[][] seatGrid(int showtimeId) {
 
         ArrayList<Integer> tickets = ticketsAtShowtime(showtimeId);
