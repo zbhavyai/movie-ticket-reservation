@@ -9,7 +9,7 @@ public class MovieSelectionView extends JFrame{
     private JTextField tfStudentName;
     private JTextField tfStudentID;
     private JButton purchaseTicketButton;
-    private JButton logInButton;
+    private JButton showLoginFormButton;
     private JPanel mainPanel;
     private JButton accountButton;
 
@@ -21,6 +21,11 @@ public class MovieSelectionView extends JFrame{
     private JPanel seatPanel;
 
     private JLabel screenLabel;
+    private JPanel loginPanel;
+    private JTextField usernameTextField;
+    private JTextField passwordTextField;
+    private JButton loginButton;
+    private boolean loginFormShowing;
 
 
     // menu options
@@ -31,7 +36,24 @@ public class MovieSelectionView extends JFrame{
     JButton[][] seats;
     boolean loggedIn;
 
+    public void toggleLoginForm(){
+        if(loginFormShowing){
+            loginPanel.setVisible(false);
+            showLoginFormButton.setText("Show Login Form");
+            this.setSize(new Dimension(720,520));
+        } else{
+            loginPanel.setVisible(true);
+            showLoginFormButton.setText("Hide Login Form");
+            this.setSize(new Dimension(720,620));
+        }
+        loginFormShowing = !loginFormShowing;
+    }
+
+
     public MovieSelectionView(){
+
+        // initially hidden
+        loginPanel.setVisible(false);
 
         // seats array
         seats = new JButton[10][10];
@@ -79,11 +101,15 @@ public class MovieSelectionView extends JFrame{
         this.loggedIn = loggedIn;
 
         if (loggedIn){
-            logInButton.setText("Log Out");
+            loginButton.setText("Log Out");
             accountButton.setText("Account Settings");
+            usernameTextField.setEnabled(false);
+            passwordTextField.setEnabled(false);
         } else{
-            logInButton.setText("Log In");
+            loginButton.setText("Log In");
             accountButton.setText("Sign Up");
+            usernameTextField.setEnabled(true);
+            passwordTextField.setEnabled(true);
         }
     }
 
@@ -108,6 +134,10 @@ public class MovieSelectionView extends JFrame{
             seatPanel.add(x);
         }
         this.setVisible(true);
+    }
+
+    public boolean getLoggedIn() {
+        return loggedIn;
     }
 
     class buttonListener implements ActionListener {
@@ -213,6 +243,20 @@ public class MovieSelectionView extends JFrame{
         purchaseTicketButton.addActionListener(a);
     }
 
-    public void addLoginButtonActionListener(ActionListener a){logInButton.addActionListener(a);}
+    public void addShowLoginButtonActionListener(ActionListener a){
+        showLoginFormButton.addActionListener(a);
+    }
+
+    public void addLoginButtonListener(ActionListener a){
+        loginButton.addActionListener(a);
+    }
+
+    public String getUserName(){
+        return this.usernameTextField.getText();
+    }
+
+    public String getPassword(){
+        return this.passwordTextField.getText();
+    }
 
 }

@@ -15,6 +15,7 @@ public class MovieSelectionViewController {
     ShowtimeComboBoxListener showtimeListener;
     PurchaseButtonListener purchaseButtonListener;
     LoginButtonListener loginButtonListener;
+    ShowLoginButtonListener showLoginButtonListener;
 
     MovieSelectionView theView;
 
@@ -28,6 +29,7 @@ public class MovieSelectionViewController {
         showtimeListener = new ShowtimeComboBoxListener();
         purchaseButtonListener = new PurchaseButtonListener();
         loginButtonListener = new LoginButtonListener();
+        showLoginButtonListener = new ShowLoginButtonListener();
 
 
 
@@ -40,17 +42,45 @@ public class MovieSelectionViewController {
         theView.addTheatreComboBoxActionListener(theatreListener);
         theView.addShowtimeComboBoxActionListener(showtimeListener);
         theView.addPurchaseButtonActionListener(purchaseButtonListener);
-        theView.addLoginButtonActionListener(loginButtonListener);
+        theView.addShowLoginButtonActionListener(showLoginButtonListener);
+        theView.addLoginButtonListener(loginButtonListener);
 
         theView.setVisible(true);
 
     }
 
+    // login button
     class LoginButtonListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            boolean loggedIn = theView.getLoggedIn();
+            if(!loggedIn){
+                // attempt to log in
+                String userName = theView.getUserName();
+                String password = theView.getPassword();
+                boolean authenticated = authenticateUser(userName, password);
+                if(!authenticated){
+                    JOptionPane.showMessageDialog(theView, "Invalid Credentials.",
+                            "Alert", JOptionPane.WARNING_MESSAGE);
+                }
+                theView.setLoggedIn(authenticated);
+            }
+            else{
+                // log out
+                theView.setLoggedIn(false);
+            }
+
+
+
+        }
+    }
+
+
+    class ShowLoginButtonListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            System.out.println("login");
+            theView.toggleLoginForm();
         }
     }
 
@@ -193,6 +223,14 @@ public class MovieSelectionViewController {
         };
         return seats;
 
+    }
+
+    private boolean authenticateUser(String userName, String password){
+        if((userName.equals("Graydon")) & (password.equals("1234"))){
+            return true;
+        } else {
+            return false;
+        }
     }
 
 
