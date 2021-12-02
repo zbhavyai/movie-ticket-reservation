@@ -1,6 +1,7 @@
 package movieTicketSystem.controller;
 
 import movieTicketSystem.View.MovieSelectionView;
+import movieTicketSystem.model.RegisteredUser;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,10 +21,12 @@ public class MovieSelectionViewController {
     MovieSelectionView theView;
 
     TheaterController theTheater;
+    UserController userController;
 
 
-    public MovieSelectionViewController(MovieSelectionView theView) {
+    public MovieSelectionViewController(MovieSelectionView theView, UserController userController) {
         this.theView = theView;
+        this.userController = userController;
 
         // action listeners
         movieListener = new MovieComboBoxListener();
@@ -225,15 +228,14 @@ public class MovieSelectionViewController {
     }
 
     private boolean authenticateUser(String userName, String password){
-        if((userName.equals("Graydon")) & (password.equals("1234"))){
-            return true;
+        RegisteredUser ru = userController.verifyUser(userName, password);
+
+
+        if((ru == null)){
+            return false;  // user does not exist
         } else {
-            return false;
+            return true;  // user does exist
         }
     }
 
-    public static void main(String[] args) {
-        MovieSelectionView theView = new MovieSelectionView();
-        MovieSelectionViewController x = new MovieSelectionViewController(theView);
-    }
 }
