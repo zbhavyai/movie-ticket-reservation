@@ -214,8 +214,6 @@ public class MovieSelectionView extends JFrame{
         purchaseTicketButton.addActionListener(a);
     }
 
-    public void setScreenLabelText(String s) {
-        this.screenLabel.setText(s);
-    }
+    public void addLoginButtonActionListener(ActionListener a){logInButton.addActionListener(a);}
 
 }

@@ -9,7 +9,7 @@ public class ViewController {
     public static void main(String[] args) {
         MovieSelectionView theView = new MovieSelectionView();
         ViewController viewController = new ViewController();
-        MovieSelectionViewController x = new MovieSelectionViewController(theView, viewController);
+        MovieSelectionViewController movieSelectionViewController = new MovieSelectionViewController(theView, viewController);
     }
 
     public String[] getMovies(){

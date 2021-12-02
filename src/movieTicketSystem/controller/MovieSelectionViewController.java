@@ -10,21 +10,28 @@ import java.awt.event.ActionListener;
 
 public class MovieSelectionViewController {
 
+    MovieComboBoxListener movieListener;
+    TheatreComboBoxListener theatreListener;
+    ShowtimeComboBoxListener showtimeListener;
+    PurchaseButtonListener purchaseButtonListener;
+    LoginButtonListener loginButtonListener;
+
     MovieSelectionView theView;
-    movieComboBoxListener movieListener;
-    theatreComboBoxListener theatreListener;
-    showtimeComboBoxListener showtimeListener;
-    purchaseButtonListener purchaseButtonListener;
     ViewController viewController;
 
 
     public MovieSelectionViewController(MovieSelectionView theView, ViewController viewController) {
         this.theView = theView;
-        movieListener = new movieComboBoxListener();
-        theatreListener = new theatreComboBoxListener();
-        showtimeListener = new showtimeComboBoxListener();
-        purchaseButtonListener = new purchaseButtonListener();
         this.viewController = viewController;
+
+        // action listeners
+        movieListener = new MovieComboBoxListener();
+        theatreListener = new TheatreComboBoxListener();
+        showtimeListener = new ShowtimeComboBoxListener();
+        purchaseButtonListener = new PurchaseButtonListener();
+        loginButtonListener = new LoginButtonListener();
+
+
 
         String[] movieOptions = viewController.getMovies();
 
@@ -35,12 +42,21 @@ public class MovieSelectionViewController {
         theView.addTheatreComboBoxActionListener(theatreListener);
         theView.addShowtimeComboBoxActionListener(showtimeListener);
         theView.addPurchaseButtonActionListener(purchaseButtonListener);
+        theView.addLoginButtonActionListener(loginButtonListener);
 
         theView.setVisible(true);
 
     }
 
-    class movieComboBoxListener implements ActionListener {
+    class LoginButtonListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            System.out.println("login");
+        }
+    }
+
+    class MovieComboBoxListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -64,7 +80,7 @@ public class MovieSelectionViewController {
         }
     }
 
-    class theatreComboBoxListener implements ActionListener {
+    class TheatreComboBoxListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -84,7 +100,7 @@ public class MovieSelectionViewController {
         }
     }
 
-    class showtimeComboBoxListener implements ActionListener {
+    class ShowtimeComboBoxListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -95,7 +111,7 @@ public class MovieSelectionViewController {
             theView.setSeats(seats);}
     }
 
-    class purchaseButtonListener implements ActionListener {
+    class PurchaseButtonListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
