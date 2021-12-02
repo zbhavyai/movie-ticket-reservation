@@ -17,12 +17,10 @@ public class MovieSelectionViewController {
     LoginButtonListener loginButtonListener;
 
     MovieSelectionView theView;
-    ViewController viewController;
 
 
-    public MovieSelectionViewController(MovieSelectionView theView, ViewController viewController) {
+    public MovieSelectionViewController(MovieSelectionView theView) {
         this.theView = theView;
-        this.viewController = viewController;
 
         // action listeners
         movieListener = new MovieComboBoxListener();
@@ -33,7 +31,7 @@ public class MovieSelectionViewController {
 
 
 
-        String[] movieOptions = viewController.getMovies();
+        String[] movieOptions = getMovies();
 
         theView.setMovieOptions(movieOptions);
 
@@ -62,7 +60,7 @@ public class MovieSelectionViewController {
         public void actionPerformed(ActionEvent e) {
 
             System.out.println("Movie Selected: "  + theView.getMovieInput());
-            String[] theatreOptions = viewController.getTheatres();
+            String[] theatreOptions = getTheatres();
 
             // clear any previous showtime options
             theView.removeShowtimeComboBoxActionListener(showtimeListener);
@@ -87,7 +85,7 @@ public class MovieSelectionViewController {
 
 
             System.out.println("Theatre Selected: "  + theView.getTheatreInput());
-            String[] timeOptions = viewController.getShowTimes();
+            String[] timeOptions = getShowTimes();
 
             //disable any previously selected seats for a different showtime
             theView.disableAllSeats();
@@ -106,7 +104,7 @@ public class MovieSelectionViewController {
         public void actionPerformed(ActionEvent e) {
 
             System.out.println("Showtime Selected: "  + theView.getShowtimeInput());
-            int[][] seats = viewController.getSeats();
+            int[][] seats = getSeats();
 
             theView.setSeats(seats);}
     }
@@ -136,6 +134,65 @@ public class MovieSelectionViewController {
                 }
             }
         }
+    }
+
+    private String[] getMovies(){
+
+        // **** TALK TO BACK END AND GET INITIAL MOVIE LIST ****
+        // USE THE GET ALL MOVIES HERE
+        String[] movieOptions = {
+                "Knives Out",
+                "House of Gucci",
+                "Lord of the Rings"
+        };
+
+        return movieOptions;
+    }
+
+    private String[] getTheatres(){
+
+        // **** TALK TO BACK END AND GET LIST OF THEATRES PLAYING THIS MOVIE ****
+        // USE SEARCH THEATRES BY MOVIE ID HERE
+        String[] theatreOptions = {
+                "Scotiabank Theatre Chinook",
+                "Canyon Meadows Cinema",
+                "Shawnessey Theatre"
+        };
+
+        return theatreOptions;
+    }
+
+    private String[] getShowTimes(){
+
+        // *** TALK TO BACK END AND GET LIST OF SHOWTIMES FOR THIS MOVIE/THEATRE ****
+        // CALL METHOD TO GET SHOWTIMES BY MOVIE ID AND THEATRE ID
+        String[] timeOptions = {
+                "1:00 pm",
+                "3:00 pm",
+                "5:00 pm",
+                "7:00 pm",
+        };
+
+        return timeOptions;
+    }
+
+    private int[][] getSeats(){
+        // *** TALK TO BACK END AND GET ARRAY OF SEATS FOR THIS SHOWTIME/MOVIE/THEATRE
+        // CALL METHOD TO GET SEATS ARRAY BASED ON MOVIE ID, THEATRE ID, SHOWTIME ID
+        int[][] seats = {
+                {0, 1, 1, 1, 1, 1, 1, 1, 1, 0},
+                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+        };
+        return seats;
+
     }
 
 
