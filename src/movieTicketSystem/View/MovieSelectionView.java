@@ -11,7 +11,6 @@ public class MovieSelectionView extends JFrame{
     private JButton purchaseTicketButton;
     private JButton showLoginFormButton;
     private JPanel mainPanel;
-    private JButton accountButton;
 
     private JLabel movieLabel;
     private JComboBox movieSelectorComboBox;
@@ -25,6 +24,7 @@ public class MovieSelectionView extends JFrame{
     private JTextField usernameTextField;
     private JTextField passwordTextField;
     private JButton loginButton;
+    private JTabbedPane tabbedPane;
     private boolean loginFormShowing;
 
 
@@ -67,7 +67,7 @@ public class MovieSelectionView extends JFrame{
         // set logged in as false to start off
         setLoggedIn(false);
 
-        setContentPane(mainPanel);
+        setContentPane(tabbedPane);
         setTitle("Movie Selection Menu");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         seatPanel.setLayout(new BoxLayout(seatPanel, BoxLayout.PAGE_AXIS));
@@ -102,14 +102,14 @@ public class MovieSelectionView extends JFrame{
 
         if (loggedIn){
             loginButton.setText("Log Out");
-            accountButton.setText("Account Settings");
             usernameTextField.setEnabled(false);
             passwordTextField.setEnabled(false);
+            showLoginFormButton.setEnabled(false);
         } else{
             loginButton.setText("Log In");
-            accountButton.setText("Sign Up");
             usernameTextField.setEnabled(true);
             passwordTextField.setEnabled(true);
+            showLoginFormButton.setEnabled(true);
         }
     }
 
