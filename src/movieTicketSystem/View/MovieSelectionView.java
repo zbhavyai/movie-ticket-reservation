@@ -121,7 +121,7 @@ public class MovieSelectionView extends JFrame {
         int height = 30;
 
         for (int i = 0; i < 10; i++) {
-            var x = new JPanel();
+            JPanel x = new JPanel();
             x.setLayout(new BoxLayout(x, BoxLayout.LINE_AXIS));
             for (int j = 0; j < 10; j++) {
                 JButton btn = new JButton("" + (char) (i + 65) + (j));
@@ -233,7 +233,7 @@ public class MovieSelectionView extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
 
-            var x = (JButton) e.getSource();
+            JButton x = (JButton) e.getSource();
             if (x.getBackground() == Color.green) {
                 x.setBackground(null);
             } else {

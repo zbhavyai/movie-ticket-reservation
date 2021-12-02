@@ -6,5 +6,6 @@
 	<classpathentry kind="lib" path="lib/javax.mail-1.6.2.jar"/>
 	<classpathentry kind="lib" path="lib/javax.mail-api-1.6.2.jar"/>
 	<classpathentry kind="lib" path="lib/mysql-connector-java-8.0.27.jar"/>
+	<classpathentry kind="lib" path="lib/forms_rt.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
