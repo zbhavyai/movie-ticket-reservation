@@ -57,6 +57,22 @@ public class TheaterController {
 		return this.theaters;
 	}
 
+	/**
+	 * Search for the seat availability for a given showtime.
+	 */
+	public int[][] getSeatGrid(int showtimeId) {
+		return db.seatGrid(showtimeId);
+		
+	}
+
+	/**
+	 * Search for the showtimeId based on the movieId, theaterId and showtime
+	 */
+	public int getShowtimeId(String[] searchValues){
+		int theatreId = db.getTheaterIdByName(searchValues[0]);
+		int movieId = db.getMovieIdByName(searchValues[1]);
+		return db.getShowtimeIdByMovieAndTheatreAndShowtime(theatreId, movieId, searchValues[2]);
+	}
 
 	/**
 	 * Search for all showtimes that match the specified movie id and theater id/movieId.
@@ -64,8 +80,7 @@ public class TheaterController {
 	public ArrayList<String> searchShowtimesByMovieAndTheatre(int theatreId, int movieId) {
 		return db.searchShowtimesByMovieAndTheatre(theatreId, movieId);
 		
-	}
-	
+	}	
 
 	/**
 	 * Reserve a seat for a specified showtime and seatNumber.

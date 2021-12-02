@@ -19,6 +19,8 @@ public class MovieSelectionViewController {
 
     MovieSelectionView theView;
 
+    TheaterController theTheater;
+
 
     public MovieSelectionViewController(MovieSelectionView theView) {
         this.theView = theView;
@@ -133,8 +135,13 @@ public class MovieSelectionViewController {
         @Override
         public void actionPerformed(ActionEvent e) {
 
+            String showtime = theView.getShowtimeInput();
+            String movie = theView.getMovieInput();
+            String theater = theView.getTheatreInput();
             System.out.println("Showtime Selected: "  + theView.getShowtimeInput());
-            int[][] seats = getSeats();
+            String[] showtimeSearch = {theater, movie, showtime};
+            int showtimeId = getShowtimeId(showtimeSearch);
+            int[][] seats = getSeats(showtimeId);
 
             theView.setSeats(seats);}
     }
@@ -206,23 +213,15 @@ public class MovieSelectionViewController {
         return timeOptions;
     }
 
-    private int[][] getSeats(){
-        // *** TALK TO BACK END AND GET ARRAY OF SEATS FOR THIS SHOWTIME/MOVIE/THEATRE
-        // CALL METHOD TO GET SEATS ARRAY BASED ON MOVIE ID, THEATRE ID, SHOWTIME ID
-        int[][] seats = {
-                {0, 1, 1, 1, 1, 1, 1, 1, 1, 0},
-                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-        };
-        return seats;
+    private int[][] getSeats(int showtimeId){
 
+        int [][] seats = theTheater.getSeatGrid(showtimeId);
+        return seats;
+    }
+
+    public int getShowtimeId(String[] searchValues){
+        int showtimeId = theTheater.getShowtimeId(searchValues);
+        return showtimeId;
     }
 
     private boolean authenticateUser(String userName, String password){
@@ -233,6 +232,8 @@ public class MovieSelectionViewController {
         }
     }
 
-
-
+    public static void main(String[] args) {
+        MovieSelectionView theView = new MovieSelectionView();
+        MovieSelectionViewController x = new MovieSelectionViewController(theView);
+    }
 }
