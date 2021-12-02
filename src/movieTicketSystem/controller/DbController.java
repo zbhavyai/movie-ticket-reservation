@@ -130,12 +130,12 @@ public class DbController {
         }
 
         return theatreIds;
-    }            
+    }
 
     /**
-     * 
-     * This method is used to get the theatreId from the database by using the theatreName provided 
-     * 
+     *
+     * This method is used to get the theatreId from the database by using the theatreName provided
+     *
      * @param theaterName is the name of the theatre to search
      * @return the Id number of the theatre searched
      */
@@ -159,9 +159,9 @@ public class DbController {
     }
 
     /**
-     * 
-     * This method is used to get the movieId from the database by using the movieName provided 
-     * 
+     *
+     * This method is used to get the movieId from the database by using the movieName provided
+     *
      * @param movieName is the name of the movie to search
      * @return the Id number of the movie searched
      */
@@ -185,9 +185,9 @@ public class DbController {
     }
 
     /**
-     * 
+     *
      * This method is used to retrieve the showtimeId based on the theatreId, movieId and showtimeString
-     * 
+     *
      * @param theatreId is the id of the theatre to search in
      * @param movieId is the id of the movie to search in
      * @param showtimeString is the showtime to search in
@@ -343,9 +343,9 @@ public class DbController {
     }
 
     /**
-     * 
+     *
      * This method finds all tickets that have been created for a particular showtime
-     * 
+     *
      * @param showtimeId is the showtime to search for tickets in
      * @return a list of tickets that have been created for the given showtime
      */
@@ -371,9 +371,9 @@ public class DbController {
     }
 
     /**
-     * 
+     *
      * This method is used to return a grid of seats for a particular showtime. The grid will show available seats as 1's and unavailable as 0's
-     * 
+     *
      * @param showtimeId is the Id of the showtime to search for
      * @return a 2d integer array representing the seats and their availability for the showtime
      */
@@ -423,27 +423,26 @@ public class DbController {
     }
 
     /**
-     * Fetches an object of RegisteredUser from DB using username
+     * Fetches an object of RegisteredUser from DB using email
      *
-     * @param username unique username of the RegisteredUser
+     * @param email email while registering in the system
      * @return RegisteredUser object if found, null otherwise
      */
-    public RegisteredUser searchRegisteredUser(String username) {
+    public RegisteredUser searchRegisteredUser(String email) {
         try {
-            String query = "SELECT * FROM RUser WHERE username = ?";
+            String query = "SELECT * FROM REGISTERED_USER WHERE username = ?";
             PreparedStatement myStmt = this.dbConnect.prepareStatement(query);
-            myStmt.setString(1, username);
+            myStmt.setString(1, email);
 
             ResultSet results = myStmt.executeQuery();
 
             while (results.next()) {
-                if (results.getString("username").equals(username)) {
+                if (results.getString("email").equals(email)) {
 
                     RegisteredUser ru = new RegisteredUser();
                     ru.setId(results.getInt("userId"));
-                    ru.setUsername(username);
                     ru.setPassword(results.getString("password"));
-                    ru.setEmail(results.getString("email"));
+                    ru.setEmail(email);
                     ru.setAddress(results.getString("address"));
                     ru.setLastFeePaid(results.getDate("lastPaid").toLocalDate());
                     ru.setCard(this.getPayment(results.getInt("card")));
@@ -515,7 +514,6 @@ public class DbController {
                     c.setId(results.getInt("couponId"));
                     c.setCouponCode(couponCode);
                     c.setCouponAmount(results.getDouble("couponAmount"));
-                    c.setRedeemedAmount(results.getDouble("redeemedAmount"));
                     c.setExpiry(results.getDate("expiry").toLocalDate());
 
                     return c;

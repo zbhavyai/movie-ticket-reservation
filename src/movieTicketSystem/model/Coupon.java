@@ -6,7 +6,6 @@ public class Coupon {
     private int id;
     private String couponCode;
     private double couponAmount;
-    private double redeemedAmount;
     private LocalDate expiry;
 
     public int getId() {
@@ -41,14 +40,6 @@ public class Coupon {
         this.couponAmount = couponAmount;
     }
 
-    public double getRedeemedAmount() {
-        return redeemedAmount;
-    }
-
-    public void setRedeemedAmount(double redeemedAmount) {
-        this.redeemedAmount = redeemedAmount;
-    }
-
     public boolean isExpired() {
         if (this.expiry.isBefore(LocalDate.now())) {
             return true;
@@ -62,6 +53,6 @@ public class Coupon {
     @Override
     public String toString() {
         return "[" + this.couponCode + ", " + String.format("%.2f", this.couponAmount)
-                + String.format("%.2f", this.redeemedAmount) + this.expiry + "]";
+                + this.expiry + "]";
     }
 }

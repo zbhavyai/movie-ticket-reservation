@@ -5,7 +5,6 @@ import java.util.List;
 
 public class RegisteredUser {
     private int id;
-    private String username;
     private String password;
     private String email;
     private String address;
@@ -22,12 +21,12 @@ public class RegisteredUser {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {
@@ -36,14 +35,6 @@ public class RegisteredUser {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getAddress() {
@@ -108,6 +99,6 @@ public class RegisteredUser {
 
     @Override
     public String toString() {
-        return ("[" + this.username + ", " + this.email + ", " + this.address + ", " + this.card + ", " + lastFeePaid + "]");
+        return ("[" + this.email + ", " + this.address + ", " + this.card + ", " + lastFeePaid + "]");
     }
 }
