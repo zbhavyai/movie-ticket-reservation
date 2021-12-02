@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS MOVIE
 	 title				VARCHAR(30)		NOT NULL,
          rating				double			NOT NULL,
 	 theatreId			int			NOT NULL,	
-     PRIMARY KEY (movieId),
+     PRIMARY KEY (movieId),seat
      foreign key(theatreId) references THEATRE(theatreId)
 );
 	

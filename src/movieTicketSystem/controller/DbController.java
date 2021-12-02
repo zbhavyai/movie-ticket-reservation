@@ -22,12 +22,11 @@ public class DbController {
     public void initializeConnection(){
         
         try{
-            dbConnect = DriverManager.getConnection("jdbc:mysql://localhost:3306/ensf614project", "root", "root");
+            dbConnect = DriverManager.getConnection("jdbc:mysql://localhost:3306/ensf614project", "root", "Butterfly1996.");
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    
 
     
     public ArrayList<Movie> selectAllMovies(){
@@ -262,6 +261,71 @@ public class DbController {
     }    
 
     
+    public ArrayList<Integer> ticketsAtShowtime(int showtimeId){
+        ArrayList<Integer> tickets = new ArrayList<Integer>();
+        try {    
+            String query = "SELECT * FROM ticket Where showtimeId = ?";
+            PreparedStatement myStmt = dbConnect.prepareStatement(query);
+        
+            myStmt.setInt(1, showtimeId);
+            
+            ResultSet results = myStmt.executeQuery();
+            
+            // Get a list of tickets associated with that showtime
+            while (results.next()){
+            	tickets.add(results.getInt("ticketId"));
+            }
+            myStmt.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return tickets;
+    }
+    
+    public int[][] seatGrid(int showtimeId){
+
+        ArrayList<Integer> tickets = ticketsAtShowtime(showtimeId);
+        ArrayList<Integer> row = new ArrayList<Integer>();
+        ArrayList<Integer> col = new ArrayList<Integer>();
+        int[][] seatGrid = new int[10][10];
+
+        try {    
+            for(int i = 0; i < tickets.size(); i++){
+                String query = "SELECT * FROM seat Where ticketId = ?";
+                PreparedStatement myStmt = dbConnect.prepareStatement(query);
+                myStmt.setInt(1, tickets.get(i));
+
+                ResultSet results = myStmt.executeQuery();
+                while (results.next()){
+                    row.add(results.getInt("seatRow"));
+                    col.add(results.getInt("seatNum"));
+                }
+            }
+
+            for(int i = 0; i < 10; i++){
+                for(int j = 0; j < 10; j++){
+                    seatGrid[i][j] = 2;
+                }
+            }
+
+            for(int i = 0; i < 10; i++){
+                for(int j = 0; j < 10; j++){
+                    for(int k = 0; k < row.size(); k++){
+                        if(i + 1 == row.get(k) && j + 1 == col.get(k)){
+                            seatGrid[i][j] = 0;
+                        }
+                        if(seatGrid[i][j] != 0){
+                            seatGrid[i][j] = 1;
+                        }
+                    }
+                }
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return seatGrid;
+    }    
     
     
 //    other demo methods for reference *******************************************************
@@ -292,13 +356,11 @@ public class DbController {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-    
+    }       
     
     public static void main(String[] args) {
 		DbController dbController=new DbController();
-		dbController.selectMoviesByTheatre(1);
+		dbController.seatGrid(2);
 		
 	}
 }
