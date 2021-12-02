@@ -11,8 +11,8 @@ public class Email {
     private Properties loginDetails;
 
     private Email() {
-        String smtpSettingsLocation = "config/Gmail_SMTP_Settings.txt";
-        String loginDetailsLocation = "config/Gmail_Login.txt";
+        String smtpSettingsLocation = "config/gmail_smtp.properties";
+        String loginDetailsLocation = "config/gmail_login.properties";
 
         try {
             this.smtpSettings = new Properties();
@@ -70,9 +70,4 @@ public class Email {
             e.printStackTrace();
         }
     }
-
-    /*public static void main(String[] args) throws Exception {
-        Email email = Email.getInstance();
-        email.sendEmail("someone@example.com", "Test subject", "Test body");
-    }*/
 }
