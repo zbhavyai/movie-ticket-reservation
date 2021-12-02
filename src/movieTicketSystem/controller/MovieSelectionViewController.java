@@ -15,21 +15,19 @@ public class MovieSelectionViewController {
     theatreComboBoxListener theatreListener;
     showtimeComboBoxListener showtimeListener;
     purchaseButtonListener purchaseButtonListener;
+    ViewController viewController;
 
 
-    public MovieSelectionViewController(MovieSelectionView theView) {
+    public MovieSelectionViewController(MovieSelectionView theView, ViewController viewController) {
         this.theView = theView;
         movieListener = new movieComboBoxListener();
         theatreListener = new theatreComboBoxListener();
         showtimeListener = new showtimeComboBoxListener();
         purchaseButtonListener = new purchaseButtonListener();
+        this.viewController = viewController;
 
-        // **** TALK TO BACK END AND GET INITIAL MOVIE LIST ****
-        String[] movieOptions = {
-                "Knives Out",
-                "House of Gucci",
-                "Lord of the Rings"
-        };
+        String[] movieOptions = viewController.getMovies();
+
         theView.setMovieOptions(movieOptions);
 
         // add action listeners
@@ -47,13 +45,8 @@ public class MovieSelectionViewController {
         @Override
         public void actionPerformed(ActionEvent e) {
 
-            // **** TALK TO BACK END AND GET LIST OF THEATRES PLAYING THIS MOVIE ****
             System.out.println("Movie Selected: "  + theView.getMovieInput());
-            String[] theatreOptions = {
-                    "Scotiabank Theatre Chinook",
-                    "Canyon Meadows Cinema",
-                    "Shawnessey Theatre"
-            };
+            String[] theatreOptions = viewController.getTheatres();
 
             // clear any previous showtime options
             theView.removeShowtimeComboBoxActionListener(showtimeListener);
@@ -76,14 +69,9 @@ public class MovieSelectionViewController {
         @Override
         public void actionPerformed(ActionEvent e) {
 
-            // *** TALK TO BACK END AND GET LIST OF SHOWTIMES FOR THIS MOVIE/THEATRE ****
+
             System.out.println("Theatre Selected: "  + theView.getTheatreInput());
-            String[] timeOptions = {
-                    "1:00 pm",
-                    "3:00 pm",
-                    "5:00 pm",
-                    "7:00 pm",
-            };
+            String[] timeOptions = viewController.getShowTimes();
 
             //disable any previously selected seats for a different showtime
             theView.disableAllSeats();
@@ -101,20 +89,8 @@ public class MovieSelectionViewController {
         @Override
         public void actionPerformed(ActionEvent e) {
 
-            // *** TALK TO BACK END AND GET ARRAY OF SEATS FOR THIS SHOWTIME/MOVIE/THEATRE
             System.out.println("Showtime Selected: "  + theView.getShowtimeInput());
-            int[][] seats = {
-                    {0, 1, 1, 1, 1, 1, 1, 1, 1, 0},
-                    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-            };
+            int[][] seats = viewController.getSeats();
 
             theView.setSeats(seats);}
     }
@@ -146,9 +122,6 @@ public class MovieSelectionViewController {
         }
     }
 
-    public static void main(String[] args) {
-        MovieSelectionView theView = new MovieSelectionView();
-        MovieSelectionViewController x = new MovieSelectionViewController(theView);
-    }
+
 
 }

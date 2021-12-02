@@ -43,7 +43,7 @@ public class MovieSelectionView extends JFrame{
         createSeats();
 
         // set logged in as false to start off
-        setLoggedIn(false);
+        setLoggedIn(true);
 
         setContentPane(mainPanel);
         setTitle("Movie Selection Menu");
