@@ -3,7 +3,7 @@ package movieTicketSystem.model;
 public class Receipt {
     private int id;
     private Movie movie;
-    private Theater theatre;
+    private Theatre theatre;
     private Showtime showTime;
     private double price;
 
@@ -23,11 +23,11 @@ public class Receipt {
         this.movie = movie;
     }
 
-    public Theater getTheatre() {
+    public Theatre getTheatre() {
         return theatre;
     }
 
-    public void setTheatre(Theater theatre) {
+    public void setTheatre(Theatre theatre) {
         this.theatre = theatre;
     }
 

@@ -3,30 +3,30 @@ package movieTicketSystem.controller;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-import movieTicketSystem.model.Theater;
+import movieTicketSystem.model.Theatre;
 
 /**
  * TheaterController class to control system access to Theater, Showtime, and Seat classes.
  */
 public class TheaterController {
 	
-	private ArrayList<Theater> theaters = new ArrayList<Theater>();
+	private ArrayList<Theatre> theatres = new ArrayList<Theatre>();
 	DbController db = new DbController();
 	
 	public TheaterController() {
-		ArrayList<Theater> theatersdb =	db.selectAllTheatres();
-        this.theaters = theatersdb;
+		ArrayList<Theatre> theatersdb =	db.selectAllTheatres();
+        this.theatres = theatersdb;
 	}
 	
 	/**
 	 * Search for theater based on theatreId.
 	 * 
 	 */
-	public Theater searchTheatreById(int theatreId) {
+	public Theatre searchTheatreById(int theatreId) {
 		// search theatre table
-		for (Theater theater : this.theaters) {
-			if (theater.getTheatreId() == theatreId)
-				return theater;
+		for (Theatre theatre : this.theatres) {
+			if (theatre.getTheatreId() == theatreId)
+				return theatre;
 		}
 		return null;
 	}
@@ -36,12 +36,12 @@ public class TheaterController {
 	 * Search for movie based on theatre Id. Returns list of movie objects
 	 * 
 	 */
-	public ArrayList<Theater> searchTheatresByMovie(int movieId) {
+	public ArrayList<Theatre> searchTheatresByMovie(int movieId) {
 		ArrayList<Integer> theatreIds = db.searchTheatresByMovie(movieId);
-		ArrayList<Theater> filteredTheatres = new ArrayList<Theater>();
+		ArrayList<Theatre> filteredTheatres = new ArrayList<Theatre>();
 		
 		for (int id : theatreIds) {
-			for (Theater theatre : theaters) {
+			for (Theatre theatre : theatres) {
 				if(theatre.getTheatreId()==id) {
 					filteredTheatres.add(theatre);
 				}
@@ -53,8 +53,8 @@ public class TheaterController {
 
     
 	
-	public ArrayList<Theater> getTheaters() {
-		return this.theaters;
+	public ArrayList<Theatre> getTheaters() {
+		return this.theatres;
 	}
 
 
