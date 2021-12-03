@@ -1,11 +1,12 @@
 package movieTicketSystem.model;
 
+import java.time.LocalDateTime;
+
 public class Receipt {
     private int id;
-    private Movie movie;
-    private Theater theater;
-    private Showtime showTime;
+    private String paymentCard;
     private double price;
+    private LocalDateTime generationTime;
 
     public int getId() {
         return id;
@@ -15,28 +16,12 @@ public class Receipt {
         this.id = id;
     }
 
-    public Movie getMovie() {
-        return movie;
+    public String getPaymentCard() {
+        return paymentCard;
     }
 
-    public void setMovie(Movie movie) {
-        this.movie = movie;
-    }
-
-    public Theater getTheatre() {
-        return theater;
-    }
-
-    public void setTheatre(Theater theater) {
-        this.theater = theater;
-    }
-
-    public Showtime getShowTime() {
-        return showTime;
-    }
-
-    public void setShowTime(Showtime showTime) {
-        this.showTime = showTime;
+    public void setPaymentCard(String paymentCard) {
+        this.paymentCard = paymentCard;
     }
 
     public double getPrice() {
@@ -45,5 +30,13 @@ public class Receipt {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public LocalDateTime getGenerationTime() {
+        return generationTime;
+    }
+
+    public void setGenerationTime(LocalDateTime generationTime) {
+        this.generationTime = generationTime;
     }
 }
