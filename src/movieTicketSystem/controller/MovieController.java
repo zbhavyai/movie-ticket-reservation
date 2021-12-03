@@ -55,7 +55,13 @@ public class MovieController {
 	}
 
 	
-	
+	public ArrayList<String> getMovieNames() {
+		ArrayList<String> movieNames = new ArrayList<String>();
+		for(int i = 0; i < movies.size(); i++){
+			movieNames.add(movies.get(i).getTitle());
+		}
+		return movieNames;
+	}
 
 	public ArrayList<Movie> getMovies() {
 		return movies;

@@ -3,6 +3,7 @@ package movieTicketSystem.View;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 
+import java.util.ArrayList;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -32,9 +33,9 @@ public class MovieSelectionView extends JFrame {
 
 
     // menu options
-    String[] movieOptions = {};
-    String[] theatreOptions = {};
-    String[] timeOptions = {};
+    ArrayList<String> movieOptions = new ArrayList<String>();
+    ArrayList<String> theatreOptions = new ArrayList<String>();
+    ArrayList<String> timeOptions = new ArrayList<String>();
 
     JButton[][] seats;
     boolean loggedIn;
@@ -83,17 +84,17 @@ public class MovieSelectionView extends JFrame {
 
     private void dropdownMenuSetup() {
         // setup dropdown menus
-        movieSelectorComboBox.setModel(new DefaultComboBoxModel(movieOptions));
+        movieSelectorComboBox.setModel(new DefaultComboBoxModel(movieOptions.toArray()));
         movieSelectorComboBox.setFocusable(false);
         movieSelectorComboBox.setSelectedIndex(-1);
         movieSelectorComboBox.setEnabled(false);
 
-        theatreSelectionComboBox.setModel(new DefaultComboBoxModel(theatreOptions));
+        theatreSelectionComboBox.setModel(new DefaultComboBoxModel(theatreOptions.toArray()));
         theatreSelectionComboBox.setFocusable(false);
         theatreSelectionComboBox.setSelectedIndex(-1);
         theatreSelectionComboBox.setEnabled(false);
 
-        showtimeSelectorComboBox.setModel(new DefaultComboBoxModel(timeOptions));
+        showtimeSelectorComboBox.setModel(new DefaultComboBoxModel(timeOptions.toArray()));
         showtimeSelectorComboBox.setFocusable(false);
         showtimeSelectorComboBox.setSelectedIndex(-1);
         showtimeSelectorComboBox.setEnabled(false);
@@ -265,30 +266,30 @@ public class MovieSelectionView extends JFrame {
         return seats;
     }
 
-    public void setTheatreOptions(String[] theatreOptions) {
+    public void setTheatreOptions(ArrayList<String> theatreOptions) {
         this.theatreOptions = theatreOptions;
-        theatreSelectionComboBox.setModel(new DefaultComboBoxModel(theatreOptions));
+        theatreSelectionComboBox.setModel(new DefaultComboBoxModel(theatreOptions.toArray()));
         theatreSelectionComboBox.setSelectedIndex(-1);
         theatreSelectionComboBox.setEnabled(true);
     }
 
-    public void setTimeOptions(String[] timeOptions) {
+    public void setTimeOptions(ArrayList<String> timeOptions) {
         this.timeOptions = timeOptions;
-        showtimeSelectorComboBox.setModel(new DefaultComboBoxModel(timeOptions));
+        showtimeSelectorComboBox.setModel(new DefaultComboBoxModel(timeOptions.toArray()));
         showtimeSelectorComboBox.setSelectedIndex(-1);
         showtimeSelectorComboBox.setEnabled(true);
     }
 
     public void clearShowtimeOptions() {
-        this.timeOptions = new String[]{};
-        showtimeSelectorComboBox.setModel(new DefaultComboBoxModel(timeOptions));
+        this.timeOptions = new ArrayList<String>();
+        showtimeSelectorComboBox.setModel(new DefaultComboBoxModel(timeOptions.toArray()));
         showtimeSelectorComboBox.setSelectedIndex(-1);
         showtimeSelectorComboBox.setEnabled(false);
     }
 
-    public void setMovieOptions(String[] movieOptions) {
+    public void setMovieOptions(ArrayList<String> movieOptions) {
         this.movieOptions = movieOptions;
-        movieSelectorComboBox.setModel(new DefaultComboBoxModel(movieOptions));
+        movieSelectorComboBox.setModel(new DefaultComboBoxModel(movieOptions.toArray()));
         movieSelectorComboBox.setSelectedIndex(-1);
         movieSelectorComboBox.setEnabled(true);
     }

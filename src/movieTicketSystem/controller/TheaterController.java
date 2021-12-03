@@ -51,10 +51,22 @@ public class TheaterController {
 		return filteredTheaters;
 	}
 
-    
+	public ArrayList<String> getTheaterNames() {
+		ArrayList<String> theaterNames = new ArrayList<String>();
+		for(int i = 0; i < theaters.size(); i++){
+			theaterNames.add(theaters.get(i).getTheatreName());
+		}
+		return theaterNames;
+	}    
 	
 	public ArrayList<Theater> getTheaters() {
 		return this.theaters;
+	}
+
+	public ArrayList<String>getTheatreShowtimes(String movieName, String theaterName){
+		ArrayList<String> showtimeList = new ArrayList<String>();
+		showtimeList = db.getTheatreShowtimes(db.getMovieIdByName(movieName), db.getTheaterIdByName(theaterName));
+		return showtimeList;
 	}
 
 	/**

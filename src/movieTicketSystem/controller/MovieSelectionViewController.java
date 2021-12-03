@@ -3,6 +3,7 @@ package movieTicketSystem.controller;
 import movieTicketSystem.View.MovieSelectionView;
 import movieTicketSystem.model.RegisteredUser;
 
+import java.util.ArrayList;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -20,13 +21,16 @@ public class MovieSelectionViewController {
 
     MovieSelectionView theView;
 
-    TheaterController theTheater;
+    TheaterController theaterController;
     UserController userController;
+    MovieController movieController;
 
 
-    public MovieSelectionViewController(MovieSelectionView theView, UserController userController) {
+    public MovieSelectionViewController(MovieSelectionView theView, UserController userController, TheaterController theaterController, MovieController movieController) {
         this.theView = theView;
         this.userController = userController;
+        this.theaterController = theaterController;
+        this.movieController = movieController;
 
         // action listeners
         movieListener = new MovieComboBoxListener();
@@ -36,9 +40,7 @@ public class MovieSelectionViewController {
         loginButtonListener = new LoginButtonListener();
         showLoginButtonListener = new ShowLoginButtonListener();
 
-
-
-        String[] movieOptions = getMovies();
+        ArrayList<String> movieOptions = getMovies();
 
         theView.setMovieOptions(movieOptions);
 
@@ -74,9 +76,6 @@ public class MovieSelectionViewController {
                 // log out
                 theView.setLoggedIn(false);
             }
-
-
-
         }
     }
 
@@ -95,7 +94,7 @@ public class MovieSelectionViewController {
         public void actionPerformed(ActionEvent e) {
 
             System.out.println("Movie Selected: "  + theView.getMovieInput());
-            String[] theatreOptions = getTheatres();
+            ArrayList<String> theatreOptions = getTheatres();
 
             // clear any previous showtime options
             theView.removeShowtimeComboBoxActionListener(showtimeListener);
@@ -118,9 +117,10 @@ public class MovieSelectionViewController {
         @Override
         public void actionPerformed(ActionEvent e) {
 
-
-            System.out.println("Theatre Selected: "  + theView.getTheatreInput());
-            String[] timeOptions = getShowTimes();
+            String theater = theView.getTheatreInput();
+            String movie = theView.getMovieInput();
+            System.out.println("Theatre Selected: "  + theater);
+            ArrayList<String> timeOptions = getShowTimes(movie, theater);
 
             //disable any previously selected seats for a different showtime
             theView.disableAllSeats();
@@ -176,54 +176,28 @@ public class MovieSelectionViewController {
         }
     }
 
-    private String[] getMovies(){
-
-        // **** TALK TO BACK END AND GET INITIAL MOVIE LIST ****
-        // USE THE GET ALL MOVIES HERE
-        String[] movieOptions = {
-                "Knives Out",
-                "House of Gucci",
-                "Lord of the Rings"
-        };
-
+    private ArrayList<String> getMovies(){
+        ArrayList<String> movieOptions = movieController.getMovieNames();
         return movieOptions;
     }
 
-    private String[] getTheatres(){
-
-        // **** TALK TO BACK END AND GET LIST OF THEATRES PLAYING THIS MOVIE ****
-        // USE SEARCH THEATRES BY MOVIE ID HERE
-        String[] theatreOptions = {
-                "Scotiabank Theatre Chinook",
-                "Canyon Meadows Cinema",
-                "Shawnessey Theatre"
-        };
-
+    private ArrayList<String> getTheatres(){
+        ArrayList<String> theatreOptions = theaterController.getTheaterNames();
         return theatreOptions;
     }
 
-    private String[] getShowTimes(){
-
-        // *** TALK TO BACK END AND GET LIST OF SHOWTIMES FOR THIS MOVIE/THEATRE ****
-        // CALL METHOD TO GET SHOWTIMES BY MOVIE ID AND THEATRE ID
-        String[] timeOptions = {
-                "1:00 pm",
-                "3:00 pm",
-                "5:00 pm",
-                "7:00 pm",
-        };
-
+    private ArrayList<String>getShowTimes(String movieName, String theaterName){
+        ArrayList<String> timeOptions = theaterController.getTheatreShowtimes(movieName, theaterName);
         return timeOptions;
     }
 
     private int[][] getSeats(int showtimeId){
-
-        int [][] seats = theTheater.getSeatGrid(showtimeId);
+        int [][] seats = theaterController.getSeatGrid(showtimeId);
         return seats;
     }
 
     public int getShowtimeId(String[] searchValues){
-        int showtimeId = theTheater.getShowtimeId(searchValues);
+        int showtimeId = theaterController.getShowtimeId(searchValues);
         return showtimeId;
     }
 

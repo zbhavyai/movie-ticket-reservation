@@ -149,7 +149,9 @@ public class DbController {
 
             ResultSet results = myStmt.executeQuery();
 
-            theaterId = results.getInt("theaterId");
+            while (results.next()) {
+                theaterId = results.getInt("theatreId");
+            }
             myStmt.close();
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -175,7 +177,10 @@ public class DbController {
 
             ResultSet results = myStmt.executeQuery();
 
-            movieId = results.getInt("movieId");
+            while (results.next()) {
+                movieId = results.getInt("movieId");
+            }
+
             myStmt.close();
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -203,11 +208,13 @@ public class DbController {
 
             myStmt.setInt(1, movieId);
             myStmt.setInt(2, theatreId);
-            myStmt.setString(2, showtimeString);
+            myStmt.setString(3, showtimeString);
 
             ResultSet results = myStmt.executeQuery();
 
-            showtimeId = results.getInt("showtimeId");
+            while (results.next()) {
+                showtimeId = results.getInt("showtimeId");
+            }
 
             myStmt.close();
         } catch (SQLException ex) {
@@ -340,6 +347,37 @@ public class DbController {
 
         return validTicket;
 
+    }
+
+    /**
+     * 
+     * This method is used to retrieve a list of showtimes for the movie and theatre that have been selected.
+     * 
+     * @param movieId is the movie to check for
+     * @param theatreId is the theatre to check for
+     * @return a list of showtimes that match with the movie and theatre entered.
+     */
+    public ArrayList<String> getTheatreShowtimes(int movieId, int theatreId){
+        ArrayList<String> showtimes = new ArrayList<String>();
+        try {
+            String query = "SELECT showtime FROM showtime Where movieId = ? AND theatreId = ?";
+            PreparedStatement myStmt = dbConnect.prepareStatement(query);
+
+            myStmt.setInt(1, movieId);
+            myStmt.setInt(2, theatreId);
+
+            ResultSet results = myStmt.executeQuery();
+
+            // Get a list of tickets associated with that showtime
+            while (results.next()) {
+                showtimes.add(results.getString("showtime"));
+                System.out.println(results.getString("showtime"));
+            }
+            myStmt.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return showtimes;
     }
 
     /**
