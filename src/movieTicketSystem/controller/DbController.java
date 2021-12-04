@@ -224,7 +224,7 @@ public class DbController {
         return showtimeId;
     }
 
-    public ArrayList<String> searchShowtimesByMovieAndTheatre(int theatreId, int movieId) {
+    public ArrayList<String> searchShowtimesByMovieAndTheatre(int movieId, int theatreId) {
 
         ArrayList<String> showTimes = new ArrayList<String>();
 
@@ -350,42 +350,7 @@ public class DbController {
     }
 
     /**
-<<<<<<< HEAD
-     * 
-     * This method is used to retrieve a list of showtimes for the movie and theatre that have been selected.
-     * 
-     * @param movieId is the movie to check for
-     * @param theatreId is the theatre to check for
-     * @return a list of showtimes that match with the movie and theatre entered.
-     */
-    public ArrayList<String> getTheatreShowtimes(int movieId, int theatreId){
-        ArrayList<String> showtimes = new ArrayList<String>();
-        try {
-            String query = "SELECT showtime FROM showtime Where movieId = ? AND theatreId = ?";
-            PreparedStatement myStmt = dbConnect.prepareStatement(query);
-
-            myStmt.setInt(1, movieId);
-            myStmt.setInt(2, theatreId);
-
-            ResultSet results = myStmt.executeQuery();
-
-            // Get a list of tickets associated with that showtime
-            while (results.next()) {
-                showtimes.add(results.getString("showtime"));
-                System.out.println(results.getString("showtime"));
-            }
-            myStmt.close();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-        return showtimes;
-    }
-
-    /**
-     * 
-=======
      *
->>>>>>> 0e625576a057f6a34d98b6bf7359d2a399ad97c5
      * This method finds all tickets that have been created for a particular showtime
      *
      * @param showtimeId is the showtime to search for tickets in

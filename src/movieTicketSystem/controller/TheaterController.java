@@ -65,7 +65,7 @@ public class TheaterController {
 
 	public ArrayList<String>getTheatreShowtimes(String movieName, String theaterName){
 		ArrayList<String> showtimeList = new ArrayList<String>();
-		showtimeList = db.getTheatreShowtimes(db.getMovieIdByName(movieName), db.getTheaterIdByName(theaterName));
+		showtimeList = db.searchShowtimesByMovieAndTheatre(db.getMovieIdByName(movieName), db.getTheaterIdByName(theaterName));
 		return showtimeList;
 	}
 
