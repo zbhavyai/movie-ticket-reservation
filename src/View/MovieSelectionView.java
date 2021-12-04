@@ -1,24 +1,20 @@
-package movieTicketSystem.View;
+package View;
 
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 
-import java.util.ArrayList;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class MovieSelectionView extends JFrame {
-
-    final int MOVIE_TAB_INDEX = 0;
-    final int SIGNUP_TAB_INDEX = 1;
-
     private JTextField tfStudentName;
     private JTextField tfStudentID;
     private JButton purchaseTicketButton;
-    private JButton showLoginFormButton;
+    private JButton logInButton;
     private JPanel mainPanel;
+    private JButton accountButton;
 
     private JLabel movieLabel;
     private JComboBox movieSelectorComboBox;
@@ -28,42 +24,17 @@ public class MovieSelectionView extends JFrame {
     private JPanel seatPanel;
 
     private JLabel screenLabel;
-    private JPanel loginPanel;
-    private JTextField usernameTextField;
-    private JTextField passwordTextField;
-    private JButton loginButton;
-    private JTabbedPane tabbedPane;
-    private JPanel signupPanel;
-    private boolean loginFormShowing;
 
 
     // menu options
-    ArrayList<String> movieOptions = new ArrayList<String>();
-    ArrayList<String> theatreOptions = new ArrayList<String>();
-    ArrayList<String> timeOptions = new ArrayList<String>();
+    String[] movieOptions = {};
+    String[] theatreOptions = {};
+    String[] timeOptions = {};
 
     JButton[][] seats;
     boolean loggedIn;
 
-    public void toggleLoginForm() {
-        if (loginFormShowing) {
-            loginPanel.setVisible(false);
-            showLoginFormButton.setText("Show Login Form");
-            this.setSize(new Dimension(720, 520));
-        } else {
-            loginPanel.setVisible(true);
-            showLoginFormButton.setText("Hide Login Form");
-            this.setSize(new Dimension(720, 620));
-        }
-        loginFormShowing = !loginFormShowing;
-    }
-
-
     public MovieSelectionView() {
-
-        // initially hidden
-        loginPanel.setVisible(false);
-        tabbedPane.setEnabledAt(SIGNUP_TAB_INDEX, false);
 
         // seats array
         seats = new JButton[10][10];
@@ -77,8 +48,9 @@ public class MovieSelectionView extends JFrame {
         // set logged in as false to start off
         setLoggedIn(false);
 
-        setContentPane(tabbedPane);
+        setContentPane(mainPanel);
         setTitle("Movie Selection Menu");
+        setSize(450, 500);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         seatPanel.setLayout(new BoxLayout(seatPanel, BoxLayout.PAGE_AXIS));
 
@@ -90,17 +62,17 @@ public class MovieSelectionView extends JFrame {
 
     private void dropdownMenuSetup() {
         // setup dropdown menus
-        movieSelectorComboBox.setModel(new DefaultComboBoxModel(movieOptions.toArray()));
+        movieSelectorComboBox.setModel(new DefaultComboBoxModel(movieOptions));
         movieSelectorComboBox.setFocusable(false);
         movieSelectorComboBox.setSelectedIndex(-1);
         movieSelectorComboBox.setEnabled(false);
 
-        theatreSelectionComboBox.setModel(new DefaultComboBoxModel(theatreOptions.toArray()));
+        theatreSelectionComboBox.setModel(new DefaultComboBoxModel(theatreOptions));
         theatreSelectionComboBox.setFocusable(false);
         theatreSelectionComboBox.setSelectedIndex(-1);
         theatreSelectionComboBox.setEnabled(false);
 
-        showtimeSelectorComboBox.setModel(new DefaultComboBoxModel(timeOptions.toArray()));
+        showtimeSelectorComboBox.setModel(new DefaultComboBoxModel(timeOptions));
         showtimeSelectorComboBox.setFocusable(false);
         showtimeSelectorComboBox.setSelectedIndex(-1);
         showtimeSelectorComboBox.setEnabled(false);
@@ -111,15 +83,11 @@ public class MovieSelectionView extends JFrame {
         this.loggedIn = loggedIn;
 
         if (loggedIn) {
-            loginButton.setText("Log Out");
-            usernameTextField.setEnabled(false);
-            passwordTextField.setEnabled(false);
-            showLoginFormButton.setEnabled(false);
+            logInButton.setText("Log Out");
+            accountButton.setText("Account Settings");
         } else {
-            loginButton.setText("Log In");
-            usernameTextField.setEnabled(true);
-            passwordTextField.setEnabled(true);
-            showLoginFormButton.setEnabled(true);
+            logInButton.setText("Log In");
+            accountButton.setText("Sign Up");
         }
     }
 
@@ -128,7 +96,7 @@ public class MovieSelectionView extends JFrame {
         int height = 30;
 
         for (int i = 0; i < 10; i++) {
-            JPanel x = new JPanel();
+            var x = new JPanel();
             x.setLayout(new BoxLayout(x, BoxLayout.LINE_AXIS));
             for (int j = 0; j < 10; j++) {
                 JButton btn = new JButton("" + (char) (i + 65) + (j));
@@ -146,10 +114,6 @@ public class MovieSelectionView extends JFrame {
         this.setVisible(true);
     }
 
-    public boolean getLoggedIn() {
-        return loggedIn;
-    }
-
     {
 // GUI initializer generated by IntelliJ IDEA GUI Designer
 // >>> IMPORTANT!! <<<
@@ -165,12 +129,10 @@ public class MovieSelectionView extends JFrame {
      * @noinspection ALL
      */
     private void $$$setupUI$$$() {
-        tabbedPane = new JTabbedPane();
         mainPanel = new JPanel();
-        mainPanel.setLayout(new GridLayoutManager(6, 2, new Insets(0, 0, 0, 0), -1, -1));
+        mainPanel.setLayout(new GridLayoutManager(5, 2, new Insets(0, 0, 0, 0), -1, -1));
         mainPanel.setMinimumSize(new Dimension(600, 168));
         mainPanel.setPreferredSize(new Dimension(600, 168));
-        tabbedPane.addTab("Movie Selection", mainPanel);
         movieLabel = new JLabel();
         movieLabel.setText("  Movie");
         mainPanel.add(movieLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
@@ -178,14 +140,17 @@ public class MovieSelectionView extends JFrame {
         label1.setText("  Theatre");
         mainPanel.add(label1, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel1 = new JPanel();
-        panel1.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
+        panel1.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
         mainPanel.add(panel1, new GridConstraints(4, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null, null, 0, false));
         purchaseTicketButton = new JButton();
         purchaseTicketButton.setText("Purchase");
         panel1.add(purchaseTicketButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        showLoginFormButton = new JButton();
-        showLoginFormButton.setText("Show Log In Form");
-        panel1.add(showLoginFormButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        logInButton = new JButton();
+        logInButton.setText("Log In");
+        panel1.add(logInButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        accountButton = new JButton();
+        accountButton.setText("Sign Up");
+        panel1.add(accountButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         movieSelectorComboBox = new JComboBox();
         mainPanel.add(movieSelectorComboBox, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         theatreSelectionComboBox = new JComboBox();
@@ -208,43 +173,20 @@ public class MovieSelectionView extends JFrame {
         gbc.gridy = 0;
         gbc.fill = GridBagConstraints.BOTH;
         seatPanel.add(screenLabel, gbc);
-        loginPanel = new JPanel();
-        loginPanel.setLayout(new GridLayoutManager(4, 2, new Insets(0, 0, 0, 0), -1, -1));
-        mainPanel.add(loginPanel, new GridConstraints(5, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        usernameTextField = new JTextField();
-        loginPanel.add(usernameTextField, new GridConstraints(0, 1, 2, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
-        passwordTextField = new JTextField();
-        loginPanel.add(passwordTextField, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
-        final JLabel label2 = new JLabel();
-        label2.setText("Username");
-        loginPanel.add(label2, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final JLabel label3 = new JLabel();
-        label3.setText("Password");
-        loginPanel.add(label3, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        loginButton = new JButton();
-        loginButton.setText("Log In");
-        loginPanel.add(loginButton, new GridConstraints(3, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        signupPanel = new JPanel();
-        signupPanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
-        signupPanel.setEnabled(true);
-        tabbedPane.addTab("Sign Up", signupPanel);
-        final JLabel label4 = new JLabel();
-        label4.setText("Hello world");
-        signupPanel.add(label4, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
     /**
      * @noinspection ALL
      */
     public JComponent $$$getRootComponent$$$() {
-        return tabbedPane;
+        return mainPanel;
     }
 
     class buttonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
 
-            JButton x = (JButton) e.getSource();
+            var x = (JButton) e.getSource();
             if (x.getBackground() == Color.green) {
                 x.setBackground(null);
             } else {
@@ -276,30 +218,30 @@ public class MovieSelectionView extends JFrame {
         return seats;
     }
 
-    public void setTheatreOptions(ArrayList<String> theatreOptions) {
+    public void setTheatreOptions(String[] theatreOptions) {
         this.theatreOptions = theatreOptions;
-        theatreSelectionComboBox.setModel(new DefaultComboBoxModel(theatreOptions.toArray()));
+        theatreSelectionComboBox.setModel(new DefaultComboBoxModel(theatreOptions));
         theatreSelectionComboBox.setSelectedIndex(-1);
         theatreSelectionComboBox.setEnabled(true);
     }
 
-    public void setTimeOptions(ArrayList<String> timeOptions) {
+    public void setTimeOptions(String[] timeOptions) {
         this.timeOptions = timeOptions;
-        showtimeSelectorComboBox.setModel(new DefaultComboBoxModel(timeOptions.toArray()));
+        showtimeSelectorComboBox.setModel(new DefaultComboBoxModel(timeOptions));
         showtimeSelectorComboBox.setSelectedIndex(-1);
         showtimeSelectorComboBox.setEnabled(true);
     }
 
     public void clearShowtimeOptions() {
-        this.timeOptions = new ArrayList<String>();
-        showtimeSelectorComboBox.setModel(new DefaultComboBoxModel(timeOptions.toArray()));
+        this.timeOptions = new String[]{};
+        showtimeSelectorComboBox.setModel(new DefaultComboBoxModel(timeOptions));
         showtimeSelectorComboBox.setSelectedIndex(-1);
         showtimeSelectorComboBox.setEnabled(false);
     }
 
-    public void setMovieOptions(ArrayList<String> movieOptions) {
+    public void setMovieOptions(String[] movieOptions) {
         this.movieOptions = movieOptions;
-        movieSelectorComboBox.setModel(new DefaultComboBoxModel(movieOptions.toArray()));
+        movieSelectorComboBox.setModel(new DefaultComboBoxModel(movieOptions));
         movieSelectorComboBox.setSelectedIndex(-1);
         movieSelectorComboBox.setEnabled(true);
     }
@@ -347,20 +289,8 @@ public class MovieSelectionView extends JFrame {
         purchaseTicketButton.addActionListener(a);
     }
 
-    public void addShowLoginButtonActionListener(ActionListener a) {
-        showLoginFormButton.addActionListener(a);
-    }
-
-    public void addLoginButtonListener(ActionListener a) {
-        loginButton.addActionListener(a);
-    }
-
-    public String getUserName() {
-        return this.usernameTextField.getText();
-    }
-
-    public String getPassword() {
-        return this.passwordTextField.getText();
+    public void setScreenLabelText(String s) {
+        this.screenLabel.setText(s);
     }
 
 }
