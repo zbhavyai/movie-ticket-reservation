@@ -2,22 +2,24 @@ package movieTicketSystem.controller;
 
 import java.io.FileReader;
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Properties;
 import movieTicketSystem.model.*;
 
+/**
+ * Controller to interact with the database
+ */
 public class DbController {
-    // Optional to include, but recommended
+    private static DbController instanceVar;
     private Connection dbConnect;
     private Properties dbDetails;
     private ResultSet results;
 
-    public DbController() {
-        this.initializeConnection();
-    }
-
-    // Must create a connection to the database, no arguments, no return value
-    public void initializeConnection() {
+    /**
+     * Private constructor enforcing singleton design pattern
+     */
+    private DbController() {
         try {
             String dbDetailsLocation = "config/db_details.properties";
 
@@ -36,8 +38,23 @@ public class DbController {
         }
     }
 
-    public ArrayList<Movie> selectAllMovies() {
+    /**
+     * Initializes the connection to the database and returns its instance
+     *
+     * @return instance of DbController
+     */
+    public static DbController getInstance() {
+        if (instanceVar == null) {
+            instanceVar = new DbController();
+            return instanceVar;
+        }
 
+        else {
+            return instanceVar;
+        }
+    }
+
+    public ArrayList<Movie> selectAllMovies() {
         ArrayList<Movie> movies = new ArrayList<Movie>();
 
         try {
@@ -53,7 +70,9 @@ public class DbController {
                 movies.add(mvdb);
             }
             myStmt.close();
-        } catch (SQLException ex) {
+        }
+
+        catch (SQLException ex) {
             ex.printStackTrace();
         }
 
@@ -61,7 +80,6 @@ public class DbController {
     }
 
     public ArrayList<Integer> selectMoviesByTheatre(int theatredId) {
-
         ArrayList<Integer> movieIds = new ArrayList<Integer>();
 
         try {
@@ -76,9 +94,12 @@ public class DbController {
             while (results.next()) {
                 movieIds.add(results.getInt("movieId"));
             }
+
             System.out.println(movieIds);
             myStmt.close();
-        } catch (SQLException ex) {
+        }
+
+        catch (SQLException ex) {
             ex.printStackTrace();
         }
 
@@ -86,7 +107,6 @@ public class DbController {
     }
 
     public ArrayList<Theater> selectAllTheatres() {
-
         ArrayList<Theater> theaters = new ArrayList<Theater>();
 
         try {
@@ -100,8 +120,11 @@ public class DbController {
                 Theater tr = new Theater(results.getInt("theatreId"), results.getString("theatreName"));
                 theaters.add(tr);
             }
+
             myStmt.close();
-        } catch (SQLException ex) {
+        }
+
+        catch (SQLException ex) {
             ex.printStackTrace();
         }
 
@@ -109,7 +132,6 @@ public class DbController {
     }
 
     public ArrayList<Integer> searchTheatresByMovie(int movieId) {
-
         ArrayList<Integer> theatreIds = new ArrayList<Integer>();
 
         try {
@@ -124,8 +146,11 @@ public class DbController {
             while (results.next()) {
                 theatreIds.add(results.getInt("theatreId"));
             }
+
             myStmt.close();
-        } catch (SQLException ex) {
+        }
+
+        catch (SQLException ex) {
             ex.printStackTrace();
         }
 
@@ -133,13 +158,13 @@ public class DbController {
     }
 
     /**
-     *
-     * This method is used to get the theatreId from the database by using the theatreName provided
+     * This method is used to get the theatreId from the database by using the
+     * theatreName provided
      *
      * @param theaterName is the name of the theatre to search
      * @return the Id number of the theatre searched
      */
-    public int getTheaterIdByName(String theaterName){
+    public int getTheaterIdByName(String theaterName) {
         int theaterId = 0;
 
         try {
@@ -161,13 +186,13 @@ public class DbController {
     }
 
     /**
-     *
-     * This method is used to get the movieId from the database by using the movieName provided
+     * This method is used to get the movieId from the database by using the
+     * movieName provided
      *
      * @param movieName is the name of the movie to search
      * @return the Id number of the movie searched
      */
-    public int getMovieIdByName(String movieName){
+    public int getMovieIdByName(String movieName) {
         int movieId = 0;
 
         try {
@@ -190,16 +215,15 @@ public class DbController {
     }
 
     /**
+     * This method is used to retrieve the showtimeId based on the theatreId,
+     * movieId and showtimeString
      *
-     * This method is used to retrieve the showtimeId based on the theatreId, movieId and showtimeString
-     *
-     * @param theatreId is the id of the theatre to search in
-     * @param movieId is the id of the movie to search in
+     * @param theatreId      is the id of the theatre to search in
+     * @param movieId        is the id of the movie to search in
      * @param showtimeString is the showtime to search in
      * @return the showtimeId that matches with all three of the input criteria
      */
     public int getShowtimeIdByMovieAndTheatreAndShowtime(int theatreId, int movieId, String showtimeString) {
-
         int showtimeId = 0;
 
         try {
@@ -217,7 +241,9 @@ public class DbController {
             }
 
             myStmt.close();
-        } catch (SQLException ex) {
+        }
+
+        catch (SQLException ex) {
             ex.printStackTrace();
         }
 
@@ -244,7 +270,9 @@ public class DbController {
             }
 
             myStmt.close();
-        } catch (SQLException ex) {
+        }
+
+        catch (SQLException ex) {
             ex.printStackTrace();
         }
 
@@ -252,7 +280,6 @@ public class DbController {
     }
 
     public String searchShowtimesById(int showTimeId) {
-
         String showTime = "";
 
         try {
@@ -269,7 +296,9 @@ public class DbController {
             }
 
             myStmt.close();
-        } catch (SQLException ex) {
+        }
+
+        catch (SQLException ex) {
             ex.printStackTrace();
         }
 
@@ -277,8 +306,8 @@ public class DbController {
     }
 
     public ArrayList<Integer> searchMovieTheatreByShowTime(int showTimeId) {
-
         ArrayList<Integer> movieTheatreId = new ArrayList<Integer>();
+
         try {
             String query = "SELECT * FROM showtime Where showtimeId = ?";
             PreparedStatement myStmt = dbConnect.prepareStatement(query);
@@ -291,11 +320,12 @@ public class DbController {
                 // Process the results set
                 movieTheatreId.add(results.getInt("movieId"));
                 movieTheatreId.add(results.getInt("theatreId"));
-
             }
 
             myStmt.close();
-        } catch (SQLException ex) {
+        }
+
+        catch (SQLException ex) {
             ex.printStackTrace();
         }
 
@@ -303,12 +333,11 @@ public class DbController {
     }
 
     public void createtNewTicket(int showtimeId, double price) {
-
         if (!validTicket(showtimeId)) {
             throw new IllegalArgumentException("ticket id already exists.");
         }
-        try {
 
+        try {
             String query = "INSERT INTO ticket (showtimeId, price) VALUES (?,?)";
             PreparedStatement myStmt = dbConnect.prepareStatement(query);
 
@@ -319,13 +348,41 @@ public class DbController {
             System.out.println(rowCount);
             myStmt.close();
 
-        } catch (SQLException ex) {
+        }
+
+        catch (SQLException ex) {
             ex.printStackTrace();
         }
     }
 
-    public boolean validTicket(int showtimeId) {
+    /**
+     * Deletes the ticket with ticketId from the DB
+     *
+     * @param ticketId the ticket with ticketId to be deleted
+     * @return true if deletion is successful, false otherwise
+     */
+    public boolean deleteTicket(int ticketId) {
+        try {
+            String query = "DELETE FROM TICKET WHERE ticketId = ?";
+            PreparedStatement myStmt = this.dbConnect.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            myStmt.setInt(1, ticketId);
 
+            int rowAffected = myStmt.executeUpdate();
+
+            if (rowAffected == 1) {
+                myStmt.close();
+                return true;
+            }
+        }
+
+        catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public boolean validTicket(int showtimeId) {
         boolean validTicket = true;
 
         try {
@@ -341,12 +398,13 @@ public class DbController {
             }
 
             myStmt.close();
-        } catch (SQLException ex) {
+        }
+
+        catch (SQLException ex) {
             ex.printStackTrace();
         }
 
         return validTicket;
-
     }
 
     /**
@@ -358,6 +416,7 @@ public class DbController {
      */
     public ArrayList<Integer> ticketsAtShowtime(int showtimeId) {
         ArrayList<Integer> tickets = new ArrayList<Integer>();
+
         try {
             String query = "SELECT * FROM ticket Where showtimeId = ?";
             PreparedStatement myStmt = dbConnect.prepareStatement(query);
@@ -371,21 +430,24 @@ public class DbController {
                 tickets.add(results.getInt("ticketId"));
             }
             myStmt.close();
-        } catch (SQLException ex) {
+        }
+
+        catch (SQLException ex) {
             ex.printStackTrace();
         }
+
         return tickets;
     }
 
     /**
-     *
-     * This method is used to return a grid of seats for a particular showtime. The grid will show available seats as 1's and unavailable as 0's
+     * This method is used to return a grid of seats for a particular showtime. The
+     * grid will show available seats as 1's and unavailable as 0's
      *
      * @param showtimeId is the Id of the showtime to search for
-     * @return a 2d integer array representing the seats and their availability for the showtime
+     * @return a 2d integer array representing the seats and their availability for
+     *         the showtime
      */
     public int[][] seatGrid(int showtimeId) {
-
         ArrayList<Integer> tickets = ticketsAtShowtime(showtimeId);
         ArrayList<Integer> row = new ArrayList<Integer>();
         ArrayList<Integer> col = new ArrayList<Integer>();
@@ -423,9 +485,12 @@ public class DbController {
                 }
             }
 
-        } catch (SQLException ex) {
+        }
+
+        catch (SQLException ex) {
             ex.printStackTrace();
         }
+
         return seatGrid;
     }
 
@@ -435,9 +500,9 @@ public class DbController {
      * @param email email while registering in the system
      * @return RegisteredUser object if found, null otherwise
      */
-    public RegisteredUser searchRegisteredUser(String email) {
+    public RegisteredUser getRegisteredUser(String email) {
         try {
-            String query = "SELECT * FROM REGISTERED_USER WHERE username = ?";
+            String query = "SELECT * FROM REGISTERED_USER WHERE email = ?";
             PreparedStatement myStmt = this.dbConnect.prepareStatement(query);
             myStmt.setString(1, email);
 
@@ -445,7 +510,6 @@ public class DbController {
 
             while (results.next()) {
                 if (results.getString("email").equals(email)) {
-
                     RegisteredUser ru = new RegisteredUser();
                     ru.setId(results.getInt("userId"));
                     ru.setPassword(results.getString("password"));
@@ -454,8 +518,77 @@ public class DbController {
                     ru.setLastFeePaid(results.getDate("lastPaid").toLocalDate());
                     ru.setCard(this.getPayment(results.getInt("card")));
 
+                    myStmt.close();
                     return ru;
                 }
+            }
+        }
+
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    /**
+     * Writes an object of RegisteredUser to the DB
+     *
+     * @param email      email of the user to be registered
+     * @param password   password of the user to be registered
+     * @param address    address of the user to be registered
+     * @param holderName Name of the card holder
+     * @param cardNumber the credit/debit card number
+     * @param expiry     expiry date of the card
+     * @return the RegisteredUser object saved, null if insertion is unsuccessful
+     */
+    public RegisteredUser saveRegisteredUser(String email, String password, String address, String holderName,
+            String cardNumber, LocalDate expiry) {
+        // if the email already exists, dont save
+        if (this.getRegisteredUser(email) != null) {
+            return null;
+        }
+
+        try {
+            Payment card = this.savePayment(holderName, cardNumber, expiry);
+
+            // if there is problem while saving payment
+            if (card == null) {
+                return null;
+            }
+
+            LocalDate now = LocalDate.now();
+
+            String query = "INSERT INTO REGISTERED_USER(email, password, address, card, lastPaid) VALUES (?, ?, ?, ?, ?)";
+            PreparedStatement myStmt = this.dbConnect.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            myStmt.setString(1, email);
+            myStmt.setString(2, password);
+            myStmt.setString(3, address);
+            myStmt.setInt(4, card.getId());
+            myStmt.setDate(5, java.sql.Date.valueOf(now));
+
+            int rowAffected = myStmt.executeUpdate();
+
+            if (rowAffected == 1) {
+                ResultSet rs = myStmt.getGeneratedKeys();
+
+                if (rs.next()) {
+                    RegisteredUser ru = new RegisteredUser();
+                    ru.setId(rs.getInt(1));
+                    ru.setEmail(email);
+                    ru.setPassword(password);
+                    ru.setAddress(address);
+                    ru.setCard(card);
+                    ru.setLastFeePaid(now);
+
+                    myStmt.close();
+                    return ru;
+                }
+            }
+
+            else {
+                throw new SQLException(
+                        String.format("[FAIL] %d rows affected during insertion of payment. Check!%n", rowAffected));
             }
         }
 
@@ -488,8 +621,55 @@ public class DbController {
                     p.setCardNum(results.getString("cardNumber"));
                     p.setExpiry(results.getDate("expiry").toLocalDate());
 
+                    myStmt.close();
                     return p;
                 }
+            }
+        }
+
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    /**
+     * Writes an object of Payment to the DB
+     *
+     * @param holderName Name of the card holder
+     * @param cardNumber the credit/debit card number
+     * @param expiry     expiry date of the card
+     * @return the Payment object saved, null if insertion is unsuccessful
+     */
+    public Payment savePayment(String holderName, String cardNumber, LocalDate expiry) {
+        try {
+            String query = "INSERT INTO PAYMENT(holderName, cardNumber, expiry) VALUES (?, ?, ?)";
+            PreparedStatement myStmt = this.dbConnect.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            myStmt.setString(1, holderName);
+            myStmt.setString(2, cardNumber);
+            myStmt.setDate(3, java.sql.Date.valueOf(expiry));
+
+            int rowAffected = myStmt.executeUpdate();
+
+            if (rowAffected == 1) {
+                ResultSet rs = myStmt.getGeneratedKeys();
+
+                if (rs.next()) {
+                    Payment p = new Payment();
+                    p.setId(rs.getInt(1));
+                    p.setCardHolderName(holderName);
+                    p.setCardNum(cardNumber);
+                    p.setExpiry(expiry);
+
+                    myStmt.close();
+                    return p;
+                }
+            }
+
+            else {
+                throw new SQLException(
+                        String.format("[FAIL] %d rows affected during insertion of payment. Check!%n", rowAffected));
             }
         }
 
@@ -508,7 +688,7 @@ public class DbController {
      */
     public Coupon getCoupon(String couponCode) {
         try {
-            String query = "SELECT * FROM COUPON WHERE couponId = ?";
+            String query = "SELECT * FROM COUPON WHERE couponCode = ?";
             PreparedStatement myStmt = this.dbConnect.prepareStatement(query);
             myStmt.setString(1, couponCode);
 
@@ -523,6 +703,7 @@ public class DbController {
                     c.setCouponAmount(results.getDouble("couponAmount"));
                     c.setExpiry(results.getDate("expiry").toLocalDate());
 
+                    myStmt.close();
                     return c;
                 }
             }
@@ -535,39 +716,134 @@ public class DbController {
         return null;
     }
 
-    // other demo methods for reference
-    // *******************************************************
-
-    public void deleteTeacher(String id) {
-
+    /**
+     * Writes an object of Coupon to the DB
+     *
+     * @param couponCode   the generated coupon code
+     * @param couponAmount the amount of the coupon
+     * @param expiry       expiry date of the coupon code
+     * @return the Coupon object saved, null if insertion is unsuccessful
+     */
+    public Coupon saveCoupon(String couponCode, double couponAmount, LocalDate expiry) {
         try {
-            String query = "DELETE FROM teacher WHERE TeacherID = ?";
-            PreparedStatement myStmt = dbConnect.prepareStatement(query);
+            String query = "INSERT INTO COUPON(couponCode, couponAmount, expiry) VALUES (?, ?, ?)";
+            PreparedStatement myStmt = this.dbConnect.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            myStmt.setString(1, couponCode);
+            myStmt.setDouble(2, couponAmount);
+            myStmt.setDate(3, java.sql.Date.valueOf(expiry));
 
-            myStmt.setString(1, id);
+            int rowAffected = myStmt.executeUpdate();
 
-            int rowCount = myStmt.executeUpdate();
+            if (rowAffected == 1) {
+                ResultSet rs = myStmt.getGeneratedKeys();
 
-            myStmt.close();
+                if (rs.next()) {
+                    Coupon c = new Coupon();
+                    c.setId(rs.getInt(1));
+                    c.setCouponCode(couponCode);
+                    c.setCouponAmount(couponAmount);
+                    c.setExpiry(expiry);
 
-        } catch (SQLException ex) {
-            ex.printStackTrace();
+                    myStmt.close();
+                    return c;
+                }
+            }
+
+            else {
+                throw new SQLException(
+                        String.format("[FAIL] %d rows affected during insertion of coupon. Check!%n", rowAffected));
+            }
         }
 
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    /**
+     * Updates the coupon value in the DB
+     *
+     * @param c      the Coupon object
+     * @param amount the updated amount
+     * @return the updated Coupon object if updated in the DB, null otherwise
+     */
+    public Coupon updateCoupon(Coupon c, double amount) {
+        // dont use more than coupon amount
+        if (amount > c.getCouponAmount()) {
+            return null;
+        }
+
+        try {
+            String query = "UPDATE COUPON SET couponAmount = ? WHERE couponId = ?";
+            PreparedStatement myStmt = this.dbConnect.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            myStmt.setDouble(1, amount);
+            myStmt.setInt(2, c.getId());
+
+            int rowAffected = myStmt.executeUpdate();
+
+            if (rowAffected == 1) {
+                ResultSet rs = myStmt.getGeneratedKeys();
+
+                if (rs.next()) {
+                    c.setCouponAmount(amount);
+
+                    myStmt.close();
+                    return c;
+                }
+            }
+
+            else {
+                throw new SQLException(
+                        String.format("[FAIL] %d rows affected during update of coupon. Check!%n", rowAffected));
+            }
+        }
+
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     public void close() {
         try {
             results.close();
             dbConnect.close();
-        } catch (SQLException e) {
+        }
+
+        catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
+    // other demo methods for reference
+    // *******************************************************
+    // public void deleteTeacher(String id) {
+    // try {
+    // String query = "DELETE FROM teacher WHERE TeacherID = ?";
+    // PreparedStatement myStmt = dbConnect.prepareStatement(query);
+
+    // myStmt.setString(1, id);
+    // int rowCount = myStmt.executeUpdate();
+
+    // myStmt.close();
+    // }
+
+    // catch (SQLException ex) {
+    // ex.printStackTrace();
+    // }
+    // }
+
     public static void main(String[] args) {
-        DbController dbController = new DbController();
-        // dbController.seatGrid(2);
-        // System.out.println(dbController.searchRegisteredUser("caitlyn.bean"));
+        // DbController conn = DbController.getInstance();
+        // System.out.println(conn.savePayment("Bhavyai Gupta", "1234567890123456",
+        // LocalDate.of(2021, 12, 04)));
+
+        // System.out.println(conn.saveRegisteredUser("bhavyai@outlook.com", "password",
+        // "Calgary", "Bhavyai Gupta",
+        // "1234567891012213", LocalDate.of(2021, 12, 01)));
+
     }
 }

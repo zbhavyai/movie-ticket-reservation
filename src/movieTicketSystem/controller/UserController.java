@@ -1,13 +1,26 @@
 package movieTicketSystem.controller;
 
-// import java.util.ArrayList;
-import movieTicketSystem.model.RegisteredUser;
+import movieTicketSystem.model.*;
 
+/**
+ * Controller to handle the OrdinaryUsers and RegisteredUsers
+ */
 public class UserController {
-    // private ArrayList<RegisteredUser> allRegisteredUsers;
     private static UserController instanceVar;
     private DbController db;
 
+    /**
+     * Private constructor enforcing singleton design pattern
+     */
+    private UserController() {
+        this.db = DbController.getInstance();
+    }
+
+    /**
+     * Returns the one and only instance of UserController
+     *
+     * @return instance of UserController
+     */
     public static UserController getInstance() {
         if (instanceVar == null) {
             instanceVar = new UserController();
@@ -19,16 +32,18 @@ public class UserController {
         }
     }
 
-    private UserController() {
-        // this.allRegisteredUsers = new ArrayList<>();
-        this.db = new DbController();
-
-    }
-
+    /**
+     * Verifies the registered user
+     *
+     * @param email    email of the user supplied during registration
+     * @param password password of the user supplied during registration
+     * @return the RegisteredUser object if user is found and authenticated, null
+     *         otherwise
+     */
     public RegisteredUser verifyUser(String email, String password) {
-        RegisteredUser ru = this.db.searchRegisteredUser(email);
+        RegisteredUser ru = this.db.getRegisteredUser(email);
 
-        if(ru == null) {
+        if (ru == null) {
             return null;
         }
 

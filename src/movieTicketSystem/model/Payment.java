@@ -7,7 +7,6 @@ public class Payment {
     private String cardHolderName;
     private String cardNum;
     private LocalDate expiry;
-    // private int cvc;
 
     public int getId() {
         return id;
@@ -41,13 +40,15 @@ public class Payment {
         this.expiry = expiry;
     }
 
-    // public int getCvc() {
-    // return cvc;
-    // }
+    public boolean isExpired() {
+        if (this.expiry.isBefore(LocalDate.now())) {
+            return true;
+        }
 
-    // public void setCvc(int cvc) {
-    // this.cvc = cvc;
-    // }
+        else {
+            return false;
+        }
+    }
 
     @Override
     public String toString() {
