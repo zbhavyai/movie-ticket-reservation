@@ -13,10 +13,10 @@ public class MovieSelectionView extends JFrame {
 
     final int MOVIE_TAB_INDEX = 0;
     final int SIGNUP_TAB_INDEX = 1;
+    final int PURCHASE_TAB_INDEX = 2;
 
-    private JTextField tfStudentName;
-    private JTextField tfStudentID;
-    private JButton purchaseTicketButton;
+
+    private JButton purchaseButton;
     private JButton showLoginFormButton;
     private JPanel mainPanel;
 
@@ -36,7 +36,10 @@ public class MovieSelectionView extends JFrame {
     private JPanel signupPanel;
     private JButton signupButton;
     private JButton leaveSignupButton;
+    private JPanel purchaseTab;
     private boolean loginFormShowing;
+
+    private int selectedSeatCount;
 
 
     // menu options
@@ -63,27 +66,26 @@ public class MovieSelectionView extends JFrame {
 
     public MovieSelectionView() {
 
-        // initially hidden/disabled
+        // set default values
         loginPanel.setVisible(false);
         setView("main");
-
-        // seats array
+        setLoggedIn(false);
         seats = new JButton[10][10];
+        purchaseButton.setEnabled(false);
 
-        // sets up our dropdown menu
+        // general form setup
         dropdownMenuSetup();
-
-        // create all seats (start off as disabled)
         createSeats();
 
-        // set logged in as false to start off
-        setLoggedIn(false);
 
+        // set up content pane
         setContentPane(tabbedPane);
         setTitle("Movie Selection Menu");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         seatPanel.setLayout(new BoxLayout(seatPanel, BoxLayout.PAGE_AXIS));
 
+
+        // add action listeners
         signupButton.addActionListener(new signupButtonListener());
         leaveSignupButton.addActionListener(new backToMainButtonListener());
 
@@ -150,10 +152,6 @@ public class MovieSelectionView extends JFrame {
         this.setVisible(true);
     }
 
-    public boolean getLoggedIn() {
-        return loggedIn;
-    }
-
 
     public void disableAllSeats() {
         for (int i = 0; i < 10; i++) {
@@ -173,9 +171,6 @@ public class MovieSelectionView extends JFrame {
         this.setVisible(true);
     }
 
-    public JButton[][] getSeats() {
-        return seats;
-    }
 
     public void setTheatreOptions(ArrayList<String> theatreOptions) {
         this.theatreOptions = theatreOptions;
@@ -210,17 +205,25 @@ public class MovieSelectionView extends JFrame {
             case "main":
                 tabbedPane.setEnabledAt(MOVIE_TAB_INDEX, true);
                 tabbedPane.setEnabledAt(SIGNUP_TAB_INDEX, false);
+                tabbedPane.setEnabledAt(PURCHASE_TAB_INDEX, false);
                 tabbedPane.setSelectedIndex(MOVIE_TAB_INDEX);
                 break;
             case "signup":
                 tabbedPane.setEnabledAt(MOVIE_TAB_INDEX, false);
                 tabbedPane.setEnabledAt(SIGNUP_TAB_INDEX, true);
+                tabbedPane.setEnabledAt(PURCHASE_TAB_INDEX, false);
                 tabbedPane.setSelectedIndex(SIGNUP_TAB_INDEX);
+                break;
+            case "purchase":
+                tabbedPane.setEnabledAt(MOVIE_TAB_INDEX, false);
+                tabbedPane.setEnabledAt(SIGNUP_TAB_INDEX, false);
+                tabbedPane.setEnabledAt(PURCHASE_TAB_INDEX, true);
+                tabbedPane.setSelectedIndex(PURCHASE_TAB_INDEX);
                 break;
         }
     }
 
-    // get user selections
+    // getters and setters
     public String getMovieInput() {
         return (movieSelectorComboBox.getSelectedItem() == null) ? "null" : movieSelectorComboBox.getSelectedItem().toString();
     }
@@ -232,6 +235,36 @@ public class MovieSelectionView extends JFrame {
     public String getShowtimeInput() {
         return (showtimeSelectorComboBox.getSelectedItem() == null) ? "null" : showtimeSelectorComboBox.getSelectedItem().toString();
     }
+
+    public String getUserName() {
+        return this.usernameTextField.getText();
+    }
+
+    public String getPassword() {
+        return this.passwordTextField.getText();
+    }
+
+    public JButton[][] getSeats() {
+        return seats;
+    }
+
+    public int getSelectedSeatCount() {
+        return selectedSeatCount;
+    }
+
+    public void incrementSelectedSeats() {
+        this.selectedSeatCount++;
+    }
+
+    public void decrementSelectedSeats() {
+        this.selectedSeatCount--;
+    }
+
+    public boolean getLoggedIn() {
+        return loggedIn;
+    }
+
+
 
     // ******************* ACTION LISTENERS **************************
     public void addMovieComboBoxActionListener(ActionListener a) {
@@ -250,7 +283,6 @@ public class MovieSelectionView extends JFrame {
         theatreSelectionComboBox.removeActionListener(a);
     }
 
-
     public void addShowtimeComboBoxActionListener(ActionListener a) {
         showtimeSelectorComboBox.addActionListener(a);
     }
@@ -260,7 +292,7 @@ public class MovieSelectionView extends JFrame {
     }
 
     public void addPurchaseButtonActionListener(ActionListener a) {
-        purchaseTicketButton.addActionListener(a);
+        purchaseButton.addActionListener(a);
     }
 
     public void addShowLoginButtonActionListener(ActionListener a) {
@@ -271,13 +303,6 @@ public class MovieSelectionView extends JFrame {
         loginButton.addActionListener(a);
     }
 
-    public String getUserName() {
-        return this.usernameTextField.getText();
-    }
-
-    public String getPassword() {
-        return this.passwordTextField.getText();
-    }
 
     class seatButtonColorChangeListener implements ActionListener {
         @Override
@@ -286,10 +311,14 @@ public class MovieSelectionView extends JFrame {
             JButton x = (JButton) e.getSource();
             if (x.getBackground() == Color.green) {
                 x.setBackground(null);
+                decrementSelectedSeats();
             } else {
                 x.setBackground(Color.green);
+                incrementSelectedSeats();
             }
 
+            // enable/disable purchase button based on selected seat count
+            purchaseButton.setEnabled(getSelectedSeatCount() > 0);
         }
     }
 
@@ -340,9 +369,9 @@ public class MovieSelectionView extends JFrame {
         final JPanel panel1 = new JPanel();
         panel1.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
         mainPanel.add(panel1, new GridConstraints(4, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null, null, 0, false));
-        purchaseTicketButton = new JButton();
-        purchaseTicketButton.setText("Purchase");
-        panel1.add(purchaseTicketButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        purchaseButton = new JButton();
+        purchaseButton.setText("Purchase");
+        panel1.add(purchaseButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         showLoginFormButton = new JButton();
         showLoginFormButton.setText("Show Log In Form");
         panel1.add(showLoginFormButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
@@ -397,6 +426,9 @@ public class MovieSelectionView extends JFrame {
         leaveSignupButton = new JButton();
         leaveSignupButton.setText("Return To Main Menu");
         signupPanel.add(leaveSignupButton, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        purchaseTab = new JPanel();
+        purchaseTab.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+        tabbedPane.addTab("Purchase", purchaseTab);
     }
 
     /**

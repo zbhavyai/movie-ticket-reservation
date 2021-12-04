@@ -169,6 +169,8 @@ public class MovieSelectionViewController {
                     }
                 }
             }
+
+            theView.setView("purchase");
         }
     }
 
