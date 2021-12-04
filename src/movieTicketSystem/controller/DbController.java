@@ -134,12 +134,13 @@ public class DbController {
 
     /**
      *
-     * This method is used to get the theatreId from the database by using the theatreName provided
+     * This method is used to get the theatreId from the database by using the
+     * theatreName provided
      *
      * @param theaterName is the name of the theatre to search
      * @return the Id number of the theatre searched
      */
-    public int getTheaterIdByName(String theaterName){
+    public int getTheaterIdByName(String theaterName) {
         int theaterId = 0;
 
         try {
@@ -162,12 +163,13 @@ public class DbController {
 
     /**
      *
-     * This method is used to get the movieId from the database by using the movieName provided
+     * This method is used to get the movieId from the database by using the
+     * movieName provided
      *
      * @param movieName is the name of the movie to search
      * @return the Id number of the movie searched
      */
-    public int getMovieIdByName(String movieName){
+    public int getMovieIdByName(String movieName) {
         int movieId = 0;
 
         try {
@@ -191,10 +193,11 @@ public class DbController {
 
     /**
      *
-     * This method is used to retrieve the showtimeId based on the theatreId, movieId and showtimeString
+     * This method is used to retrieve the showtimeId based on the theatreId,
+     * movieId and showtimeString
      *
-     * @param theatreId is the id of the theatre to search in
-     * @param movieId is the id of the movie to search in
+     * @param theatreId      is the id of the theatre to search in
+     * @param movieId        is the id of the movie to search in
      * @param showtimeString is the showtime to search in
      * @return the showtimeId that matches with all three of the input criteria
      */
@@ -350,15 +353,14 @@ public class DbController {
     }
 
     /**
-<<<<<<< HEAD
-     * 
-     * This method is used to retrieve a list of showtimes for the movie and theatre that have been selected.
-     * 
-     * @param movieId is the movie to check for
+     * This method is used to retrieve a list of showtimes for the movie and theatre
+     * that have been selected.
+     *
+     * @param movieId   is the movie to check for
      * @param theatreId is the theatre to check for
      * @return a list of showtimes that match with the movie and theatre entered.
      */
-    public ArrayList<String> getTheatreShowtimes(int movieId, int theatreId){
+    public ArrayList<String> getTheatreShowtimes(int movieId, int theatreId) {
         ArrayList<String> showtimes = new ArrayList<String>();
         try {
             String query = "SELECT showtime FROM showtime Where movieId = ? AND theatreId = ?";
@@ -382,11 +384,8 @@ public class DbController {
     }
 
     /**
-     * 
-=======
-     *
->>>>>>> 0e625576a057f6a34d98b6bf7359d2a399ad97c5
-     * This method finds all tickets that have been created for a particular showtime
+     * This method finds all tickets that have been created for a particular
+     * showtime
      *
      * @param showtimeId is the showtime to search for tickets in
      * @return a list of tickets that have been created for the given showtime
@@ -414,10 +413,12 @@ public class DbController {
 
     /**
      *
-     * This method is used to return a grid of seats for a particular showtime. The grid will show available seats as 1's and unavailable as 0's
+     * This method is used to return a grid of seats for a particular showtime. The
+     * grid will show available seats as 1's and unavailable as 0's
      *
      * @param showtimeId is the Id of the showtime to search for
-     * @return a 2d integer array representing the seats and their availability for the showtime
+     * @return a 2d integer array representing the seats and their availability for
+     *         the showtime
      */
     public int[][] seatGrid(int showtimeId) {
 
