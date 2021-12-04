@@ -79,9 +79,7 @@ public class MovieSelectionViewController {
         }
     }
 
-
     class ShowLoginButtonListener implements ActionListener {
-
         @Override
         public void actionPerformed(ActionEvent e) {
             theView.toggleLoginForm();
@@ -200,10 +198,6 @@ public class MovieSelectionViewController {
     public int getShowtimeId(String[] searchValues){
         return viewController.getShowtimeId(searchValues);
     }
-
-//    private boolean authenticateUser(String userName, String password){
-//        return viewController.authenticateUser(userName, password);
-//    }
 
     private RegisteredUser authenticateUser(String userName, String password){
 
