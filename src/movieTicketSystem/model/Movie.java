@@ -17,8 +17,12 @@ public class Movie {
 		this.rating = rating;
 	}
 	
-
-	
+	/**
+	 * 
+	 * Method to add a showtime
+	 * 
+	 * @param showtime
+	 */
 	public void addShowTimes(Showtime showtime) {
 		if(this.movieId!=showtime.getMovieId()) {
 			System.out.println("movieId must match before adding");
@@ -30,7 +34,6 @@ public class Movie {
 		}
 	}
 	
-	
 	public void removeShowTimes(Showtime showtime) {
 		if(this.movieId!=showtime.getMovieId()) {
 			System.out.println("movieId must match before remove");
@@ -41,8 +44,6 @@ public class Movie {
 			this.showtimes.remove(showtime);
 		}	
 	}
-	
-	
 
 	public ArrayList<Showtime> getShowtimes() {
 		return showtimes;
@@ -51,10 +52,6 @@ public class Movie {
 	public void setShowtimes(ArrayList<Showtime> showtimes) {
 		this.showtimes = showtimes;
 	}
-
-
-
-
 
 	public String getTitle() {
 		return title;
@@ -71,21 +68,14 @@ public class Movie {
 	public void setMovieId(int movieId) {
 		this.movieId = movieId;
 	}
-	
-	
 
 	public double getRating() {
 		return rating;
 	}
 
-
 	public void setRating(double rating) {
 		this.rating = rating;
 	}
-
-
-
-
 
 	@Override
 	public boolean equals(Object o) {

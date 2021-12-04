@@ -3,6 +3,7 @@ package movieTicketSystem.controller;
 import movieTicketSystem.View.MovieSelectionView;
 import movieTicketSystem.model.RegisteredUser;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class ViewController {
@@ -47,10 +48,17 @@ public class ViewController {
         return theaterController.getShowtimeId(searchValues);
     }
 
-    public boolean authenticateUser(String userName, String password){
-        RegisteredUser ru = userController.verifyUser(userName, password);
+    // public String cancelTicket(int ticketId){
+    //     theaterController.makeSeatAvailable(ticketId);
+    //     double refundAmount = userController.refundUser(ticketId);
+    //     return "Ticket " + ticketId + " has been cancelled and you have been refunded " + refundAmount + " dollars.";
+    // }
 
-        // user does exist
-        return ru != null;  // user does not exist
+    public RegisteredUser authenticateUser(String userName, String password){
+        return userController.verifyUser(userName, password);
+    }
+
+    public void addUser(String email, String password, String address, String holderName,String cardNumber, LocalDate expiry){
+        userController.addUser(email, password, address, holderName, cardNumber, expiry);
     }
 }

@@ -65,12 +65,22 @@ public class MovieSelectionViewController {
                 // attempt to log in
                 String userName = theView.getUserName();
                 String password = theView.getPassword();
+<<<<<<< HEAD
                 RegisteredUser user = authenticateUser(userName, password);
                 if(user == null){
+=======
+                RegisteredUser authenticatedUser = authenticateUser(userName, password);
+                if(authenticatedUser != null){
+>>>>>>> main
                     JOptionPane.showMessageDialog(theView, "Invalid Credentials.",
                             "Alert", JOptionPane.WARNING_MESSAGE);
+                            theView.setLoggedIn(true);
                 }
+<<<<<<< HEAD
                 theView.setLoggedIn(user);
+=======
+                theView.setLoggedIn(false);
+>>>>>>> main
             }
             else{
                 // log out
