@@ -210,6 +210,13 @@ public class MovieSelectionViewController {
         boolean loggedIn = (userName.equals("Graydon") && password.equals("123"));
 
         if (loggedIn){
+            // create Dates
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+            String date1 = "2016/08/16";
+            String date2 = "2016/08/01";
+            LocalDate lastPaidDate = LocalDate.parse(date1, formatter);
+            LocalDate expiryDate = LocalDate.parse(date2, formatter);
+
             RegisteredUser dummyUser = new RegisteredUser();
             dummyUser.setEmail("testUser@gmail.com");
             dummyUser.setAddress("123 St. NW");
@@ -217,13 +224,13 @@ public class MovieSelectionViewController {
 
             var x = new Payment();
             x.setCardNum("123-456-789");
+            x.setExpiry(expiryDate);
+            x.setCardHolderName("Graydon Hall");
 
             dummyUser.setCard(x);
 
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
-            String date = "16/08/2016";
-            LocalDate localDate = LocalDate.parse(date, formatter);
-            dummyUser.setLastFeePaid(localDate);
+
+            dummyUser.setLastFeePaid(lastPaidDate);
             return dummyUser;
         }
         return null;

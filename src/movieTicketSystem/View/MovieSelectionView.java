@@ -44,6 +44,9 @@ public class MovieSelectionView extends JFrame {
     private JTextField registeredUserEmailField;
     private JButton signUpButton;
     private JTextField registeredUserFeeField;
+    private JTextField registeredUserNameField;
+    private JTextField registeredUserAddressField;
+    private JTextField registeredUserCardExpiryField;
     private boolean loginFormShowing;
 
     private int selectedSeatCount;
@@ -154,6 +157,13 @@ public class MovieSelectionView extends JFrame {
         registeredUserEmailField.setEnabled(false);
         registeredUserFeeField.setEnabled(false);
         signUpButton.setEnabled(false);
+        registeredUserAddressField.setText(user.getAddress());
+        registeredUserCardExpiryField.setText(user.getCard().getExpiry().toString());
+        registeredUserNameField.setText(user.getCard().getCardHolderName());
+
+        registeredUserAddressField.setEnabled(false);
+        registeredUserCardExpiryField.setEnabled(false);
+        registeredUserNameField.setEnabled(false);
 
     }
 
@@ -167,10 +177,14 @@ public class MovieSelectionView extends JFrame {
         registeredUserPasswordField.setEnabled(true);
         registeredUserCreditCardField.setEnabled(true);
         registeredUserEmailField.setEnabled(true);
-        registeredUserFeeField.setEnabled(true);
+        registeredUserFeeField.setEnabled(false);
         signUpButton.setEnabled(true);
         tabbedPane.setTitleAt(SIGNUP_TAB_INDEX, "Sign Up");
         signUpNavButton.setText("Sign Up");
+        registeredUserAddressField.setEnabled(true);
+        registeredUserCardExpiryField.setEnabled(true);
+        registeredUserNameField.setEnabled(true);
+
     }
 
     public void createSeats() {
@@ -477,10 +491,10 @@ public class MovieSelectionView extends JFrame {
         leaveSignupButton.setText("Return To Main Menu");
         panel2.add(leaveSignupButton, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel3 = new JPanel();
-        panel3.setLayout(new GridLayoutManager(4, 2, new Insets(0, 0, 0, 0), -1, -1));
+        panel3.setLayout(new GridLayoutManager(7, 2, new Insets(0, 0, 0, 0), -1, -1));
         signupPanel.add(panel3, new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         registeredUserCreditCardField = new JTextField();
-        panel3.add(registeredUserCreditCardField, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        panel3.add(registeredUserCreditCardField, new GridConstraints(3, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         registeredUserEmailField = new JTextField();
         panel3.add(registeredUserEmailField, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         registeredUserPasswordField = new JTextField();
@@ -493,12 +507,27 @@ public class MovieSelectionView extends JFrame {
         panel3.add(label5, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JLabel label6 = new JLabel();
         label6.setText("  Credit Card #: ");
-        panel3.add(label6, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel3.add(label6, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         registeredUserFeeField = new JTextField();
-        panel3.add(registeredUserFeeField, new GridConstraints(3, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        panel3.add(registeredUserFeeField, new GridConstraints(6, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         final JLabel label7 = new JLabel();
         label7.setText("  Fees Last Paid on:  ");
-        panel3.add(label7, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel3.add(label7, new GridConstraints(6, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        registeredUserNameField = new JTextField();
+        panel3.add(registeredUserNameField, new GridConstraints(5, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        final JLabel label8 = new JLabel();
+        label8.setText("  First and Last Name on Credit Card: ");
+        panel3.add(label8, new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        registeredUserCardExpiryField = new JTextField();
+        panel3.add(registeredUserCardExpiryField, new GridConstraints(4, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        final JLabel label9 = new JLabel();
+        label9.setText("  Card Expiry Date (yyyy-mm-dd): ");
+        panel3.add(label9, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        registeredUserAddressField = new JTextField();
+        panel3.add(registeredUserAddressField, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        final JLabel label10 = new JLabel();
+        label10.setText("  Address: ");
+        panel3.add(label10, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         purchaseTab = new JPanel();
         purchaseTab.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         tabbedPane.addTab("Purchase", purchaseTab);
