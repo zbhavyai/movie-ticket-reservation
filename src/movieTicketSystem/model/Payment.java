@@ -7,7 +7,6 @@ public class Payment {
     private String cardHolderName;
     private String cardNum;
     private LocalDate expiry;
-    // private int cvc;
 
     public int getId() {
         return id;
@@ -50,14 +49,6 @@ public class Payment {
             return false;
         }
     }
-
-    // public int getCvc() {
-    // return cvc;
-    // }
-
-    // public void setCvc(int cvc) {
-    // this.cvc = cvc;
-    // }
 
     @Override
     public String toString() {

@@ -3,7 +3,10 @@ package movieTicketSystem.model;
 import java.time.LocalDate;
 import java.util.List;
 
-public class RegisteredUser {
+/**
+ * Represents a registered user in the system
+ */
+public class RegisteredUser extends OrdinaryUser {
     private int id;
     private String password;
     private String email;
@@ -77,18 +80,13 @@ public class RegisteredUser {
         this.lastFeePaid = lastFeePaid;
     }
 
-    public void buyTicket() {
-        // TODO
-    }
-
-    public Coupon cancelTicket() {
-        // TODO
-        Coupon c = new Coupon();
-        return c;
-    }
-
+    /**
+     * Check if the user has paid their annual fees
+     *
+     * @return true if annual fees is paid, false otherwise
+     */
     public boolean checkFeeStatus() {
-        if(this.lastFeePaid.plusYears(1).isAfter(LocalDate.now())) {
+        if (this.lastFeePaid.plusYears(1).isAfter(LocalDate.now())) {
             return true;
         }
 
@@ -97,6 +95,9 @@ public class RegisteredUser {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return ("[" + this.email + ", " + this.address + ", " + this.card + ", " + lastFeePaid + "]");
