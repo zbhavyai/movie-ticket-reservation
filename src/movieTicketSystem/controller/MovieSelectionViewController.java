@@ -21,16 +21,12 @@ public class MovieSelectionViewController {
 
     MovieSelectionView theView;
 
-    TheaterController theaterController;
-    UserController userController;
-    MovieController movieController;
+    ViewController viewController;
 
 
-    public MovieSelectionViewController(MovieSelectionView theView, UserController userController, TheaterController theaterController, MovieController movieController) {
+    public MovieSelectionViewController(MovieSelectionView theView, ViewController viewController) {
         this.theView = theView;
-        this.userController = userController;
-        this.theaterController = theaterController;
-        this.movieController = movieController;
+        this.viewController = viewController;
 
         // action listeners
         movieListener = new MovieComboBoxListener();
@@ -177,39 +173,27 @@ public class MovieSelectionViewController {
     }
 
     private ArrayList<String> getMovies(){
-        ArrayList<String> movieOptions = movieController.getMovieNames();
-        return movieOptions;
+        return viewController.getMovies();
     }
 
     private ArrayList<String> getTheatres(){
-        ArrayList<String> theatreOptions = theaterController.getTheaterNames();
-        return theatreOptions;
+        return viewController.getTheatres();
     }
 
     private ArrayList<String>getShowTimes(String movieName, String theaterName){
-        ArrayList<String> timeOptions = theaterController.getTheatreShowtimes(movieName, theaterName);
-        return timeOptions;
+        return viewController.getShowTimes(movieName, theaterName);
     }
 
     private int[][] getSeats(int showtimeId){
-        int [][] seats = theaterController.getSeatGrid(showtimeId);
-        return seats;
+        return viewController.getSeats(showtimeId);
     }
 
     public int getShowtimeId(String[] searchValues){
-        int showtimeId = theaterController.getShowtimeId(searchValues);
-        return showtimeId;
+        return viewController.getShowtimeId(searchValues);
     }
 
     private boolean authenticateUser(String userName, String password){
-        RegisteredUser ru = userController.verifyUser(userName, password);
-
-
-        if((ru == null)){
-            return false;  // user does not exist
-        } else {
-            return true;  // user does exist
-        }
+        return viewController.authenticateUser(userName, password);
     }
 
 }
