@@ -2,6 +2,8 @@ package movieTicketSystem.View;
 
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
+import com.intellij.uiDesigner.core.Spacer;
+import movieTicketSystem.model.RegisteredUser;
 
 import java.util.ArrayList;
 import javax.swing.*;
@@ -34,9 +36,14 @@ public class MovieSelectionView extends JFrame {
     private JButton loginButton;
     private JTabbedPane tabbedPane;
     private JPanel signupPanel;
-    private JButton signupButton;
+    private JButton signUpNavButton;
     private JButton leaveSignupButton;
     private JPanel purchaseTab;
+    private JTextField registeredUserCreditCardField;
+    private JTextField registeredUserPasswordField;
+    private JTextField registeredUserEmailField;
+    private JButton signUpButton;
+    private JTextField registeredUserFeeField;
     private boolean loginFormShowing;
 
     private int selectedSeatCount;
@@ -69,7 +76,7 @@ public class MovieSelectionView extends JFrame {
         // set default values
         loginPanel.setVisible(false);
         setView("main");
-        setLoggedIn(false);
+        setLoggedIn(null);
         seats = new JButton[10][10];
         purchaseButton.setEnabled(false);
 
@@ -86,7 +93,7 @@ public class MovieSelectionView extends JFrame {
 
 
         // add action listeners
-        signupButton.addActionListener(new signupButtonListener());
+        signUpNavButton.addActionListener(new signupButtonListener());
         leaveSignupButton.addActionListener(new backToMainButtonListener());
 
         setVisible(true);
@@ -113,20 +120,57 @@ public class MovieSelectionView extends JFrame {
     }
 
 
-    public void setLoggedIn(boolean loggedIn) {
-        this.loggedIn = loggedIn;
+    public void setLoggedIn(RegisteredUser user) {
+        this.loggedIn = (user != null);
 
         if (loggedIn) {
             loginButton.setText("Log Out");
             usernameTextField.setEnabled(false);
             passwordTextField.setEnabled(false);
             showLoginFormButton.setEnabled(false);
+
+            // sign up tab logic
+            populateSignUpTab(user);
+
         } else {
             loginButton.setText("Log In");
             usernameTextField.setEnabled(true);
             passwordTextField.setEnabled(true);
             showLoginFormButton.setEnabled(true);
+            clearSignUpTable();
         }
+    }
+
+    private void populateSignUpTab(RegisteredUser user) {
+        tabbedPane.setTitleAt(SIGNUP_TAB_INDEX, "Account Settings");
+        signUpNavButton.setText("Account Settings");
+        registeredUserEmailField.setText(user.getEmail());
+        registeredUserPasswordField.setText(user.getPassword());
+        registeredUserCreditCardField.setText(user.getCard().getCardNum());
+        registeredUserFeeField.setText(user.getLastFeePaid().toString());
+        registeredUserEmailField.setEnabled(false);
+        registeredUserPasswordField.setEnabled(false);
+        registeredUserCreditCardField.setEnabled(false);
+        registeredUserEmailField.setEnabled(false);
+        registeredUserFeeField.setEnabled(false);
+        signUpButton.setEnabled(false);
+
+    }
+
+    private void clearSignUpTable() {
+        registeredUserEmailField.setText("");
+        registeredUserPasswordField.setText("");
+        registeredUserCreditCardField.setText("");
+        registeredUserEmailField.setText("");
+        registeredUserFeeField.setText("");
+        registeredUserEmailField.setEnabled(true);
+        registeredUserPasswordField.setEnabled(true);
+        registeredUserCreditCardField.setEnabled(true);
+        registeredUserEmailField.setEnabled(true);
+        registeredUserFeeField.setEnabled(true);
+        signUpButton.setEnabled(true);
+        tabbedPane.setTitleAt(SIGNUP_TAB_INDEX, "Sign Up");
+        signUpNavButton.setText("Sign Up");
     }
 
     public void createSeats() {
@@ -265,7 +309,6 @@ public class MovieSelectionView extends JFrame {
     }
 
 
-
     // ******************* ACTION LISTENERS **************************
     public void addMovieComboBoxActionListener(ActionListener a) {
         movieSelectorComboBox.addActionListener(a);
@@ -375,9 +418,9 @@ public class MovieSelectionView extends JFrame {
         showLoginFormButton = new JButton();
         showLoginFormButton.setText("Show Log In Form");
         panel1.add(showLoginFormButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        signupButton = new JButton();
-        signupButton.setText("Sign Up");
-        panel1.add(signupButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        signUpNavButton = new JButton();
+        signUpNavButton.setText("Sign Up");
+        panel1.add(signUpNavButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         movieSelectorComboBox = new JComboBox();
         mainPanel.add(movieSelectorComboBox, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         theatreSelectionComboBox = new JComboBox();
@@ -417,15 +460,45 @@ public class MovieSelectionView extends JFrame {
         loginButton.setText("Log In");
         loginPanel.add(loginButton, new GridConstraints(3, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         signupPanel = new JPanel();
-        signupPanel.setLayout(new GridLayoutManager(2, 1, new Insets(0, 0, 0, 0), -1, -1));
+        signupPanel.setLayout(new GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1));
         signupPanel.setEnabled(true);
         tabbedPane.addTab("Sign Up", signupPanel);
-        final JLabel label4 = new JLabel();
-        label4.setText("Hello world");
-        signupPanel.add(label4, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JPanel panel2 = new JPanel();
+        panel2.setLayout(new GridLayoutManager(3, 2, new Insets(0, 0, 0, 0), -1, -1));
+        signupPanel.add(panel2, new GridConstraints(1, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        signUpButton = new JButton();
+        signUpButton.setText("Sign Up");
+        panel2.add(signUpButton, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final Spacer spacer1 = new Spacer();
+        panel2.add(spacer1, new GridConstraints(0, 1, 2, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        final Spacer spacer2 = new Spacer();
+        panel2.add(spacer2, new GridConstraints(0, 0, 2, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         leaveSignupButton = new JButton();
         leaveSignupButton.setText("Return To Main Menu");
-        signupPanel.add(leaveSignupButton, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel2.add(leaveSignupButton, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JPanel panel3 = new JPanel();
+        panel3.setLayout(new GridLayoutManager(4, 2, new Insets(0, 0, 0, 0), -1, -1));
+        signupPanel.add(panel3, new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        registeredUserCreditCardField = new JTextField();
+        panel3.add(registeredUserCreditCardField, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        registeredUserEmailField = new JTextField();
+        panel3.add(registeredUserEmailField, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        registeredUserPasswordField = new JTextField();
+        panel3.add(registeredUserPasswordField, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        final JLabel label4 = new JLabel();
+        label4.setText("  Email: ");
+        panel3.add(label4, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JLabel label5 = new JLabel();
+        label5.setText("  Password: ");
+        panel3.add(label5, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JLabel label6 = new JLabel();
+        label6.setText("  Credit Card #: ");
+        panel3.add(label6, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        registeredUserFeeField = new JTextField();
+        panel3.add(registeredUserFeeField, new GridConstraints(3, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        final JLabel label7 = new JLabel();
+        label7.setText("  Fees Last Paid on:  ");
+        panel3.add(label7, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         purchaseTab = new JPanel();
         purchaseTab.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         tabbedPane.addTab("Purchase", purchaseTab);

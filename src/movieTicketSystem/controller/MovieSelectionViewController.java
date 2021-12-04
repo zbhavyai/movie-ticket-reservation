@@ -1,8 +1,12 @@
 package movieTicketSystem.controller;
 
+import com.mysql.cj.result.LocalDateValueFactory;
 import movieTicketSystem.View.MovieSelectionView;
+import movieTicketSystem.model.Payment;
 import movieTicketSystem.model.RegisteredUser;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import javax.swing.*;
 import java.awt.*;
@@ -61,16 +65,16 @@ public class MovieSelectionViewController {
                 // attempt to log in
                 String userName = theView.getUserName();
                 String password = theView.getPassword();
-                boolean authenticated = authenticateUser(userName, password);
-                if(!authenticated){
+                RegisteredUser user = authenticateUser(userName, password);
+                if(user == null){
                     JOptionPane.showMessageDialog(theView, "Invalid Credentials.",
                             "Alert", JOptionPane.WARNING_MESSAGE);
                 }
-                theView.setLoggedIn(authenticated);
+                theView.setLoggedIn(user);
             }
             else{
                 // log out
-                theView.setLoggedIn(false);
+                theView.setLoggedIn(null);
             }
         }
     }
@@ -197,8 +201,32 @@ public class MovieSelectionViewController {
         return viewController.getShowtimeId(searchValues);
     }
 
-    private boolean authenticateUser(String userName, String password){
-        return viewController.authenticateUser(userName, password);
+//    private boolean authenticateUser(String userName, String password){
+//        return viewController.authenticateUser(userName, password);
+//    }
+
+    private RegisteredUser authenticateUser(String userName, String password){
+
+        boolean loggedIn = (userName.equals("Graydon") && password.equals("123"));
+
+        if (loggedIn){
+            RegisteredUser dummyUser = new RegisteredUser();
+            dummyUser.setEmail("testUser@gmail.com");
+            dummyUser.setAddress("123 St. NW");
+            dummyUser.setPassword("password");
+
+            var x = new Payment();
+            x.setCardNum("123-456-789");
+
+            dummyUser.setCard(x);
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
+            String date = "16/08/2016";
+            LocalDate localDate = LocalDate.parse(date, formatter);
+            dummyUser.setLastFeePaid(localDate);
+            return dummyUser;
+        }
+        return null;
     }
 
 }
