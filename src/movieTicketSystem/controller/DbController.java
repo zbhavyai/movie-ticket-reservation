@@ -54,6 +54,12 @@ public class DbController {
         }
     }
 
+    /**
+     * 
+     * Get a list of all movies users in the application
+     * 
+     * @return an arraylist that contains all movies in the system.
+     */
     public ArrayList<Movie> selectAllMovies() {
         ArrayList<Movie> movies = new ArrayList<Movie>();
 
@@ -71,41 +77,46 @@ public class DbController {
             }
             myStmt.close();
         }
-
         catch (SQLException ex) {
             ex.printStackTrace();
         }
-
         return movies;
     }
 
-    public ArrayList<Integer> selectMoviesByTheatre(int theatredId) {
-        ArrayList<Integer> movieIds = new ArrayList<Integer>();
+    // /**
+    //  * 
+    //  * Get a list of all registered users in the application
+    //  * 
+    //  * @return an arraylist that contains all registered users in the system.
+    //  */
+    // public ArrayList<RegisteredUser> getAllResgiteredusers() {
+    //     ArrayList<RegisteredUser> movies = new ArrayList<RegisteredUser>();
 
-        try {
-            String query = "SELECT * FROM showtime Where theatreId = ?";
-            PreparedStatement myStmt = dbConnect.prepareStatement(query);
+    //     try {
+    //         Statement myStmt = dbConnect.createStatement();
 
-            myStmt.setInt(1, theatredId);
+    //         // Execute SQL query
+    //         results = myStmt.executeQuery("SELECT * FROM registered_user");
 
-            ResultSet results = myStmt.executeQuery();
-
-            // Process the results set
-            while (results.next()) {
-                movieIds.add(results.getInt("movieId"));
-            }
-
-            System.out.println(movieIds);
-            myStmt.close();
-        }
-
-        catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-
-        return movieIds;
-    }
-
+    //         // Process the results set
+    //         while (results.next()) {
+    //             RegisteredUser mvdb = new RegisteredUser();
+    //             movies.add(mvdb);
+    //         }
+    //         myStmt.close();
+    //     }
+    //     catch (SQLException ex) {
+    //         ex.printStackTrace();
+    //     }
+    //     return movies;
+    // }
+    
+    /**
+     * 
+     * Get a list of all available theatres in the application
+     * 
+     * @return an arraylist that contains all theatres in the system.
+     */
     public ArrayList<Theater> selectAllTheatres() {
         ArrayList<Theater> theaters = new ArrayList<Theater>();
 
@@ -131,6 +142,13 @@ public class DbController {
         return theaters;
     }
 
+    /**
+     * 
+     * Method is used to get a list of all the theatres that are showing a selected movie
+     * 
+     * @param movieId is the Id of the movie that has been selected
+     * @return is an arraylist of all theatres playing the selected movie
+     */
     public ArrayList<Integer> searchTheatresByMovie(int movieId) {
         ArrayList<Integer> theatreIds = new ArrayList<Integer>();
 
@@ -250,6 +268,14 @@ public class DbController {
         return showtimeId;
     }
 
+    /**
+     * 
+     * Method is used to find showtimes that are available for the selected movie and theatre
+     * 
+     * @param movieId is the movie that has been selected
+     * @param theatreId is the theatre that has been selected
+     * @return a list of showtimes that are available for the movie and theatre selected
+     */
     public ArrayList<String> searchShowtimesByMovieAndTheatre(int movieId, int theatreId) {
 
         ArrayList<String> showTimes = new ArrayList<String>();
@@ -279,6 +305,13 @@ public class DbController {
         return showTimes;
     }
 
+    /**
+     * 
+     * Method is used to return the date/time of the showtime when providing the unique Id
+     * 
+     * @param showTimeId is the unique Id of the showtime that has been selected
+     * @return the showtime that corresponds to the unique showtime id
+     */
     public String searchShowtimesById(int showTimeId) {
         String showTime = "";
 
@@ -305,6 +338,13 @@ public class DbController {
         return showTime;
     }
 
+    /**
+     * 
+     * Method is used to retrieve the movies and theatres that correspond to the showtime selected
+     * 
+     * @param showTimeId is the showtime that has been selected
+     * @return an arraylist of movie and theatre Id's related to the showtime
+     */
     public ArrayList<Integer> searchMovieTheatreByShowTime(int showTimeId) {
         ArrayList<Integer> movieTheatreId = new ArrayList<Integer>();
 
@@ -332,6 +372,13 @@ public class DbController {
         return movieTheatreId;
     }
 
+    /**
+     * 
+     * Method is used to make a new ticket depending on what the showtime selection was and the price
+     * 
+     * @param showtimeId is the showtime selected
+     * @param price is the price to set for the ticket
+     */
     public void createtNewTicket(int showtimeId, double price) {
         if (!validTicket(showtimeId)) {
             throw new IllegalArgumentException("ticket id already exists.");
@@ -363,12 +410,19 @@ public class DbController {
      */
     public boolean deleteTicket(int ticketId) {
         try {
-            String query = "DELETE FROM TICKET WHERE ticketId = ?";
+            String query = "DELETE FROM SEAT WHERE ticketId = ?";
             PreparedStatement myStmt = this.dbConnect.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             myStmt.setInt(1, ticketId);
-
             int rowAffected = myStmt.executeUpdate();
+            if (rowAffected == 1) {
+                myStmt.close();
+                return true;
+            }
 
+            query = "DELETE FROM TICKET WHERE ticketId = ?";
+            myStmt = this.dbConnect.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            myStmt.setInt(1, ticketId);
+            rowAffected = myStmt.executeUpdate();
             if (rowAffected == 1) {
                 myStmt.close();
                 return true;
@@ -382,6 +436,13 @@ public class DbController {
         return false;
     }
 
+    /**
+     * 
+     * Method is used to verify if a ticket is valid or not
+     * 
+     * @param showtimeId is the showtime to check validity for
+     * @return true or false if the ticket is valid or not
+     */
     public boolean validTicket(int showtimeId) {
         boolean validTicket = true;
 
@@ -438,6 +499,37 @@ public class DbController {
 
         return tickets;
     }
+    
+    /**
+     * 
+     * Searches for the ticket in the database and calls for it to be deleted
+     * 
+     * @param ticketId is the ticket to get rid of
+     * @return a boolean of whether the ticket was deleted or not
+     */
+	public boolean makeSeatAvailable(int ticketId){
+        boolean success = false;
+        int foundTicket = 0;
+
+        try{
+            String query = "SELECT ticketId FROM ticket WHERE ticketId = ?";
+            PreparedStatement myStmt = dbConnect.prepareStatement(query);
+            myStmt.setInt(1, ticketId);
+            ResultSet results = myStmt.executeQuery();
+            while (results.next()) {
+                foundTicket = results.getInt("ticketId");
+            }
+            myStmt.close();
+            if(foundTicket != 0){
+                deleteTicket(ticketId);
+                success = true;
+            }
+        }
+        catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return success;
+	}
 
     /**
      * This method is used to return a grid of seats for a particular showtime. The
@@ -523,7 +615,6 @@ public class DbController {
                 }
             }
         }
-
         catch (SQLException e) {
             e.printStackTrace();
         }
@@ -816,34 +907,5 @@ public class DbController {
         catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-    // other demo methods for reference
-    // *******************************************************
-    // public void deleteTeacher(String id) {
-    // try {
-    // String query = "DELETE FROM teacher WHERE TeacherID = ?";
-    // PreparedStatement myStmt = dbConnect.prepareStatement(query);
-
-    // myStmt.setString(1, id);
-    // int rowCount = myStmt.executeUpdate();
-
-    // myStmt.close();
-    // }
-
-    // catch (SQLException ex) {
-    // ex.printStackTrace();
-    // }
-    // }
-
-    public static void main(String[] args) {
-        // DbController conn = DbController.getInstance();
-        // System.out.println(conn.savePayment("Bhavyai Gupta", "1234567890123456",
-        // LocalDate.of(2021, 12, 04)));
-
-        // System.out.println(conn.saveRegisteredUser("bhavyai@outlook.com", "password",
-        // "Calgary", "Bhavyai Gupta",
-        // "1234567891012213", LocalDate.of(2021, 12, 01)));
-
     }
 }

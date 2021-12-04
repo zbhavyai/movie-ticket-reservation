@@ -31,10 +31,12 @@ public class TheaterController {
 		return null;
 	}
 
-
 	/**
-	 * Search for movie based on theatre Id. Returns list of movie objects
-	 *
+	 * 
+	 * Search for theatres based on movie Id
+	 * 
+	 * @param movieId
+	 * @return list of theatres playing the selected movie
 	 */
 	public ArrayList<Theater> searchTheatresByMovie(int movieId) {
 		ArrayList<Integer> theatreIds = db.searchTheatresByMovie(movieId);
@@ -51,6 +53,12 @@ public class TheaterController {
 		return filteredTheaters;
 	}
 
+	/**
+	 * 
+	 * Method gets a list of theatre names available in the system
+	 * 
+	 * @return an arraylist of theatre names
+	 */
 	public ArrayList<String> getTheaterNames() {
 		ArrayList<String> theaterNames = new ArrayList<String>();
 		for(int i = 0; i < theaters.size(); i++){
@@ -59,10 +67,14 @@ public class TheaterController {
 		return theaterNames;
 	}
 
-	public ArrayList<Theater> getTheaters() {
-		return this.theaters;
-	}
-
+	/**
+	 * 
+	 * Method gets a list of showtimes that are available from the selected movie and theatre
+	 * 
+	 * @param movieName is the name of the movie that has been chosen
+	 * @param theaterName is the name of the theatre that has been chosen
+	 * @return a list of showtimes for the selected movie and theatre
+	 */
 	public ArrayList<String>getTheatreShowtimes(String movieName, String theaterName){
 		ArrayList<String> showtimeList = new ArrayList<String>();
 		showtimeList = db.searchShowtimesByMovieAndTheatre(db.getMovieIdByName(movieName), db.getTheaterIdByName(theaterName));
@@ -108,11 +120,18 @@ public class TheaterController {
 		this.searchTheatreById(theaterId).resetReservation(movieId, time, rowNum, colNum);
 	}
 
-
-
-// 	public static void main(String[] args) {
-//	 TheaterController mv = new TheaterController();
-//	 ArrayList<String> st = mv.searchShowtimesByMovieAndTheatre(1,1);
-//	 st.stream().forEach(p-> System.out.println(p));
-//}
+	/**
+	 * 
+	 * Cancels the ticket and deletes it in the database
+	 * 
+	 * @param ticketId is the ticket to cancel 
+	 * @return true if success and false if not
+	 */
+	public boolean makeSeatAvailable(int ticketId){
+		boolean success = false;
+		if(db.makeSeatAvailable(ticketId) == true){
+			success = true;
+		}
+		return success;
+	}
 }

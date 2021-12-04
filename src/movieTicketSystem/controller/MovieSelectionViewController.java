@@ -61,12 +61,13 @@ public class MovieSelectionViewController {
                 // attempt to log in
                 String userName = theView.getUserName();
                 String password = theView.getPassword();
-                boolean authenticated = authenticateUser(userName, password);
-                if(!authenticated){
+                RegisteredUser authenticatedUser = authenticateUser(userName, password);
+                if(authenticatedUser != null){
                     JOptionPane.showMessageDialog(theView, "Invalid Credentials.",
                             "Alert", JOptionPane.WARNING_MESSAGE);
+                            theView.setLoggedIn(true);
                 }
-                theView.setLoggedIn(authenticated);
+                theView.setLoggedIn(false);
             }
             else{
                 // log out
@@ -192,7 +193,7 @@ public class MovieSelectionViewController {
         return viewController.getShowtimeId(searchValues);
     }
 
-    private boolean authenticateUser(String userName, String password){
+    private RegisteredUser authenticateUser(String userName, String password){
         return viewController.authenticateUser(userName, password);
     }
 

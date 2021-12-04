@@ -111,6 +111,14 @@ CREATE TABLE IF NOT EXISTS PAYMENT
     primary key(paymentId)
 );
 
+CREATE TABLE IF NOT EXISTS SALE
+(
+    paymentId       int             NOT NULL,
+    ticketId		int			    NOT NULL,
+    foreign key (paymentId) references payment(paymentId),
+    foreign key (ticketId) references ticket(ticketId)
+);
+
 
 INSERT INTO PAYMENT (holderName,cardNumber,expiry) VALUES
 ("Lizeth Cowan","5355142077868730","2023-01-01"),
@@ -123,6 +131,18 @@ INSERT INTO PAYMENT (holderName,cardNumber,expiry) VALUES
 ("Salvador Cain","5580095333314690","2025-11-01"),
 ("Jared Nash","5113181095909820","2026-12-01"),
 ("Romeo Sosa","5534346641931920","2023-06-01");
+
+INSERT INTO SALE (paymentId, ticketId) VALUES
+(1,				1),
+(2,				2),
+(3,				3),
+(4,				4),
+(5,				5),
+(6,				6),
+(7,				7),
+(8,				8),
+(9,				9),
+(10,			10);
 
 
 CREATE TABLE IF NOT EXISTS REGISTERED_USER

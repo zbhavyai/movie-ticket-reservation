@@ -1,40 +1,19 @@
 package movieTicketSystem.model;
 
 public class Sale {
-    private int id;
-    private boolean reserved;
-    private int rowNum;
-    private int seatNum;
+    private int paymentId;
+    private int ticketId;
 
-    public int getId() {
-        return id;
+    public Sale(int paymentId, int ticketId){
+        this.paymentId = paymentId;
+        this.ticketId = ticketId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public int getPaymentId(){
+        return this.paymentId;
     }
 
-    public boolean isReserved() {
-        return reserved;
-    }
-
-    public void setReserved(boolean reserved) {
-        this.reserved = reserved;
-    }
-
-    public int getRowNum() {
-        return rowNum;
-    }
-
-    public void setRowNum(int rowNum) {
-        this.rowNum = rowNum;
-    }
-
-    public int getSeatNum() {
-        return seatNum;
-    }
-
-    public void setSeatNum(int seatNum) {
-        this.seatNum = seatNum;
+    public int getTicketId(){
+        return this.ticketId;
     }
 }
