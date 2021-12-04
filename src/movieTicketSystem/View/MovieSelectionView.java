@@ -175,9 +175,13 @@ public class MovieSelectionView extends JFrame {
         signUpButton.setEnabled(true);
         tabbedPane.setTitleAt(SIGNUP_TAB_INDEX, "Sign Up");
         signUpNavButton.setText("Sign Up");
+        registeredUserAddressField.setText("");
         registeredUserAddressField.setEnabled(true);
+        registeredUserCardExpiryField.setText("");
         registeredUserCardExpiryField.setEnabled(true);
+        registeredUserNameField.setText("");
         registeredUserNameField.setEnabled(true);
+
     }
 
     public void createSeats() {
