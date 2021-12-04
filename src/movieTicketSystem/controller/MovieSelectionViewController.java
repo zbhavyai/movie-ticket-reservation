@@ -173,6 +173,9 @@ public class MovieSelectionViewController {
         }
     }
 
+
+    // METHODS TO TALK TO VIEW CONTROLLER
+
     private ArrayList<String> getMovies(){
         return viewController.getMovies();
     }
