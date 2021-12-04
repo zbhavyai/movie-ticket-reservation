@@ -41,6 +41,16 @@ public class Payment {
         this.expiry = expiry;
     }
 
+    public boolean isExpired() {
+        if (this.expiry.isBefore(LocalDate.now())) {
+            return true;
+        }
+
+        else {
+            return false;
+        }
+    }
+
     // public int getCvc() {
     // return cvc;
     // }

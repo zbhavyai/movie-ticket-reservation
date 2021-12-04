@@ -6,18 +6,19 @@ import java.util.ArrayList;
 import java.util.Properties;
 import movieTicketSystem.model.*;
 
+/**
+ * Controller to interact with the database
+ */
 public class DbController {
-    // Optional to include, but recommended
+    private static DbController instanceVar;
     private Connection dbConnect;
     private Properties dbDetails;
     private ResultSet results;
 
-    public DbController() {
-        this.initializeConnection();
-    }
-
-    // Must create a connection to the database, no arguments, no return value
-    public void initializeConnection() {
+    /**
+     * Private constructor enforcing singleton design pattern
+     */
+    private DbController() {
         try {
             String dbDetailsLocation = "config/db_details.properties";
 
@@ -36,8 +37,23 @@ public class DbController {
         }
     }
 
-    public ArrayList<Movie> selectAllMovies() {
+    /**
+     * Initializes the connection to the database and returns its instance
+     *
+     * @return instance of DbController
+     */
+    public static DbController getInstance() {
+        if (instanceVar == null) {
+            instanceVar = new DbController();
+            return instanceVar;
+        }
 
+        else {
+            return instanceVar;
+        }
+    }
+
+    public ArrayList<Movie> selectAllMovies() {
         ArrayList<Movie> movies = new ArrayList<Movie>();
 
         try {
@@ -53,7 +69,9 @@ public class DbController {
                 movies.add(mvdb);
             }
             myStmt.close();
-        } catch (SQLException ex) {
+        }
+
+        catch (SQLException ex) {
             ex.printStackTrace();
         }
 
@@ -61,7 +79,6 @@ public class DbController {
     }
 
     public ArrayList<Integer> selectMoviesByTheatre(int theatredId) {
-
         ArrayList<Integer> movieIds = new ArrayList<Integer>();
 
         try {
@@ -76,9 +93,12 @@ public class DbController {
             while (results.next()) {
                 movieIds.add(results.getInt("movieId"));
             }
+
             System.out.println(movieIds);
             myStmt.close();
-        } catch (SQLException ex) {
+        }
+
+        catch (SQLException ex) {
             ex.printStackTrace();
         }
 
@@ -86,7 +106,6 @@ public class DbController {
     }
 
     public ArrayList<Theater> selectAllTheatres() {
-
         ArrayList<Theater> theaters = new ArrayList<Theater>();
 
         try {
@@ -100,8 +119,11 @@ public class DbController {
                 Theater tr = new Theater(results.getInt("theatreId"), results.getString("theatreName"));
                 theaters.add(tr);
             }
+
             myStmt.close();
-        } catch (SQLException ex) {
+        }
+
+        catch (SQLException ex) {
             ex.printStackTrace();
         }
 
@@ -109,7 +131,6 @@ public class DbController {
     }
 
     public ArrayList<Integer> searchTheatresByMovie(int movieId) {
-
         ArrayList<Integer> theatreIds = new ArrayList<Integer>();
 
         try {
@@ -124,8 +145,11 @@ public class DbController {
             while (results.next()) {
                 theatreIds.add(results.getInt("theatreId"));
             }
+
             myStmt.close();
-        } catch (SQLException ex) {
+        }
+
+        catch (SQLException ex) {
             ex.printStackTrace();
         }
 
@@ -133,7 +157,6 @@ public class DbController {
     }
 
     /**
-     *
      * This method is used to get the theatreId from the database by using the
      * theatreName provided
      *
@@ -162,7 +185,6 @@ public class DbController {
     }
 
     /**
-     *
      * This method is used to get the movieId from the database by using the
      * movieName provided
      *
@@ -192,7 +214,6 @@ public class DbController {
     }
 
     /**
-     *
      * This method is used to retrieve the showtimeId based on the theatreId,
      * movieId and showtimeString
      *
@@ -202,7 +223,6 @@ public class DbController {
      * @return the showtimeId that matches with all three of the input criteria
      */
     public int getShowtimeIdByMovieAndTheatreAndShowtime(int theatreId, int movieId, String showtimeString) {
-
         int showtimeId = 0;
 
         try {
@@ -220,7 +240,9 @@ public class DbController {
             }
 
             myStmt.close();
-        } catch (SQLException ex) {
+        }
+
+        catch (SQLException ex) {
             ex.printStackTrace();
         }
 
@@ -228,7 +250,6 @@ public class DbController {
     }
 
     public ArrayList<String> searchShowtimesByMovieAndTheatre(int theatreId, int movieId) {
-
         ArrayList<String> showTimes = new ArrayList<String>();
 
         try {
@@ -247,7 +268,9 @@ public class DbController {
             }
 
             myStmt.close();
-        } catch (SQLException ex) {
+        }
+
+        catch (SQLException ex) {
             ex.printStackTrace();
         }
 
@@ -255,7 +278,6 @@ public class DbController {
     }
 
     public String searchShowtimesById(int showTimeId) {
-
         String showTime = "";
 
         try {
@@ -272,7 +294,9 @@ public class DbController {
             }
 
             myStmt.close();
-        } catch (SQLException ex) {
+        }
+
+        catch (SQLException ex) {
             ex.printStackTrace();
         }
 
@@ -280,8 +304,8 @@ public class DbController {
     }
 
     public ArrayList<Integer> searchMovieTheatreByShowTime(int showTimeId) {
-
         ArrayList<Integer> movieTheatreId = new ArrayList<Integer>();
+
         try {
             String query = "SELECT * FROM showtime Where showtimeId = ?";
             PreparedStatement myStmt = dbConnect.prepareStatement(query);
@@ -294,11 +318,12 @@ public class DbController {
                 // Process the results set
                 movieTheatreId.add(results.getInt("movieId"));
                 movieTheatreId.add(results.getInt("theatreId"));
-
             }
 
             myStmt.close();
-        } catch (SQLException ex) {
+        }
+
+        catch (SQLException ex) {
             ex.printStackTrace();
         }
 
@@ -306,12 +331,11 @@ public class DbController {
     }
 
     public void createtNewTicket(int showtimeId, double price) {
-
         if (!validTicket(showtimeId)) {
             throw new IllegalArgumentException("ticket id already exists.");
         }
-        try {
 
+        try {
             String query = "INSERT INTO ticket (showtimeId, price) VALUES (?,?)";
             PreparedStatement myStmt = dbConnect.prepareStatement(query);
 
@@ -322,13 +346,14 @@ public class DbController {
             System.out.println(rowCount);
             myStmt.close();
 
-        } catch (SQLException ex) {
+        }
+
+        catch (SQLException ex) {
             ex.printStackTrace();
         }
     }
 
     public boolean validTicket(int showtimeId) {
-
         boolean validTicket = true;
 
         try {
@@ -344,12 +369,13 @@ public class DbController {
             }
 
             myStmt.close();
-        } catch (SQLException ex) {
+        }
+
+        catch (SQLException ex) {
             ex.printStackTrace();
         }
 
         return validTicket;
-
     }
 
     /**
@@ -362,6 +388,7 @@ public class DbController {
      */
     public ArrayList<String> getTheatreShowtimes(int movieId, int theatreId) {
         ArrayList<String> showtimes = new ArrayList<String>();
+
         try {
             String query = "SELECT showtime FROM showtime Where movieId = ? AND theatreId = ?";
             PreparedStatement myStmt = dbConnect.prepareStatement(query);
@@ -377,9 +404,12 @@ public class DbController {
                 System.out.println(results.getString("showtime"));
             }
             myStmt.close();
-        } catch (SQLException ex) {
+        }
+
+        catch (SQLException ex) {
             ex.printStackTrace();
         }
+
         return showtimes;
     }
 
@@ -392,6 +422,7 @@ public class DbController {
      */
     public ArrayList<Integer> ticketsAtShowtime(int showtimeId) {
         ArrayList<Integer> tickets = new ArrayList<Integer>();
+
         try {
             String query = "SELECT * FROM ticket Where showtimeId = ?";
             PreparedStatement myStmt = dbConnect.prepareStatement(query);
@@ -405,14 +436,16 @@ public class DbController {
                 tickets.add(results.getInt("ticketId"));
             }
             myStmt.close();
-        } catch (SQLException ex) {
+        }
+
+        catch (SQLException ex) {
             ex.printStackTrace();
         }
+
         return tickets;
     }
 
     /**
-     *
      * This method is used to return a grid of seats for a particular showtime. The
      * grid will show available seats as 1's and unavailable as 0's
      *
@@ -421,7 +454,6 @@ public class DbController {
      *         the showtime
      */
     public int[][] seatGrid(int showtimeId) {
-
         ArrayList<Integer> tickets = ticketsAtShowtime(showtimeId);
         ArrayList<Integer> row = new ArrayList<Integer>();
         ArrayList<Integer> col = new ArrayList<Integer>();
@@ -459,9 +491,12 @@ public class DbController {
                 }
             }
 
-        } catch (SQLException ex) {
+        }
+
+        catch (SQLException ex) {
             ex.printStackTrace();
         }
+
         return seatGrid;
     }
 
@@ -571,27 +606,6 @@ public class DbController {
         return null;
     }
 
-    // other demo methods for reference
-    // *******************************************************
-
-    public void deleteTeacher(String id) {
-
-        try {
-            String query = "DELETE FROM teacher WHERE TeacherID = ?";
-            PreparedStatement myStmt = dbConnect.prepareStatement(query);
-
-            myStmt.setString(1, id);
-
-            int rowCount = myStmt.executeUpdate();
-
-            myStmt.close();
-
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-
-    }
-
     public void close() {
         try {
             results.close();
@@ -601,9 +615,21 @@ public class DbController {
         }
     }
 
-    public static void main(String[] args) {
-        DbController dbController = new DbController();
-        // dbController.seatGrid(2);
-        // System.out.println(dbController.searchRegisteredUser("caitlyn.bean"));
-    }
+    // other demo methods for reference
+    // *******************************************************
+    // public void deleteTeacher(String id) {
+    // try {
+    // String query = "DELETE FROM teacher WHERE TeacherID = ?";
+    // PreparedStatement myStmt = dbConnect.prepareStatement(query);
+
+    // myStmt.setString(1, id);
+    // int rowCount = myStmt.executeUpdate();
+
+    // myStmt.close();
+    // }
+
+    // catch (SQLException ex) {
+    // ex.printStackTrace();
+    // }
+    // }
 }

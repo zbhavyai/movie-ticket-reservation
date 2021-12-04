@@ -11,10 +11,10 @@ import movieTicketSystem.model.Movie;
 
 
 public class MovieController {
-	
+
 	private ArrayList<Movie> movies;
-	
-	DbController db = new DbController();
+
+	DbController db = DbController.getInstance();
 
 	public MovieController() {
 		ArrayList<Movie> moviesdb =	db.selectAllMovies();
@@ -23,7 +23,7 @@ public class MovieController {
 
 	/**
 	 * Search for movie based on movieId. Returns a movie object
-	 * 
+	 *
 	 */
 	public Movie searchMovieById(int movieId) {
 
@@ -34,15 +34,15 @@ public class MovieController {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Search for movie based on theatre Id. Returns list of movie objects
-	 * 
+	 *
 	 */
 	public ArrayList<Movie> searchMovieByTheatre(int theatredId) {
 		ArrayList<Integer> movieIds = db.selectMoviesByTheatre(theatredId);
 		ArrayList<Movie> filteredmovies = new ArrayList<Movie>();
-		
+
 		for (int id : movieIds) {
 			for (Movie movie : movies) {
 				if(movie.getMovieId()==id) {
@@ -54,7 +54,7 @@ public class MovieController {
 		return filteredmovies;
 	}
 
-	
+
 	public ArrayList<String> getMovieNames() {
 		ArrayList<String> movieNames = new ArrayList<String>();
 		for(int i = 0; i < movies.size(); i++){
@@ -66,32 +66,26 @@ public class MovieController {
 	public ArrayList<Movie> getMovies() {
 		return movies;
 	}
-	
+
 //	 public static <T> ArrayList<T> getArrayListFromStream(Stream<T> stream)
 //	    {
-//	  
+//
 //	        // Convert the Stream to List
 //	        List<T>
 //	            list = stream.collect(Collectors.toList());
-//	  
+//
 //	        // Create an ArrayList of the List
 //	        ArrayList<T>
 //	            arrayList = new ArrayList<T>(list);
-//	  
+//
 //	        // Return the ArrayList
 //	        return arrayList;
 //	    }
-//	 
-//	 
+//
+//
 //	 	public static void main(String[] args) {
 //			 MovieController mv = new MovieController();
 //			 mv.searchMovieByTheatre(1);
 //		}
 
 }
-
-			
-
-
-
-
