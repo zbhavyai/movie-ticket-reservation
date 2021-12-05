@@ -181,7 +181,6 @@ public class MovieSelectionView extends JFrame {
         registeredUserCardExpiryField.setEnabled(true);
         registeredUserNameField.setText("");
         registeredUserNameField.setEnabled(true);
-
     }
 
     public void createSeats() {

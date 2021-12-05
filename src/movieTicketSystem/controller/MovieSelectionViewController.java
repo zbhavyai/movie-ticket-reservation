@@ -153,6 +153,7 @@ public class MovieSelectionViewController {
 
         @Override
         public void actionPerformed(ActionEvent e) {
+            double totalPrice;
 
             //**** FOR EACH SELECTED SEAT, SEND ROW, COL, MOVIE, THEATRE, SHOWTIME TO BACK END FOR PURCHASE ****
             JButton[][] seats = theView.getSeats();
@@ -160,16 +161,20 @@ public class MovieSelectionViewController {
                 for(int j=0; j<10; j++){
                     Color seatBackground = seats[i][j].getBackground();
                     if(seatBackground == Color.green){
-                        int row = i;
-                        int col = j;
+                        int row = i+1;
+                        int col = j+1;
+                        String movie = theView.getMovieInput();
+                        String theatre = theView.getTheatreInput();
+                        String showTime = theView.getShowtimeInput();
                         System.out.println(
                                 "\nPURCHASE INFO:"
-                                + "\n row: " + (i+1)
-                                + "\n col: " + (j+1)
-                                + "\n movie: " + theView.getMovieInput()
-                                + "\n theatre: " + theView.getTheatreInput()
-                                + "\n showtime: " + theView.getShowtimeInput()
+                                + "\n row: " + row
+                                + "\n col: " + col
+                                + "\n movie: " + movie
+                                + "\n theatre: " + theatre
+                                + "\n showtime: " + showTime
                         );
+
                     }
                 }
             }
