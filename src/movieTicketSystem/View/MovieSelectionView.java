@@ -3,6 +3,7 @@ package movieTicketSystem.View;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
+import movieTicketSystem.model.Coupon;
 import movieTicketSystem.model.RegisteredUser;
 
 import java.text.DecimalFormat;
@@ -17,6 +18,7 @@ public class MovieSelectionView extends JFrame {
     final int MOVIE_TAB_INDEX = 0;
     final int SIGNUP_TAB_INDEX = 1;
     final int PURCHASE_TAB_INDEX = 2;
+    final int CANCEL_TAB_INDEX = 3;
 
     private boolean loginFormShowing;
     private int selectedSeatCount;
@@ -69,6 +71,12 @@ public class MovieSelectionView extends JFrame {
     private JFormattedTextField purchasingCardholderNameTF;
     private JTextField remainingCouponAmtTF;
     private JPanel paymentPanel;
+    private JButton cancelPreviousTicketButton;
+    private JTextField ticketCancellationTF;
+    private JButton cancelTicketButton;
+    private JButton leaveCancelPageButton;
+    private JTextField refundCouponCode;
+    private JTextField refundCouponAmount;
 
 
     public MovieSelectionView() {
@@ -96,6 +104,8 @@ public class MovieSelectionView extends JFrame {
         signUpNavButton.addActionListener(new signupButtonListener());
         leaveSignupButton.addActionListener(new backToMainButtonListener());
         cancelPaymentButton.addActionListener(new backToMainButtonListener());
+        cancelPreviousTicketButton.addActionListener(new cancelTicketNavButtonListener());
+        leaveCancelPageButton.addActionListener(new backToMainButtonListener());
 
         setVisible(true);
         this.setSize(new Dimension(720, 520));
@@ -305,19 +315,29 @@ public class MovieSelectionView extends JFrame {
                 tabbedPane.setEnabledAt(MOVIE_TAB_INDEX, true);
                 tabbedPane.setEnabledAt(SIGNUP_TAB_INDEX, false);
                 tabbedPane.setEnabledAt(PURCHASE_TAB_INDEX, false);
+                tabbedPane.setEnabledAt(CANCEL_TAB_INDEX, false);
                 tabbedPane.setSelectedIndex(MOVIE_TAB_INDEX);
                 break;
             case "signup":
                 tabbedPane.setEnabledAt(MOVIE_TAB_INDEX, false);
                 tabbedPane.setEnabledAt(SIGNUP_TAB_INDEX, true);
+                tabbedPane.setEnabledAt(CANCEL_TAB_INDEX, false);
                 tabbedPane.setEnabledAt(PURCHASE_TAB_INDEX, false);
                 tabbedPane.setSelectedIndex(SIGNUP_TAB_INDEX);
                 break;
             case "purchase":
                 tabbedPane.setEnabledAt(MOVIE_TAB_INDEX, false);
                 tabbedPane.setEnabledAt(SIGNUP_TAB_INDEX, false);
+                tabbedPane.setEnabledAt(CANCEL_TAB_INDEX, false);
                 tabbedPane.setEnabledAt(PURCHASE_TAB_INDEX, true);
                 tabbedPane.setSelectedIndex(PURCHASE_TAB_INDEX);
+                break;
+            case "cancel":
+                tabbedPane.setEnabledAt(MOVIE_TAB_INDEX, false);
+                tabbedPane.setEnabledAt(SIGNUP_TAB_INDEX, false);
+                tabbedPane.setEnabledAt(CANCEL_TAB_INDEX, true);
+                tabbedPane.setEnabledAt(PURCHASE_TAB_INDEX, false);
+                tabbedPane.setSelectedIndex(CANCEL_TAB_INDEX);
                 break;
         }
     }
@@ -405,6 +425,42 @@ public class MovieSelectionView extends JFrame {
         couponCodeTF.setEnabled(b);
     }
 
+    public String getTicketCancellationID() {
+        return ticketCancellationTF.getText();
+    }
+
+    public void addCompletePaymentListener(ActionListener a) {
+        completePaymentButton.addActionListener(a);
+    }
+
+    public String getCreditCardNum() {
+        return purchasingCreditCardNumTF.getText();
+    }
+
+    public String getCVC() {
+        return purchasingCVCTF.getText();
+    }
+
+    public String getCardExpiry() {
+        return purchasingCardExpiryTF.getText();
+    }
+
+    public String getCardHolderName() {
+        return purchasingCardholderNameTF.getText();
+    }
+
+    public double getGrandTotal() {
+        return Double.parseDouble(grandTotalTF.getText());
+    }
+
+    public void setRefundCouponCode(String s) {
+        refundCouponCode.setText(s);
+    }
+
+    public void setRefundCouponAmt(String s) {
+        refundCouponAmount.setText(s);
+    }
+
 
     // ******************* ACTION LISTENERS **************************
     public void addMovieComboBoxActionListener(ActionListener a) {
@@ -447,28 +503,8 @@ public class MovieSelectionView extends JFrame {
         applyCouponButton.addActionListener(a);
     }
 
-    public void addCompletePaymentListener(ActionListener a) {
-        completePaymentButton.addActionListener(a);
-    }
-
-    public String getCreditCardNum() {
-        return purchasingCreditCardNumTF.getText();
-    }
-
-    public String getCVC() {
-        return purchasingCVCTF.getText();
-    }
-
-    public String getCardExpiry() {
-        return purchasingCardExpiryTF.getText();
-    }
-
-    public String getCardHolderName() {
-        return purchasingCardholderNameTF.getText();
-    }
-
-    public double getGrandTotal() {
-        return Double.parseDouble(grandTotalTF.getText());
+    public void addCancelTicketButtonListener(ActionListener a) {
+        cancelTicketButton.addActionListener(a);
     }
 
 
@@ -504,6 +540,13 @@ public class MovieSelectionView extends JFrame {
         }
     }
 
+    class cancelTicketNavButtonListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            setView("cancel");
+        }
+    }
+
 
     // ************************** INTELLIJ CODE DO NOT TOUCH ***********************************
 
@@ -535,7 +578,7 @@ public class MovieSelectionView extends JFrame {
         label1.setText("  Theatre");
         mainPanel.add(label1, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel1 = new JPanel();
-        panel1.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
+        panel1.setLayout(new GridLayoutManager(1, 4, new Insets(0, 0, 0, 0), -1, -1));
         mainPanel.add(panel1, new GridConstraints(4, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null, null, 0, false));
         purchaseButton = new JButton();
         purchaseButton.setText("Purchase");
@@ -546,6 +589,9 @@ public class MovieSelectionView extends JFrame {
         signUpNavButton = new JButton();
         signUpNavButton.setText("Sign Up");
         panel1.add(signUpNavButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        cancelPreviousTicketButton = new JButton();
+        cancelPreviousTicketButton.setText("Cancel A Ticket");
+        panel1.add(cancelPreviousTicketButton, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         movieSelectorComboBox = new JComboBox();
         mainPanel.add(movieSelectorComboBox, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         theatreSelectionComboBox = new JComboBox();
@@ -661,14 +707,18 @@ public class MovieSelectionView extends JFrame {
         label14.setText("  Grand Total: $");
         panel4.add(label14, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         totalPriceTF = new JFormattedTextField();
+        totalPriceTF.setEditable(false);
         panel4.add(totalPriceTF, new GridConstraints(0, 1, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         couponCodeTF = new JFormattedTextField();
         panel4.add(couponCodeTF, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         couponAmtTF = new JFormattedTextField();
+        couponAmtTF.setEditable(false);
         panel4.add(couponAmtTF, new GridConstraints(2, 1, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         grandTotalTF = new JFormattedTextField();
+        grandTotalTF.setEditable(false);
         panel4.add(grandTotalTF, new GridConstraints(3, 1, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         remainingCouponAmtTF = new JTextField();
+        remainingCouponAmtTF.setEditable(false);
         panel4.add(remainingCouponAmtTF, new GridConstraints(4, 1, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         final JLabel label15 = new JLabel();
         label15.setText("  RemainingCoupon Amount: $");
@@ -712,6 +762,41 @@ public class MovieSelectionView extends JFrame {
         panel5.add(spacer3, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         final Spacer spacer4 = new Spacer();
         panel5.add(spacer4, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        final JPanel panel6 = new JPanel();
+        panel6.setLayout(new GridLayoutManager(4, 3, new Insets(0, 0, 0, 0), -1, -1));
+        tabbedPane.addTab("Cancel Ticket", panel6);
+        final JLabel label21 = new JLabel();
+        label21.setText("  Please Enter the ID of the ticket you'd like to cancel:");
+        panel6.add(label21, new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JPanel panel7 = new JPanel();
+        panel7.setLayout(new GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1));
+        panel6.add(panel7, new GridConstraints(3, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        cancelTicketButton = new JButton();
+        cancelTicketButton.setText("CancelTicket");
+        panel7.add(cancelTicketButton, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        leaveCancelPageButton = new JButton();
+        leaveCancelPageButton.setText("Return  To Main Menu");
+        panel7.add(leaveCancelPageButton, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final Spacer spacer5 = new Spacer();
+        panel7.add(spacer5, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        final Spacer spacer6 = new Spacer();
+        panel7.add(spacer6, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        final JLabel label22 = new JLabel();
+        label22.setText("  Refunded Coupon Code: ");
+        panel6.add(label22, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        refundCouponCode = new JTextField();
+        refundCouponCode.setEditable(false);
+        refundCouponCode.setEnabled(true);
+        panel6.add(refundCouponCode, new GridConstraints(1, 1, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        final JLabel label23 = new JLabel();
+        label23.setText("  Refunded Coupon Amount: $");
+        panel6.add(label23, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        refundCouponAmount = new JTextField();
+        refundCouponAmount.setEditable(false);
+        refundCouponAmount.setEnabled(true);
+        panel6.add(refundCouponAmount, new GridConstraints(2, 1, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        ticketCancellationTF = new JTextField();
+        panel6.add(ticketCancellationTF, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
     }
 
     /**

@@ -25,6 +25,7 @@ public class MovieSelectionViewController {
     ShowLoginButtonListener showLoginButtonListener;
     CouponButtonListener couponButtonListener;
     CompletePaymentButtonListener completePaymentButtonListener;
+    CancelTicketButtonListener cancelTicketButtonListener;
 
     MovieSelectionView theView;
     ViewController viewController;
@@ -45,6 +46,7 @@ public class MovieSelectionViewController {
         showLoginButtonListener = new ShowLoginButtonListener();
         couponButtonListener = new CouponButtonListener();
         completePaymentButtonListener = new CompletePaymentButtonListener();
+        cancelTicketButtonListener = new CancelTicketButtonListener();
         theView.addMovieComboBoxActionListener(movieListener);
         theView.addTheatreComboBoxActionListener(theatreListener);
         theView.addShowtimeComboBoxActionListener(showtimeListener);
@@ -53,6 +55,7 @@ public class MovieSelectionViewController {
         theView.addLoginButtonListener(loginButtonListener);
         theView.addCouponistener(couponButtonListener);
         theView.addCompletePaymentListener(completePaymentButtonListener);
+        theView.addCancelTicketButtonListener(cancelTicketButtonListener);
 
         ArrayList<String> movieOptions = getMovies();
         theView.setMovieOptions(movieOptions);
@@ -263,6 +266,28 @@ public class MovieSelectionViewController {
         }
     }
 
+    class CancelTicketButtonListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+                String ticketId = theView.getTicketCancellationID();
+                Coupon coupon = cancelTicket(ticketId);
+                if(coupon == null){
+                    JOptionPane.showMessageDialog(theView, "Ticket Not Found.",
+                            "Alert", JOptionPane.WARNING_MESSAGE);
+                    theView.setRefundCouponAmt("");
+                    theView.setRefundCouponCode("");
+                    return;
+                }
+
+                // ticket is found
+                theView.setRefundCouponAmt(String.format("%.02f", coupon.getCouponAmount()));
+                theView.setRefundCouponCode(coupon.getCouponCode());
+
+        }
+    }
+
     class PurchaseButtonListener implements ActionListener {
 
         @Override
@@ -336,6 +361,10 @@ public class MovieSelectionViewController {
 
     private Coupon getCoupon(String couponCode) {
         return viewController.getCoupon(couponCode);
+    }
+
+    private Coupon cancelTicket(String ticketID){
+        return viewController.cancelTicket(ticketID);
     }
 
 }

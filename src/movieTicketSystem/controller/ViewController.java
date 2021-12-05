@@ -121,4 +121,22 @@ public class ViewController {
     }
 
 
+    public Coupon cancelTicket(String ticketID) {
+        Coupon c1 = new Coupon();
+        c1.setCouponCode("OIUY");
+        c1.setCouponAmount(25);
+
+        Coupon c2 = new Coupon();
+        c2.setCouponCode("MNBV");
+        c2.setCouponAmount(15);
+
+        switch(ticketID) {
+            case "101":
+                return c1;
+            case "102":
+                return c2;
+            default:
+                return null;
+        }
+    }
 }
