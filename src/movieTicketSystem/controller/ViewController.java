@@ -121,7 +121,7 @@ public class ViewController {
     }
 
 
-    public Coupon cancelTicket(String ticketID) {
+    public Coupon cancelTicket(String ticketID, boolean loggedIn) {
         Coupon c1 = new Coupon();
         c1.setCouponCode("OIUY");
         c1.setCouponAmount(25);

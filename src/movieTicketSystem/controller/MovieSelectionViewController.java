@@ -272,7 +272,8 @@ public class MovieSelectionViewController {
         public void actionPerformed(ActionEvent e) {
 
                 String ticketId = theView.getTicketCancellationID();
-                Coupon coupon = cancelTicket(ticketId);
+                boolean registered = theView.getLoggedIn();
+                Coupon coupon = cancelTicket(ticketId, registered);
                 if(coupon == null){
                     JOptionPane.showMessageDialog(theView, "Ticket Not Found.",
                             "Alert", JOptionPane.WARNING_MESSAGE);
@@ -363,8 +364,8 @@ public class MovieSelectionViewController {
         return viewController.getCoupon(couponCode);
     }
 
-    private Coupon cancelTicket(String ticketID){
-        return viewController.cancelTicket(ticketID);
+    private Coupon cancelTicket(String ticketID, boolean loggedIn){
+        return viewController.cancelTicket(ticketID, loggedIn);
     }
 
 }
