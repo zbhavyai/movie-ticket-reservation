@@ -5,6 +5,7 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import movieTicketSystem.model.RegisteredUser;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import javax.swing.*;
 import java.awt.*;
@@ -55,6 +56,19 @@ public class MovieSelectionView extends JFrame {
     private JTextField registeredUserNameField;
     private JTextField registeredUserAddressField;
     private JTextField registeredUserCardExpiryField;
+    private JButton applyCouponButton;
+    private JFormattedTextField totalPriceTF;
+    private JFormattedTextField couponCodeTF;
+    private JFormattedTextField couponAmtTF;
+    private JFormattedTextField grandTotalTF;
+    private JFormattedTextField purchasingCreditCardNumTF;
+    private JFormattedTextField purchasingCVCTF;
+    private JFormattedTextField purchasingCardExpiryTF;
+    private JButton completePaymentButton;
+    private JButton cancelPaymentButton;
+    private JFormattedTextField purchasingCardholderNameTF;
+    private JTextField remainingCouponAmtTF;
+    private JPanel paymentPanel;
 
 
     public MovieSelectionView() {
@@ -81,6 +95,7 @@ public class MovieSelectionView extends JFrame {
         // add action listeners
         signUpNavButton.addActionListener(new signupButtonListener());
         leaveSignupButton.addActionListener(new backToMainButtonListener());
+        cancelPaymentButton.addActionListener(new backToMainButtonListener());
 
         setVisible(true);
         this.setSize(new Dimension(720, 520));
@@ -183,6 +198,36 @@ public class MovieSelectionView extends JFrame {
         registeredUserNameField.setEnabled(true);
     }
 
+    // method one, if a user is logged in
+    public void populatePurchaseTab(RegisteredUser user, double price) {
+        totalPriceTF.setText(String.format("%.02f", price));
+        totalPriceTF.setEnabled(false);
+        couponAmtTF.setText("0.00");
+        couponAmtTF.setEnabled(false);
+        remainingCouponAmtTF.setText("0.00");
+        remainingCouponAmtTF.setEnabled(false);
+        grandTotalTF.setText(String.format("%.02f", price));
+        grandTotalTF.setEnabled(false);
+        purchasingCreditCardNumTF.setText(user.getCard().getCardNum());
+        purchasingCardExpiryTF.setText(user.getCard().getExpiry().toString());
+        purchasingCardholderNameTF.setText(user.getCard().getCardHolderName());
+    }
+
+    // if a user is not logged in
+    public void populatePurchaseTab(double price) {
+        totalPriceTF.setText(String.format("%.02f", price));
+        totalPriceTF.setEnabled(false);
+        couponAmtTF.setText("0.00");
+        couponAmtTF.setEnabled(false);
+        remainingCouponAmtTF.setText("0.00");
+        remainingCouponAmtTF.setEnabled(false);
+        grandTotalTF.setText(String.format("%.02f", price));
+        grandTotalTF.setEnabled(false);
+        purchasingCreditCardNumTF.setText("");
+        purchasingCardExpiryTF.setText("");
+        purchasingCardholderNameTF.setText("");
+    }
+
     public void createSeats() {
         int width = 60;
         int height = 30;
@@ -277,6 +322,12 @@ public class MovieSelectionView extends JFrame {
         }
     }
 
+    public void setPaymentDetailsEnabled(boolean b) {
+        for (Component c : paymentPanel.getComponents()) {
+            c.setEnabled(b);
+        }
+    }
+
     // ****************** Getters and Setters *************************
     public String getMovieInput() {
         return (movieSelectorComboBox.getSelectedItem() == null) ? "null" : movieSelectorComboBox.getSelectedItem().toString();
@@ -318,6 +369,42 @@ public class MovieSelectionView extends JFrame {
         return loggedIn;
     }
 
+    public double getTotalPrice() {
+        return Double.parseDouble(totalPriceTF.getText());
+    }
+
+    public String getCouponCode() {
+        return couponCodeTF.getText();
+    }
+
+    public void setCouponAmount(String s) {
+        couponAmtTF.setText(s);
+    }
+
+    public void setGrandTotal(String s) {
+        grandTotalTF.setText(s);
+    }
+
+    public void setRemainingCouponAmount(String s) {
+        remainingCouponAmtTF.setText(s);
+    }
+
+    public void setCouponButtonText(String s) {
+        applyCouponButton.setText(s);
+    }
+
+    public String getCouponButtonText() {
+        return applyCouponButton.getText();
+    }
+
+    public void setCouponCodeText(String s) {
+        couponCodeTF.setText("");
+    }
+
+    public void setCouponCodeEnabled(boolean b) {
+        couponCodeTF.setEnabled(b);
+    }
+
 
     // ******************* ACTION LISTENERS **************************
     public void addMovieComboBoxActionListener(ActionListener a) {
@@ -356,6 +443,9 @@ public class MovieSelectionView extends JFrame {
         loginButton.addActionListener(a);
     }
 
+    public void addCouponistener(ActionListener a) {
+        applyCouponButton.addActionListener(a);
+    }
 
     class seatButtonColorChangeListener implements ActionListener {
         @Override
@@ -525,8 +615,78 @@ public class MovieSelectionView extends JFrame {
         label10.setText("  Address: ");
         panel3.add(label10, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         purchaseTab = new JPanel();
-        purchaseTab.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+        purchaseTab.setLayout(new GridLayoutManager(3, 1, new Insets(0, 0, 0, 0), -1, -1));
         tabbedPane.addTab("Purchase", purchaseTab);
+        final JPanel panel4 = new JPanel();
+        panel4.setLayout(new GridLayoutManager(5, 3, new Insets(0, 0, 0, 0), -1, -1));
+        purchaseTab.add(panel4, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        final JLabel label11 = new JLabel();
+        label11.setText("  Ticket Price Total:  $");
+        panel4.add(label11, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JLabel label12 = new JLabel();
+        label12.setText("  Enter Coupon Code: ");
+        panel4.add(label12, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        applyCouponButton = new JButton();
+        applyCouponButton.setText("Apply Coupon");
+        panel4.add(applyCouponButton, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JLabel label13 = new JLabel();
+        label13.setText("  Coupon Amount: $");
+        panel4.add(label13, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JLabel label14 = new JLabel();
+        label14.setText("  Grand Total: $");
+        panel4.add(label14, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        totalPriceTF = new JFormattedTextField();
+        panel4.add(totalPriceTF, new GridConstraints(0, 1, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        couponCodeTF = new JFormattedTextField();
+        panel4.add(couponCodeTF, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        couponAmtTF = new JFormattedTextField();
+        panel4.add(couponAmtTF, new GridConstraints(2, 1, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        grandTotalTF = new JFormattedTextField();
+        panel4.add(grandTotalTF, new GridConstraints(3, 1, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        remainingCouponAmtTF = new JTextField();
+        panel4.add(remainingCouponAmtTF, new GridConstraints(4, 1, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        final JLabel label15 = new JLabel();
+        label15.setText("  RemainingCoupon Amount: $");
+        panel4.add(label15, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        paymentPanel = new JPanel();
+        paymentPanel.setLayout(new GridLayoutManager(5, 2, new Insets(0, 0, 0, 0), -1, -1));
+        purchaseTab.add(paymentPanel, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        final JLabel label16 = new JLabel();
+        label16.setText("Payment Details");
+        paymentPanel.add(label16, new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        purchasingCreditCardNumTF = new JFormattedTextField();
+        paymentPanel.add(purchasingCreditCardNumTF, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        final JLabel label17 = new JLabel();
+        label17.setText("  Credit Card #: ");
+        paymentPanel.add(label17, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        purchasingCVCTF = new JFormattedTextField();
+        paymentPanel.add(purchasingCVCTF, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        final JLabel label18 = new JLabel();
+        label18.setText("  CVC: ");
+        paymentPanel.add(label18, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        purchasingCardExpiryTF = new JFormattedTextField();
+        paymentPanel.add(purchasingCardExpiryTF, new GridConstraints(3, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        final JLabel label19 = new JLabel();
+        label19.setText("  Cardholder First and Last Name: ");
+        paymentPanel.add(label19, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JLabel label20 = new JLabel();
+        label20.setText("  Card Expiry Date: ");
+        paymentPanel.add(label20, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        purchasingCardholderNameTF = new JFormattedTextField();
+        paymentPanel.add(purchasingCardholderNameTF, new GridConstraints(4, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        final JPanel panel5 = new JPanel();
+        panel5.setLayout(new GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1));
+        purchaseTab.add(panel5, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        cancelPaymentButton = new JButton();
+        cancelPaymentButton.setText("Cancel");
+        panel5.add(cancelPaymentButton, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        completePaymentButton = new JButton();
+        completePaymentButton.setText("Complete Payment");
+        panel5.add(completePaymentButton, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final Spacer spacer3 = new Spacer();
+        panel5.add(spacer3, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        final Spacer spacer4 = new Spacer();
+        panel5.add(spacer4, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
     }
 
     /**

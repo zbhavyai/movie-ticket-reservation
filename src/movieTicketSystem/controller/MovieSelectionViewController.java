@@ -1,7 +1,7 @@
 package movieTicketSystem.controller;
 
-import com.mysql.cj.result.LocalDateValueFactory;
 import movieTicketSystem.View.MovieSelectionView;
+import movieTicketSystem.model.Coupon;
 import movieTicketSystem.model.Payment;
 import movieTicketSystem.model.RegisteredUser;
 
@@ -22,35 +22,36 @@ public class MovieSelectionViewController {
     PurchaseButtonListener purchaseButtonListener;
     LoginButtonListener loginButtonListener;
     ShowLoginButtonListener showLoginButtonListener;
+    CouponButtonListener couponButtonListener;
 
     MovieSelectionView theView;
-
     ViewController viewController;
+
+    RegisteredUser loggedInUser;
 
 
     public MovieSelectionViewController(MovieSelectionView theView, ViewController viewController) {
         this.theView = theView;
         this.viewController = viewController;
 
-        // action listeners
+        // create and add action listeners
         movieListener = new MovieComboBoxListener();
         theatreListener = new TheatreComboBoxListener();
         showtimeListener = new ShowtimeComboBoxListener();
         purchaseButtonListener = new PurchaseButtonListener();
         loginButtonListener = new LoginButtonListener();
         showLoginButtonListener = new ShowLoginButtonListener();
-
-        ArrayList<String> movieOptions = getMovies();
-
-        theView.setMovieOptions(movieOptions);
-
-        // add action listeners
+        couponButtonListener = new CouponButtonListener();
         theView.addMovieComboBoxActionListener(movieListener);
         theView.addTheatreComboBoxActionListener(theatreListener);
         theView.addShowtimeComboBoxActionListener(showtimeListener);
         theView.addPurchaseButtonActionListener(purchaseButtonListener);
         theView.addShowLoginButtonActionListener(showLoginButtonListener);
         theView.addLoginButtonListener(loginButtonListener);
+        theView.addCouponistener(couponButtonListener);
+
+        ArrayList<String> movieOptions = getMovies();
+        theView.setMovieOptions(movieOptions);
 
         theView.setVisible(true);
 
@@ -66,17 +67,18 @@ public class MovieSelectionViewController {
                 String userName = theView.getUserName();
                 String password = theView.getPassword();
 
-                RegisteredUser authenticatedUser = authenticateUser(userName, password);
-                if(authenticatedUser == null){
+                loggedInUser = authenticateUser(userName, password);
+                if(loggedInUser == null){
                     JOptionPane.showMessageDialog(theView, "Invalid Credentials.",
                             "Alert", JOptionPane.WARNING_MESSAGE);
                             theView.setLoggedIn(null);
                 }
-                theView.setLoggedIn(authenticatedUser);
+                theView.setLoggedIn(loggedInUser);
             }
             else{
                 // log out
                 theView.setLoggedIn(null);
+                loggedInUser = null;
             }
         }
     }
@@ -153,7 +155,7 @@ public class MovieSelectionViewController {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            double totalPrice;
+            double totalPrice =0;
 
             //**** FOR EACH SELECTED SEAT, SEND ROW, COL, MOVIE, THEATRE, SHOWTIME TO BACK END FOR PURCHASE ****
             JButton[][] seats = theView.getSeats();
@@ -174,12 +176,72 @@ public class MovieSelectionViewController {
                                 + "\n theatre: " + theatre
                                 + "\n showtime: " + showTime
                         );
+                        totalPrice += getTicketPrice(showTime, theatre, movie, row, col);
 
                     }
                 }
             }
+            if(loggedInUser==null){
+                theView.populatePurchaseTab(totalPrice);
+            }else{
+                theView.populatePurchaseTab(loggedInUser, totalPrice);
+            }
 
             theView.setView("purchase");
+        }
+    }
+
+    class CouponButtonListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            double totalPrice = theView.getTotalPrice();
+
+            String couponAction = theView.getCouponButtonText();
+            if (couponAction.equals("Apply Coupon")){
+                String couponCode = theView.getCouponCode();
+                double grandTotal = totalPrice;
+                double couponAmountRemaining = 0;
+
+                Coupon coupon = getCoupon(couponCode);
+                if(coupon == null){
+                    JOptionPane.showMessageDialog(theView, "Coupon Not found.",
+                            "Alert", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+                else{
+                    double couponAmount = coupon.getCouponAmount();
+                    if(couponAmount > grandTotal){
+                        grandTotal = 0;
+                        couponAmountRemaining = couponAmount - totalPrice;
+                    }else{
+                        grandTotal = totalPrice - couponAmount;
+                    }
+
+                    theView.setCouponAmount(String.format("%.02f", couponAmount));
+                    theView.setGrandTotal(String.format("%.02f", grandTotal));
+                    theView.setRemainingCouponAmount(String.format("%.02f", couponAmountRemaining));
+                    theView.setCouponButtonText("Remove Coupon");
+                    theView.setCouponCodeEnabled(false);
+
+                    // if total is 0 no need to enter payment details
+                    if(grandTotal==0){
+                        theView.setPaymentDetailsEnabled(false);
+                    } else{
+                        theView.setPaymentDetailsEnabled(true);
+                    }
+                }
+            } else{
+                // Remove Coupon
+                theView.setCouponAmount(String.format("0.00"));
+                theView.setGrandTotal(String.format("%.02f", totalPrice));
+                theView.setRemainingCouponAmount(String.format("0.00"));
+                theView.setCouponButtonText("Apply Coupon");
+                theView.setCouponCodeText("");
+                theView.setPaymentDetailsEnabled(true);
+                theView.setCouponCodeEnabled(true);
+            }
+
         }
     }
 
@@ -235,6 +297,29 @@ public class MovieSelectionViewController {
             return dummyUser;
         }
         return null;
+    }
+
+    private double getTicketPrice(String showTime, String theatre, String movie, int row, int col) {
+        return 20;
+    }
+
+    private Coupon getCoupon(String couponCode) {
+        Coupon c1 = new Coupon();
+        c1.setCouponCode("QWER");
+        c1.setCouponAmount(25);
+
+        Coupon c2 = new Coupon();
+        c2.setCouponCode("ASDF");
+        c2.setCouponAmount(15);
+
+        switch(couponCode) {
+            case "QWER":
+                return c1;
+            case "ASDF":
+                return c2;
+            default:
+                return null;
+        }
     }
 
 }
