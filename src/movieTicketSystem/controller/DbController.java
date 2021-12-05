@@ -1,10 +1,17 @@
 package movieTicketSystem.controller;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.sql.*;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Properties;
+import java.util.Random;
+
+import com.mysql.cj.result.BufferedRowList;
+
 import movieTicketSystem.model.*;
 
 /**
@@ -233,6 +240,35 @@ public class DbController {
     }
 
     /**
+     * 
+     * This method is used to get the price of a movie
+     *
+     * @param movieId is the Id of the movie to search
+     * @return the price of the movie as a double
+     */
+    public double getPrice(int movieId) {
+        double moviePrice = 0.0;
+
+        try {
+            String query = "SELECT price FROM movie Where movieId = ?";
+            PreparedStatement myStmt = dbConnect.prepareStatement(query);
+            myStmt.setInt(1, movieId);
+
+            ResultSet results = myStmt.executeQuery();
+
+            while (results.next()) {
+                moviePrice = results.getDouble("price");
+            }
+
+            myStmt.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return moviePrice;
+    }
+
+    /**
      * This method is used to retrieve the showtimeId based on the theatreId,
      * movieId and showtimeString
      *
@@ -266,6 +302,56 @@ public class DbController {
         }
 
         return showtimeId;
+    }
+
+    public boolean checkValidShowtime(int ticketId){
+        boolean validShowtime = true;
+        LocalDate showtime = getShowtimeByTicketId(ticketId).toLocalDate();
+        LocalDate now = LocalDate.now().plusDays(3);
+        if(now.isAfter(showtime)){
+            validShowtime = false;
+        }
+        return validShowtime;
+    }
+
+    public Date getShowtimeByTicketId(int ticketId){
+        Date showtime = null;
+        int showtimeId = 0; 
+        try {
+            String query = "SELECT showtimeId FROM ticket Where ticketId = ?";
+            PreparedStatement myStmt = dbConnect.prepareStatement(query);
+
+            myStmt.setInt(1, ticketId);
+
+            ResultSet results = myStmt.executeQuery();
+
+            while (results.next()) {
+                showtimeId = results.getInt("showtimeId");
+            }
+
+            myStmt.close();
+            try {
+                query = "SELECT showtime FROM showtime Where showtimeId = ?";
+                myStmt = dbConnect.prepareStatement(query);
+    
+                myStmt.setInt(1, showtimeId);
+    
+                results = myStmt.executeQuery();
+    
+                while (results.next()) {
+                    showtime = results.getDate("showtime");
+                }
+    
+                myStmt.close();
+            }
+            catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return showtime;
     }
 
     /**
@@ -592,16 +678,17 @@ public class DbController {
      * @param email email while registering in the system
      * @return RegisteredUser object if found, null otherwise
      */
-    public RegisteredUser getRegisteredUser(String email) {
+    public RegisteredUser getRegisteredUser(String email, String password) {
         try {
-            String query = "SELECT * FROM REGISTERED_USER WHERE email = ?";
+            String query = "SELECT * FROM REGISTERED_USER WHERE email = ? AND password = ?";
             PreparedStatement myStmt = this.dbConnect.prepareStatement(query);
             myStmt.setString(1, email);
+            myStmt.setString(2, password);
 
             ResultSet results = myStmt.executeQuery();
 
             while (results.next()) {
-                if (results.getString("email").equals(email)) {
+                if (results.getString("email").equals(email) && results.getString("password").equals(password)) {
                     RegisteredUser ru = new RegisteredUser();
                     ru.setId(results.getInt("userId"));
                     ru.setPassword(results.getString("password"));
@@ -636,7 +723,7 @@ public class DbController {
     public RegisteredUser saveRegisteredUser(String email, String password, String address, String holderName,
             String cardNumber, LocalDate expiry) {
         // if the email already exists, dont save
-        if (this.getRegisteredUser(email) != null) {
+        if (this.getRegisteredUser(email, password) != null) {
             return null;
         }
 
@@ -851,6 +938,94 @@ public class DbController {
         }
 
         return null;
+    }
+
+    private boolean checkCode(String couponCode){
+        boolean goodCode = true;
+        ArrayList<String> codesTaken = new ArrayList<String>();
+        try {
+            String query = "SELECT couponCode FROM COUPON";
+            PreparedStatement myStmt = this.dbConnect.prepareStatement(query);
+
+            ResultSet results = myStmt.executeQuery();
+
+            while (results.next()) {
+                codesTaken.add(results.getString("couponCode"));
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        for(int i = 0; i < codesTaken.size(); i++){
+            if(couponCode.equals(codesTaken.get(i))){
+                goodCode = false;
+            }
+        }
+        return goodCode;
+    }
+
+    private String createCouponCode(){
+        StringBuffer b = new StringBuffer();
+        for(int i = 0; i < 10; i++){
+            Random r = new Random();
+            b.append((char) ('a' + r.nextInt(26)));
+        }
+        if(checkCode(b.toString()) == true){
+            return b.toString();
+        }
+        else{
+            createCouponCode();
+        }
+        return "";
+    }
+
+    public int getShowtimeIdByTicketId(int ticketId){
+        int showtimeId = 0; 
+        try {
+            String query = "SELECT showtimeId FROM ticket Where ticketId = ?";
+            PreparedStatement myStmt = dbConnect.prepareStatement(query);
+
+            myStmt.setInt(1, ticketId);
+
+            ResultSet results = myStmt.executeQuery();
+
+            while (results.next()) {
+                showtimeId = results.getInt("showtimeId");
+            }
+
+            myStmt.close();
+        }
+        catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return showtimeId;
+    }
+
+    public Coupon createCoupon(int ticketId, boolean loggedIn){
+        double price = getPrice(getMovieIdByShowtimeId(getShowtimeIdByTicketId(ticketId)));
+        if(loggedIn == false){
+            price = price * 0.85;
+        }
+        return saveCoupon(createCouponCode(), price, LocalDate.now().plusYears(1));
+    }
+
+    public int getMovieIdByShowtimeId(int showtimeId){
+        int movieId = 0;
+        try {
+            String query = "SELECT movieId FROM shotime WHERE showtimeId = ?";
+            PreparedStatement myStmt = this.dbConnect.prepareStatement(query);
+            myStmt.setDouble(1, showtimeId);
+
+            ResultSet results = myStmt.executeQuery();
+
+            while (results.next()) {
+                movieId = results.getInt("movieId");
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return movieId;
     }
 
     /**

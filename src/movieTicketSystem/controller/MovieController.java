@@ -28,6 +28,10 @@ public class MovieController {
 		return null;
 	}
 
+	public double getPrice(String movieName){
+		return db.getPrice(db.getMovieIdByName(movieName));
+	}
+
 	/**
 	 * 
 	 * Method used to get a list of all movies by their names, available in the system

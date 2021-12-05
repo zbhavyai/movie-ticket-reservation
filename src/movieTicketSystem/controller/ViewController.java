@@ -4,6 +4,7 @@ import movieTicketSystem.View.MovieSelectionView;
 import movieTicketSystem.model.Coupon;
 import movieTicketSystem.model.Payment;
 import movieTicketSystem.model.RegisteredUser;
+import movieTicketSystem.model.Ticket;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -31,6 +32,7 @@ public class ViewController {
         MovieSelectionViewController movieSelectionViewController = new MovieSelectionViewController(movieSelectionView, viewController);
     }
 
+    // *** MOVIE SELECTION CONNECTION TO BACK END ***
     public ArrayList<String> getMovies(){
         return movieController.getMovieNames();
     }
@@ -50,93 +52,44 @@ public class ViewController {
     public int getShowtimeId(String[] searchValues){
         return theaterController.getShowtimeId(searchValues);
     }
+    // *** MOVIE SELECTION CONNECTION TO BACK END ***
 
-    // public String cancelTicket(int ticketId){
-    //     theaterController.makeSeatAvailable(ticketId);
-    //     double refundAmount = userController.refundUser(ticketId);
-    //     return "Ticket " + ticketId + " has been cancelled and you have been refunded " + refundAmount + " dollars.";
-    // }
 
+    // *** LOGIN AND SIGNUP CONNECTION TO BACK END ***
+
+    public void signupPayment(String name, String cardNum, LocalDate cardExpiryDate) {
+        userController.addPayment(name, cardNum, cardExpiryDate);
+    }
+
+    public void signup(String email, String password, String address, String cardNum, LocalDate cardExpiryDate, String name) {
+        userController.addUser(email, password, address, name, cardNum, cardExpiryDate);
+    }
 
     public void addUser(String email, String password, String address, String holderName,String cardNumber, LocalDate expiry){
         userController.addUser(email, password, address, holderName, cardNumber, expiry);
     }
 
     public RegisteredUser authenticateUser(String userName, String password){
-
-        // DUMMY PLACEHOLDER LOGIC
-        boolean loggedIn = (userName.equals("Graydon") && password.equals("123"));
-
-        if (loggedIn){
-            // create Dates
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-            String date1 = "2016/08/16";
-            String date2 = "2016/08/01";
-            LocalDate lastPaidDate = LocalDate.parse(date1, formatter);
-            LocalDate expiryDate = LocalDate.parse(date2, formatter);
-
-            RegisteredUser dummyUser = new RegisteredUser();
-            dummyUser.setEmail("testUser@gmail.com");
-            dummyUser.setAddress("123 St. NW");
-            dummyUser.setPassword("password");
-
-            var x = new Payment();
-            x.setCardNum("123-456-789");
-            x.setExpiry(expiryDate);
-            x.setCardHolderName("Graydon Hall");
-
-            dummyUser.setCard(x);
-
-
-            dummyUser.setLastFeePaid(lastPaidDate);
-            return dummyUser;
-        }
-        return null;
-
-        // CURRENTLY GIVES ME NULL POINTER EXCPEPTION WHEN I USE THIS LINE YOU HAD BELOW...
-//        return userController.verifyUser(userName, password);
+        return userController.verifyUser(userName, password);
     }
+    // *** LOGIN AND SIGNUP CONNECTION TO BACK END ***
 
+
+    // *** PRICES AND COUPON CONNECITON TO BACK END ***
     public Coupon getCoupon(String couponCode) {
-        Coupon c1 = new Coupon();
-        c1.setCouponCode("QWER");
-        c1.setCouponAmount(25);
-
-        Coupon c2 = new Coupon();
-        c2.setCouponCode("ASDF");
-        c2.setCouponAmount(15);
-
-        switch(couponCode) {
-            case "QWER":
-                return c1;
-            case "ASDF":
-                return c2;
-            default:
-                return null;
-        }
+        return userController.getCouponWithCode(couponCode);
     }
 
     public double getTicketPrice(String showTime, String theatre, String movie, int row, int col) {
-        return 20;
+        return movieController.getPrice(movie);
     }
 
-
-    public Coupon cancelTicket(String ticketID, boolean loggedIn) {
-        Coupon c1 = new Coupon();
-        c1.setCouponCode("OIUY");
-        c1.setCouponAmount(25);
-
-        Coupon c2 = new Coupon();
-        c2.setCouponCode("MNBV");
-        c2.setCouponAmount(15);
-
-        switch(ticketID) {
-            case "101":
-                return c1;
-            case "102":
-                return c2;
-            default:
-                return null;
-        }
+    public boolean checkShowtime(int ticketId){
+        return theaterController.checkValidShowtime(ticketId);
     }
+
+    public Coupon cancelTicket(int ticketID, boolean loggedIn) {
+        return userController.createCoupon(ticketID, loggedIn);
+    }
+    // *** PRICES AND COUPON CONNECITON TO BACK END ***
 }

@@ -11,8 +11,9 @@ CREATE TABLE IF NOT EXISTS THEATRE
 CREATE TABLE IF NOT EXISTS MOVIE
     (movieId            int             NOT NULL,
      title                VARCHAR(30)        NOT NULL,
-         rating                double            NOT NULL,
+	 rating                double            NOT NULL,
      theatreId            int            NOT NULL,
+     price				DOUBLE AS 	(rating * 4.5),
      PRIMARY KEY (movieId),
      foreign key(theatreId) references THEATRE(theatreId)
 );

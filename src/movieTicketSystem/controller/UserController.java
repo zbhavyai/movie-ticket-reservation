@@ -10,7 +10,7 @@ import movieTicketSystem.model.*;
  */
 public class UserController {
     private static UserController instanceVar;
-    private DbController db;
+	DbController db = DbController.getInstance();
     // private ArrayList<RegisteredUser> registeredUserIdList;
 
     // /**
@@ -37,13 +37,6 @@ public class UserController {
         }
     }
 
-	// public double refundUser(int ticketId){
-    //     if(db.verifyUserWithTicket(ticketId) != null){
-    //         int userId = db.verifyUserWithTicket(ticketId);
-    //     }
-	// 	db.makeSeatAvailable(ticketId);
-	// }
-
     /**
      * Adds registered user
      *
@@ -56,6 +49,14 @@ public class UserController {
         this.db.saveRegisteredUser(email, password, address, holderName, cardNumber, expiry);
     }
 
+    public void addPayment(String name, String cardNum, LocalDate cardExpiryDate) {
+        db.savePayment(name, cardNum, cardExpiryDate);
+    }
+
+    public Coupon getCouponWithCode(String couponCode) {
+        return db.getCoupon(couponCode);
+    }
+
     /**
      * Verifies the registered user
      *
@@ -65,18 +66,10 @@ public class UserController {
      *         otherwise
      */
     public RegisteredUser verifyUser(String email, String password) {
-        RegisteredUser ru = this.db.getRegisteredUser(email);
+        return this.db.getRegisteredUser(email, password);
+    }
 
-        if (ru == null) {
-            return null;
-        }
-
-        else if (!ru.getPassword().equals(password)) {
-            return null;
-        }
-
-        else {
-            return ru;
-        }
+    public Coupon createCoupon(int ticketID, boolean loggedIn) {
+        return db.createCoupon(ticketID, loggedIn);
     }
 }

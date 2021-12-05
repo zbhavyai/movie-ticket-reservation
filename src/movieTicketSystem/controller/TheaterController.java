@@ -67,6 +67,10 @@ public class TheaterController {
 		return theaterNames;
 	}
 
+	public boolean checkValidShowtime(int ticketId){
+		return db.checkValidShowtime(ticketId);
+	}
+
 	/**
 	 * 
 	 * Method gets a list of showtimes that are available from the selected movie and theatre
