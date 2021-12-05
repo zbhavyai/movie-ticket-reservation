@@ -447,6 +447,31 @@ public class MovieSelectionView extends JFrame {
         applyCouponButton.addActionListener(a);
     }
 
+    public void addCompletePaymentListener(ActionListener a) {
+        completePaymentButton.addActionListener(a);
+    }
+
+    public String getCreditCardNum() {
+        return purchasingCreditCardNumTF.getText();
+    }
+
+    public String getCVC() {
+        return purchasingCVCTF.getText();
+    }
+
+    public String getCardExpiry() {
+        return purchasingCardExpiryTF.getText();
+    }
+
+    public String getCardHolderName() {
+        return purchasingCardholderNameTF.getText();
+    }
+
+    public double getGrandTotal() {
+        return Double.parseDouble(grandTotalTF.getText());
+    }
+
+
     class seatButtonColorChangeListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {

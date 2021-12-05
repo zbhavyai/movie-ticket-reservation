@@ -4,6 +4,7 @@ import movieTicketSystem.View.MovieSelectionView;
 import movieTicketSystem.model.Coupon;
 import movieTicketSystem.model.Payment;
 import movieTicketSystem.model.RegisteredUser;
+import movieTicketSystem.model.Seat;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -23,6 +24,7 @@ public class MovieSelectionViewController {
     LoginButtonListener loginButtonListener;
     ShowLoginButtonListener showLoginButtonListener;
     CouponButtonListener couponButtonListener;
+    CompletePaymentButtonListener completePaymentButtonListener;
 
     MovieSelectionView theView;
     ViewController viewController;
@@ -42,6 +44,7 @@ public class MovieSelectionViewController {
         loginButtonListener = new LoginButtonListener();
         showLoginButtonListener = new ShowLoginButtonListener();
         couponButtonListener = new CouponButtonListener();
+        completePaymentButtonListener = new CompletePaymentButtonListener();
         theView.addMovieComboBoxActionListener(movieListener);
         theView.addTheatreComboBoxActionListener(theatreListener);
         theView.addShowtimeComboBoxActionListener(showtimeListener);
@@ -49,6 +52,7 @@ public class MovieSelectionViewController {
         theView.addShowLoginButtonActionListener(showLoginButtonListener);
         theView.addLoginButtonListener(loginButtonListener);
         theView.addCouponistener(couponButtonListener);
+        theView.addCompletePaymentListener(completePaymentButtonListener);
 
         ArrayList<String> movieOptions = getMovies();
         theView.setMovieOptions(movieOptions);
@@ -151,43 +155,57 @@ public class MovieSelectionViewController {
             theView.setSeats(seats);}
     }
 
-    class PurchaseButtonListener implements ActionListener {
+    class CompletePaymentButtonListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            double totalPrice =0;
+            String movie = theView.getMovieInput();
+            String theatre = theView.getTheatreInput();
+            String showTime = theView.getShowtimeInput();
 
-            //**** FOR EACH SELECTED SEAT, SEND ROW, COL, MOVIE, THEATRE, SHOWTIME TO BACK END FOR PURCHASE ****
+            // check if a valid coupon has been applied
+            Coupon coupon = null;
+            if(theView.getCouponButtonText().equals("Remove Coupon")){
+                String couponCode = theView.getCouponCode();
+                coupon = getCoupon(couponCode);
+            }
+
+            // payment amount
+            double totalAmount = theView.getTotalPrice();
+            double grandTotal = theView.getGrandTotal();
+
+
+
+            // Payment details
+            String cardNumber = theView.getCreditCardNum();
+            String CVC = theView.getCVC();
+            String cardExpiryDate = theView.getCardExpiry();
+            String cardHolderName = theView.getCardHolderName();
+
+
+
+            //Figure out selected seats
+            ArrayList<Seat> selectedSeats = new ArrayList<Seat>();
             JButton[][] seats = theView.getSeats();
             for(int i=0; i<10; i++){
                 for(int j=0; j<10; j++){
                     Color seatBackground = seats[i][j].getBackground();
                     if(seatBackground == Color.green){
-                        int row = i+1;
-                        int col = j+1;
-                        String movie = theView.getMovieInput();
-                        String theatre = theView.getTheatreInput();
-                        String showTime = theView.getShowtimeInput();
-                        System.out.println(
-                                "\nPURCHASE INFO:"
-                                + "\n row: " + row
-                                + "\n col: " + col
-                                + "\n movie: " + movie
-                                + "\n theatre: " + theatre
-                                + "\n showtime: " + showTime
-                        );
-                        totalPrice += getTicketPrice(showTime, theatre, movie, row, col);
+                        Seat dummySeat = new Seat(i+1, j+1);
+                        selectedSeats.add(dummySeat);
 
                     }
                 }
             }
-            if(loggedInUser==null){
-                theView.populatePurchaseTab(totalPrice);
-            }else{
-                theView.populatePurchaseTab(loggedInUser, totalPrice);
-            }
 
-            theView.setView("purchase");
+            // INSERT HERE:
+            // Based on the above calculated values (movie, theatre, showtime,
+            // coupon (null if does not exist), total amount, grand total, cardNumber, CVC,
+            // cardExpiryDate, cardHolderName, selectedSeats)
+            // talk to viewController, and put the purhcase through.
+            // RETURN AN ARRAYLIST OF TICKET OBJECTS
+            // I will use this arraylist of ticket objects and display it to the user.
+
         }
     }
 
@@ -245,6 +263,46 @@ public class MovieSelectionViewController {
         }
     }
 
+    class PurchaseButtonListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            double totalPrice =0;
+
+            //**** FOR EACH SELECTED SEAT, SEND ROW, COL, MOVIE, THEATRE, SHOWTIME TO BACK END FOR PURCHASE ****
+            JButton[][] seats = theView.getSeats();
+            for(int i=0; i<10; i++){
+                for(int j=0; j<10; j++){
+                    Color seatBackground = seats[i][j].getBackground();
+                    if(seatBackground == Color.green){
+                        int row = i+1;
+                        int col = j+1;
+                        String movie = theView.getMovieInput();
+                        String theatre = theView.getTheatreInput();
+                        String showTime = theView.getShowtimeInput();
+                        System.out.println(
+                                "\nPURCHASE INFO:"
+                                        + "\n row: " + row
+                                        + "\n col: " + col
+                                        + "\n movie: " + movie
+                                        + "\n theatre: " + theatre
+                                        + "\n showtime: " + showTime
+                        );
+                        totalPrice += getTicketPrice(showTime, theatre, movie, row, col);
+
+                    }
+                }
+            }
+            if(loggedInUser==null){
+                theView.populatePurchaseTab(totalPrice);
+            }else{
+                theView.populatePurchaseTab(loggedInUser, totalPrice);
+            }
+
+            theView.setView("purchase");
+        }
+    }
+
 
     // METHODS TO TALK TO VIEW CONTROLLER
 
@@ -269,57 +327,15 @@ public class MovieSelectionViewController {
     }
 
     private RegisteredUser authenticateUser(String userName, String password){
-
-        boolean loggedIn = (userName.equals("Graydon") && password.equals("123"));
-
-        if (loggedIn){
-            // create Dates
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-            String date1 = "2016/08/16";
-            String date2 = "2016/08/01";
-            LocalDate lastPaidDate = LocalDate.parse(date1, formatter);
-            LocalDate expiryDate = LocalDate.parse(date2, formatter);
-
-            RegisteredUser dummyUser = new RegisteredUser();
-            dummyUser.setEmail("testUser@gmail.com");
-            dummyUser.setAddress("123 St. NW");
-            dummyUser.setPassword("password");
-
-            var x = new Payment();
-            x.setCardNum("123-456-789");
-            x.setExpiry(expiryDate);
-            x.setCardHolderName("Graydon Hall");
-
-            dummyUser.setCard(x);
-
-
-            dummyUser.setLastFeePaid(lastPaidDate);
-            return dummyUser;
-        }
-        return null;
+        return viewController.authenticateUser(userName, password);
     }
 
     private double getTicketPrice(String showTime, String theatre, String movie, int row, int col) {
-        return 20;
+        return viewController.getTicketPrice(showTime, theatre, movie, row, col);
     }
 
     private Coupon getCoupon(String couponCode) {
-        Coupon c1 = new Coupon();
-        c1.setCouponCode("QWER");
-        c1.setCouponAmount(25);
-
-        Coupon c2 = new Coupon();
-        c2.setCouponCode("ASDF");
-        c2.setCouponAmount(15);
-
-        switch(couponCode) {
-            case "QWER":
-                return c1;
-            case "ASDF":
-                return c2;
-            default:
-                return null;
-        }
+        return viewController.getCoupon(couponCode);
     }
 
 }
