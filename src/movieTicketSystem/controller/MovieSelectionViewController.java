@@ -26,11 +26,13 @@ public class MovieSelectionViewController {
     CouponButtonListener couponButtonListener;
     CompletePaymentButtonListener completePaymentButtonListener;
     CancelTicketButtonListener cancelTicketButtonListener;
+    SignUpButtonListener signUpButtonListener;
 
     MovieSelectionView theView;
     ViewController viewController;
 
     RegisteredUser loggedInUser;
+
 
 
     public MovieSelectionViewController(MovieSelectionView theView, ViewController viewController) {
@@ -47,6 +49,7 @@ public class MovieSelectionViewController {
         couponButtonListener = new CouponButtonListener();
         completePaymentButtonListener = new CompletePaymentButtonListener();
         cancelTicketButtonListener = new CancelTicketButtonListener();
+        signUpButtonListener = new SignUpButtonListener();
         theView.addMovieComboBoxActionListener(movieListener);
         theView.addTheatreComboBoxActionListener(theatreListener);
         theView.addShowtimeComboBoxActionListener(showtimeListener);
@@ -56,6 +59,7 @@ public class MovieSelectionViewController {
         theView.addCouponistener(couponButtonListener);
         theView.addCompletePaymentListener(completePaymentButtonListener);
         theView.addCancelTicketButtonListener(cancelTicketButtonListener);
+        theView.addSignUpButtonListener(signUpButtonListener);
 
         ArrayList<String> movieOptions = getMovies();
         theView.setMovieOptions(movieOptions);
@@ -156,6 +160,29 @@ public class MovieSelectionViewController {
             int[][] seats = getSeats(showtimeId);
 
             theView.setSeats(seats);}
+    }
+
+    class SignUpButtonListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+            String email = theView.getSignUpEmail();
+            String password = theView.getSignUpPassword();
+            String address = theView.getSignUpAddress();
+            String cardNum = theView.getSignUpCardNum();
+            String cardExpiryDate = theView.getSignUpCardExp();
+            String name = theView.getSignUpCardName();
+            theView.clearSignUpForm();
+            String cvc = "123";  // ADD CVC TO SIGN UP FORM SO THEY CAN PAY
+
+            // FIRST DO PAYMENT
+            // IF SUCCESFUL, REGISTER THEM
+
+
+            // TALK TO VIEW CONTROLLER AND SIGN UP THE USER
+            return;
+        }
     }
 
     class CompletePaymentButtonListener implements ActionListener {

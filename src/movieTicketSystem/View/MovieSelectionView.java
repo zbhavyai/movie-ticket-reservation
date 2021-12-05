@@ -342,6 +342,16 @@ public class MovieSelectionView extends JFrame {
         }
     }
 
+    public void clearSignUpForm() {
+        registeredUserEmailField.setText("");
+        registeredUserPasswordField.setText("");
+        registeredUserAddressField.setText("");
+        registeredUserCreditCardField.setText("");
+        registeredUserCardExpiryField.setText("");
+        registeredUserNameField.setText("");
+        setView("main");
+    }
+
     public void setPaymentDetailsEnabled(boolean b) {
         for (Component c : paymentPanel.getComponents()) {
             c.setEnabled(b);
@@ -461,6 +471,30 @@ public class MovieSelectionView extends JFrame {
         refundCouponAmount.setText(s);
     }
 
+    public String getSignUpEmail() {
+        return registeredUserEmailField.getText();
+    }
+
+    public String getSignUpPassword() {
+        return registeredUserPasswordField.getText();
+    }
+
+    public String getSignUpAddress() {
+        return registeredUserAddressField.getText();
+    }
+
+    public String getSignUpCardNum() {
+        return registeredUserCreditCardField.getText();
+    }
+
+    public String getSignUpCardExp() {
+        return registeredUserCardExpiryField.getText();
+    }
+
+    public String getSignUpCardName() {
+        return registeredUserNameField.getText();
+    }
+
 
     // ******************* ACTION LISTENERS **************************
     public void addMovieComboBoxActionListener(ActionListener a) {
@@ -505,6 +539,10 @@ public class MovieSelectionView extends JFrame {
 
     public void addCancelTicketButtonListener(ActionListener a) {
         cancelTicketButton.addActionListener(a);
+    }
+
+    public void addSignUpButtonListener(ActionListener a) {
+        signUpButton.addActionListener(a);
     }
 
 
