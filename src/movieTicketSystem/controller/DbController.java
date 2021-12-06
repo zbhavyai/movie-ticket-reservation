@@ -63,9 +63,9 @@ public class DbController {
     }
 
     /**
-     * 
+     *
      * Get a list of all movies users in the application
-     * 
+     *
      * @return an arraylist that contains all movies in the system.
      */
     public ArrayList<Movie> selectAllMovies() {
@@ -75,7 +75,7 @@ public class DbController {
             Statement myStmt = dbConnect.createStatement();
 
             // Execute SQL query
-            results = myStmt.executeQuery("SELECT * FROM movie");
+            results = myStmt.executeQuery("SELECT * FROM MOVIE");
 
             // Process the results set
             while (results.next()) {
@@ -92,9 +92,9 @@ public class DbController {
     }
 
     // /**
-    //  * 
+    //  *
     //  * Get a list of all registered users in the application
-    //  * 
+    //  *
     //  * @return an arraylist that contains all registered users in the system.
     //  */
     // public ArrayList<RegisteredUser> getAllResgiteredusers() {
@@ -118,11 +118,11 @@ public class DbController {
     //     }
     //     return movies;
     // }
-    
+
     /**
-     * 
+     *
      * Get a list of all available theatres in the application
-     * 
+     *
      * @return an arraylist that contains all theatres in the system.
      */
     public ArrayList<Theater> selectAllTheatres() {
@@ -132,7 +132,7 @@ public class DbController {
             Statement myStmt = dbConnect.createStatement();
 
             // Execute SQL query
-            results = myStmt.executeQuery("SELECT * FROM theatre");
+            results = myStmt.executeQuery("SELECT * FROM THEATRE");
 
             // Process the results set
             while (results.next()) {
@@ -151,9 +151,9 @@ public class DbController {
     }
 
     /**
-     * 
+     *
      * Method is used to get a list of all the theatres that are showing a selected movie
-     * 
+     *
      * @param movieId is the Id of the movie that has been selected
      * @return is an arraylist of all theatres playing the selected movie
      */
@@ -161,7 +161,7 @@ public class DbController {
         ArrayList<Integer> theatreIds = new ArrayList<Integer>();
 
         try {
-            String query = "SELECT * FROM showtime Where movieId = ?";
+            String query = "SELECT * FROM SHOWTIME Where movieId = ?";
             PreparedStatement myStmt = dbConnect.prepareStatement(query);
 
             myStmt.setInt(1, movieId);
@@ -194,7 +194,7 @@ public class DbController {
         int theaterId = 0;
 
         try {
-            String query = "SELECT theatreId FROM theatre Where theatreName = ?";
+            String query = "SELECT theatreId FROM THEATRE Where theatreName = ?";
             PreparedStatement myStmt = dbConnect.prepareStatement(query);
             myStmt.setString(1, theaterName);
 
@@ -222,7 +222,7 @@ public class DbController {
         int movieId = 0;
 
         try {
-            String query = "SELECT movieId FROM movie Where title = ?";
+            String query = "SELECT movieId FROM MOVIE Where title = ?";
             PreparedStatement myStmt = dbConnect.prepareStatement(query);
             myStmt.setString(1, movieName);
 
@@ -241,7 +241,7 @@ public class DbController {
     }
 
     /**
-     * 
+     *
      * This method is used to get the price of a movie
      *
      * @param movieId is the Id of the movie to search
@@ -251,7 +251,7 @@ public class DbController {
         double moviePrice = 0.0;
 
         try {
-            String query = "SELECT price FROM movie Where movieId = ?";
+            String query = "SELECT price FROM MOVIE Where movieId = ?";
             PreparedStatement myStmt = dbConnect.prepareStatement(query);
             myStmt.setInt(1, movieId);
 
@@ -282,7 +282,7 @@ public class DbController {
         int showtimeId = 0;
 
         try {
-            String query = "SELECT showtimeId FROM showtime Where movieId = ? AND theatreId = ? AND showtime = ?";
+            String query = "SELECT showtimeId FROM SHOWTIME Where movieId = ? AND theatreId = ? AND showtime = ?";
             PreparedStatement myStmt = dbConnect.prepareStatement(query);
 
             myStmt.setInt(1, movieId);
@@ -317,9 +317,9 @@ public class DbController {
 
     public Date getShowtimeByTicketId(int ticketId){
         Date showtime = null;
-        int showtimeId = 0; 
+        int showtimeId = 0;
         try {
-            String query = "SELECT showtimeId FROM ticket Where ticketId = ?";
+            String query = "SELECT showtimeId FROM TICKET Where ticketId = ?";
             PreparedStatement myStmt = dbConnect.prepareStatement(query);
 
             myStmt.setInt(1, ticketId);
@@ -332,17 +332,17 @@ public class DbController {
 
             myStmt.close();
             try {
-                query = "SELECT showtime FROM showtime Where showtimeId = ?";
+                query = "SELECT showtime FROM SHOWTIME Where showtimeId = ?";
                 myStmt = dbConnect.prepareStatement(query);
-    
+
                 myStmt.setInt(1, showtimeId);
-    
+
                 results = myStmt.executeQuery();
-    
+
                 while (results.next()) {
                     showtime = results.getDate("showtime");
                 }
-    
+
                 myStmt.close();
             }
             catch (SQLException ex) {
@@ -356,9 +356,9 @@ public class DbController {
     }
 
     /**
-     * 
+     *
      * Method is used to find showtimes that are available for the selected movie and theatre
-     * 
+     *
      * @param movieId is the movie that has been selected
      * @param theatreId is the theatre that has been selected
      * @return a list of showtimes that are available for the movie and theatre selected
@@ -368,7 +368,7 @@ public class DbController {
         ArrayList<String> showTimes = new ArrayList<String>();
 
         try {
-            String query = "SELECT showtime FROM showtime Where movieId = ? AND theatreId = ?";
+            String query = "SELECT showtime FROM SHOWTIME Where movieId = ? AND theatreId = ?";
             PreparedStatement myStmt = dbConnect.prepareStatement(query);
 
             myStmt.setInt(1, movieId);
@@ -393,9 +393,9 @@ public class DbController {
     }
 
     /**
-     * 
+     *
      * Method is used to return the date/time of the showtime when providing the unique Id
-     * 
+     *
      * @param showTimeId is the unique Id of the showtime that has been selected
      * @return the showtime that corresponds to the unique showtime id
      */
@@ -403,7 +403,7 @@ public class DbController {
         String showTime = "";
 
         try {
-            String query = "SELECT showtime FROM showtime Where showTimeId = ?";
+            String query = "SELECT showtime FROM SHOWTIME Where showTimeId = ?";
             PreparedStatement myStmt = dbConnect.prepareStatement(query);
 
             myStmt.setInt(1, showTimeId);
@@ -426,9 +426,9 @@ public class DbController {
     }
 
     /**
-     * 
+     *
      * Method is used to retrieve the movies and theatres that correspond to the showtime selected
-     * 
+     *
      * @param showTimeId is the showtime that has been selected
      * @return an arraylist of movie and theatre Id's related to the showtime
      */
@@ -436,7 +436,7 @@ public class DbController {
         ArrayList<Integer> movieTheatreId = new ArrayList<Integer>();
 
         try {
-            String query = "SELECT * FROM showtime Where showtimeId = ?";
+            String query = "SELECT * FROM SHOWTIME Where showtimeId = ?";
             PreparedStatement myStmt = dbConnect.prepareStatement(query);
 
             myStmt.setInt(1, showTimeId);
@@ -460,9 +460,9 @@ public class DbController {
     }
 
     /**
-     * 
+     *
      * Method is used to make a new ticket depending on what the showtime selection was and the price
-     * 
+     *
      * @param showtimeId is the showtime selected
      * @param price is the price to set for the ticket
      */
@@ -491,7 +491,7 @@ public class DbController {
     public int getTicketId(){
         int ticketId = 0;
         try {
-            String query = "SELECT MAX(ticketId) FROM ticket";
+            String query = "SELECT MAX(ticketId) FROM TICKET";
             PreparedStatement myStmt = dbConnect.prepareStatement(query);
 
             ResultSet results = myStmt.executeQuery();
@@ -543,9 +543,9 @@ public class DbController {
     }
 
     /**
-     * 
+     *
      * Method is used to verify if a ticket is valid or not
-     * 
+     *
      * @param showtimeId is the showtime to check validity for
      * @return true or false if the ticket is valid or not
      */
@@ -556,7 +556,7 @@ public class DbController {
             Statement myStmt = dbConnect.createStatement();
 
             // Execute SQL query
-            results = myStmt.executeQuery("SELECT * FROM showtime");
+            results = myStmt.executeQuery("SELECT * FROM SHOWTIME");
 
             // Process the results set
             while (results.next()) {
@@ -585,7 +585,7 @@ public class DbController {
         ArrayList<Integer> tickets = new ArrayList<Integer>();
 
         try {
-            String query = "SELECT * FROM ticket Where showtimeId = ?";
+            String query = "SELECT * FROM TICKET Where showtimeId = ?";
             PreparedStatement myStmt = dbConnect.prepareStatement(query);
 
             myStmt.setInt(1, showtimeId);
@@ -605,11 +605,11 @@ public class DbController {
 
         return tickets;
     }
-    
+
     /**
-     * 
+     *
      * Searches for the ticket in the database and calls for it to be deleted
-     * 
+     *
      * @param ticketId is the ticket to get rid of
      * @return a boolean of whether the ticket was deleted or not
      */
@@ -618,7 +618,7 @@ public class DbController {
         int foundTicket = 0;
 
         try{
-            String query = "SELECT ticketId FROM ticket WHERE ticketId = ?";
+            String query = "SELECT ticketId FROM TICKET WHERE ticketId = ?";
             PreparedStatement myStmt = dbConnect.prepareStatement(query);
             myStmt.setInt(1, ticketId);
             ResultSet results = myStmt.executeQuery();
@@ -653,7 +653,7 @@ public class DbController {
 
         try {
             for (int i = 0; i < tickets.size(); i++) {
-                String query = "SELECT * FROM seat Where ticketId = ?";
+                String query = "SELECT * FROM SEAT Where ticketId = ?";
                 PreparedStatement myStmt = dbConnect.prepareStatement(query);
                 myStmt.setInt(1, tickets.get(i));
 
@@ -840,7 +840,7 @@ public class DbController {
             myStmt.setString(1, name);
             myStmt.setString(2, cardNum);
             myStmt.setDate(3, (Date)Date.from(cardExpiryDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
-        
+
             ResultSet results = myStmt.executeQuery();
 
             while (results.next()) {
@@ -1034,9 +1034,9 @@ public class DbController {
     }
 
     public int getShowtimeIdByTicketId(int ticketId){
-        int showtimeId = 0; 
+        int showtimeId = 0;
         try {
-            String query = "SELECT showtimeId FROM ticket Where ticketId = ?";
+            String query = "SELECT showtimeId FROM TICKET Where ticketId = ?";
             PreparedStatement myStmt = dbConnect.prepareStatement(query);
 
             myStmt.setInt(1, ticketId);
