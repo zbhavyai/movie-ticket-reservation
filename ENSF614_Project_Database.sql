@@ -47,12 +47,11 @@ CREATE TABLE IF NOT EXISTS COUPON
 
 
 CREATE TABLE IF NOT EXISTS SEAT
-    (seatId         int             NOT NULL,
+    (seatId         int             NOT NULL AUTO_INCREMENT,
      seatRow        int             NOT NULL,
      seatNum        int             NOT NULL,
      ticketId       int             NOT NULL,
-     primary key (seatId),
-     foreign key (ticketID) references TICKET(ticketId));
+     primary key (seatId));
 
 
 CREATE TABLE IF NOT EXISTS PAYMENT
@@ -110,30 +109,30 @@ VALUES (1,                1,                1,                '2021-12-01 09:23:
         (13,            6,                1,                '2021-12-20 20:50:00');
 
 
-INSERT INTO TICKET (ticketId, showtimeId, price)
-VALUES (1,                1, 15.5),
-        (2,                2, 17.5),
-        (3,                2, 14.5),
-        (4,                3, 15.5),
-        (5,                3, 15.5),
-        (6,                3, 13.5),
-        (7,                4, 15.5),
-        (8,                4, 15.5),
-        (9,                5, 20.5),
-        (10,            5, 15.5);
+INSERT INTO TICKET (showtimeId, price)
+VALUES (1, 15.5),
+        (2, 17.5),
+        (2, 14.5),
+        (3, 15.5),
+        (3, 15.5),
+        (3, 13.5),
+        (4, 15.5),
+        (4, 15.5),
+        (5, 20.5),
+        (5, 15.5);
 
 
-INSERT INTO SEAT (seatId, seatRow, seatNum, ticketId)
-VALUES (1,                1,                1,                1),
-        (2,                1,                2,                2),
-        (3,                2,                4,                3),
-        (4,                2,                8,                4),
-        (5,                3,                7,                5),
-        (6,                3,                8,                6),
-        (7,                4,                1,                7),
-        (8,                4,                2,                8),
-        (9,                4,                3,                9),
-        (10,            4,                4,                10);
+INSERT INTO SEAT (seatRow, seatNum, ticketId)
+VALUES (1,                1,                1),
+        (1,                2,                2),
+        (2,                4,                3),
+        (2,                8,                4),
+        (3,                7,                5),
+        (3,                8,                6),
+        (4,                1,                7),
+        (4,                2,                8),
+        (4,                3,                9),
+        (4,                4,                10);
 
 
 INSERT INTO PAYMENT (holderName,cardNumber,expiry) VALUES
@@ -149,6 +148,7 @@ INSERT INTO PAYMENT (holderName,cardNumber,expiry) VALUES
 ("Romeo Sosa","5534346641931920","2023-06-01");
 
 
+<<<<<<< HEAD
 INSERT INTO RUser (username,password,email,address,card,lastPaid) VALUES
 ("romeo.sosa","password3","romeo.sosa@ucalgary.ca","721 Gates St. Lachute, QC J8H 8J8","10","2021-04-21"),
 ("jared.nash","password6","jared.nash@ucalgary.ca","8489 Tallwood St. Laval-sur-le-Lac, QC H7R 9L1","9","2021-03-17"),
@@ -168,3 +168,11 @@ INSERT INTO COUPON (couponCode,couponAmount,redeemedAmount,expiry) VALUES
 ("s57NlehWQh","26","4","2022-03-01"),
 ("A2kGUPhyR8","15","15","2022-04-01"),
 ("tCpLtqccCT","23","24","2022-05-01");
+=======
+INSERT INTO RECEIPT (paymentCard,price,generationTime) VALUES
+("5355142077868730","34","2021-11-25 09:00:00"),
+("5565149389994340","64","2021-12-09 09:00:00"),
+("5119080811765270","12","2022-03-01 09:00:00"),
+("5179341601731640","67","2022-04-01 09:00:00"),
+("5113181095909820","98","2022-05-01 09:00:00");
+>>>>>>> cg

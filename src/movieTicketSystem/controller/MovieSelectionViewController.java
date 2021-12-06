@@ -173,13 +173,12 @@ public class MovieSelectionViewController {
             String address = theView.getSignUpAddress();
             String cardNum = theView.getSignUpCardNum();
             String cardExpiryDate = theView.getSignUpCardExp();
-            LocalDate expiry = LocalDate.parse(cardExpiryDate);
             String name = theView.getSignUpCardName();
             theView.clearSignUpForm();
             String cvc = "123";  // ADD CVC TO SIGN UP FORM SO THEY CAN PAY
 
-            viewController.signupPayment(name, cardNum, expiry);
-            viewController.signup(email, password, address, cardNum, expiry, name);
+            viewController.signupPayment(name, cardNum, cardExpiryDate);
+            viewController.signup(email, password, address, cardNum, cardExpiryDate, name);
             return;
         }
     }
@@ -220,16 +219,20 @@ public class MovieSelectionViewController {
                     if(seatBackground == Color.green){
                         Seat dummySeat = new Seat(i+1, j+1);
                         selectedSeats.add(dummySeat);
-
                     }
                 }
             }
 
-            int paymentId = viewController.ticketPayment(cardHolderName, cardNumber, LocalDate.parse(cardExpiryDate));
+            int paymentId = 0;
+            if(theView.getCouponButtonText().equals("Apply Coupon")){
+                paymentId = viewController.ticketPayment(cardHolderName, cardNumber, cardExpiryDate);
+            }
             ArrayList<Ticket> newTicketList = new ArrayList<Ticket>();
             for(int i = 0; i < selectedSeats.size(); i++){
-                newTicketList.add(viewController.makeTicket(movie, theatre, showTime));
-                viewController.makeSale(paymentId, newTicketList.get(i).getId());
+                newTicketList.add(viewController.makeTicket(movie, theatre, showTime, selectedSeats.get(i).getRowNumber(), selectedSeats.get(i).getColNumber()));
+                if(paymentId != 0){
+                    viewController.makeSale(paymentId, newTicketList.get(i).getId());
+                }
             }
 
         }
@@ -314,9 +317,35 @@ public class MovieSelectionViewController {
                 return;
             }
 
+<<<<<<< HEAD
             // ticket is found
             theView.setRefundCouponAmt(String.format("%.02f", coupon.getCouponAmount()));
             theView.setRefundCouponCode(coupon.getCouponCode());
+=======
+                int ticketId = Integer.parseInt(theView.getTicketCancellationID());
+                boolean registered = theView.getLoggedIn();
+                boolean showtimeCheck = viewController.checkShowtime(ticketId);
+                if(showtimeCheck == false){
+                    JOptionPane.showMessageDialog(theView, "Movie is playing in less than 72 hours, cannot cancel.",
+                            "Alert", JOptionPane.WARNING_MESSAGE);
+                    theView.setRefundCouponAmt("");
+                    theView.setRefundCouponCode("");
+                    return;
+                }
+                Coupon coupon = viewController.cancelTicket(ticketId, registered);
+                System.out.println(coupon.getCouponCode() + " code");
+                if(coupon == null){
+                    JOptionPane.showMessageDialog(theView, "Ticket Not Found.",
+                            "Alert", JOptionPane.WARNING_MESSAGE);
+                    theView.setRefundCouponAmt("");
+                    theView.setRefundCouponCode("");
+                    return;
+                }
+
+                // ticket is found
+                theView.setRefundCouponAmt(String.format("%.02f", coupon.getCouponAmount()));
+                theView.setRefundCouponCode(coupon.getCouponCode());
+>>>>>>> cg
 
         }
     }
