@@ -106,4 +106,15 @@ public class ViewController {
         userController.createSale(paymentId, ticketId);
     }
     // *** PURCHASE CONNECTION TO BACK END ***
+
+
+    // *** CANCELLATION CONNECTION TO BACK END
+    public void emailCancelledCoupon(String userEmail, Coupon C){
+        return;
+    }
+
+    public void emailPurhcasedTicket(String userEmail, Ticket t){
+        return;
+    }
+
 }
