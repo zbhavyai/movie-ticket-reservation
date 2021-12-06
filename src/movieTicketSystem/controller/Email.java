@@ -4,6 +4,9 @@ import java.io.*;
 import java.util.*;
 import javax.mail.*;
 import javax.mail.internet.*;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * Controller class to send emails
@@ -12,6 +15,8 @@ public class Email {
     private static Email instanceVar;
     private Properties smtpSettings;
     private Properties loginDetails;
+    private String couponTemplate;
+    private String ticketTemplate;
 
     /**
      * Private constructor enforcing singleton design pattern
@@ -37,6 +42,18 @@ public class Email {
         catch (IOException e) {
             System.out.printf("[FAIL] Login details file could not be read at \'%s\'", loginDetailsLocation);
         }
+
+        try {
+            Path couponFile = Path.of("config/template_coupon.html");
+            this.couponTemplate = Files.readString(couponFile);
+
+            Path ticketFile = Path.of("config/template_ticket.html");
+            this.ticketTemplate = Files.readString(ticketFile);
+        }
+
+        catch (IOException e) {
+            System.out.printf("[FAIL] Email templates cannot be read: %s", e.getMessage());
+        }
     }
 
     /**
@@ -52,6 +69,22 @@ public class Email {
 
         else {
             return instanceVar;
+        }
+    }
+
+    /**
+     * Returns the email template to use while sending email
+     *
+     * @param type "coupon" or "ticket"
+     * @return respective HTML template
+     */
+    public String getTemplate(String type) {
+        if (type.equalsIgnoreCase("coupon")) {
+            return this.couponTemplate;
+        }
+
+        else {
+            return this.ticketTemplate;
         }
     }
 

@@ -5,7 +5,6 @@ import movieTicketSystem.model.Coupon;
 import movieTicketSystem.model.Payment;
 import movieTicketSystem.model.RegisteredUser;
 import movieTicketSystem.model.Ticket;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -15,7 +14,8 @@ public class ViewController {
     TheaterController theaterController;
     MovieController movieController;
 
-    public ViewController(UserController userController, TheaterController theaterController, MovieController movieController) {
+    public ViewController(UserController userController, TheaterController theaterController,
+            MovieController movieController) {
         this.userController = userController;
         this.theaterController = theaterController;
         this.movieController = movieController;
@@ -29,31 +29,31 @@ public class ViewController {
         ViewController viewController = new ViewController(userController, theaterController, movieController);
 
         MovieSelectionView movieSelectionView = new MovieSelectionView();
-        MovieSelectionViewController movieSelectionViewController = new MovieSelectionViewController(movieSelectionView, viewController);
+        MovieSelectionViewController movieSelectionViewController = new MovieSelectionViewController(movieSelectionView,
+                viewController);
     }
 
     // *** MOVIE SELECTION CONNECTION TO BACK END ***
-    public ArrayList<String> getMovies(){
+    public ArrayList<String> getMovies() {
         return movieController.getMovieNames();
     }
 
-    public ArrayList<String> getTheatres(){
+    public ArrayList<String> getTheatres() {
         return theaterController.getTheaterNames();
     }
 
-    public ArrayList<String>getShowTimes(String movieName, String theaterName){
+    public ArrayList<String> getShowTimes(String movieName, String theaterName) {
         return theaterController.getTheatreShowtimes(movieName, theaterName);
     }
 
-    public int[][] getSeats(int showtimeId){
+    public int[][] getSeats(int showtimeId) {
         return theaterController.getSeatGrid(showtimeId);
     }
 
-    public int getShowtimeId(String[] searchValues){
+    public int getShowtimeId(String[] searchValues) {
         return theaterController.getShowtimeId(searchValues);
     }
     // *** MOVIE SELECTION CONNECTION TO BACK END ***
-
 
     // *** LOGIN AND SIGNUP CONNECTION TO BACK END ***
 
@@ -61,19 +61,20 @@ public class ViewController {
         userController.addPayment(name, cardNum, cardExpiryDate);
     }
 
-    public void signup(String email, String password, String address, String cardNum, LocalDate cardExpiryDate, String name) {
+    public void signup(String email, String password, String address, String cardNum, LocalDate cardExpiryDate,
+            String name) {
         userController.addUser(email, password, address, name, cardNum, cardExpiryDate);
     }
 
-    public void addUser(String email, String password, String address, String holderName,String cardNumber, LocalDate expiry){
+    public void addUser(String email, String password, String address, String holderName, String cardNumber,
+            LocalDate expiry) {
         userController.addUser(email, password, address, holderName, cardNumber, expiry);
     }
 
-    public RegisteredUser authenticateUser(String userName, String password){
+    public RegisteredUser authenticateUser(String userName, String password) {
         return userController.verifyUser(userName, password);
     }
     // *** LOGIN AND SIGNUP CONNECTION TO BACK END ***
-
 
     // *** PRICES AND COUPON CONNECTION TO BACK END ***
     public Coupon getCoupon(String couponCode) {
@@ -84,7 +85,7 @@ public class ViewController {
         return movieController.getPrice(movie);
     }
 
-    public boolean checkShowtime(int ticketId){
+    public boolean checkShowtime(int ticketId) {
         return theaterController.checkValidShowtime(ticketId);
     }
 
@@ -107,14 +108,41 @@ public class ViewController {
     }
     // *** PURCHASE CONNECTION TO BACK END ***
 
-
     // *** CANCELLATION CONNECTION TO BACK END
-    public void emailCancelledCoupon(String userEmail, Coupon C){
-        return;
+
+    /**
+     * Emails the generated coupon
+     *
+     * @param userEmail recipient of coupon
+     * @param c         the coupon to email
+     */
+    public void emailCancelledCoupon(String userEmail, Coupon c) {
+        Email e = Email.getInstance();
+
+        String subject = "ENSF-614 Movie App - Here's your coupon";
+
+        String body = e.getTemplate("coupon");
+        body.replace("#INSERTCODE#", c.getCouponCode());
+        body.replace("#INSERTAMOUNT#", String.format("%.2f", c.getCouponAmount()));
+        body.replace("#INSERTEXPIRY#", c.getExpiry().toString());
+
+        e.sendEmail(userEmail, subject, body);
     }
 
-    public void emailPurhcasedTicket(String userEmail, Ticket t){
-        return;
-    }
+    /**
+     * Emails the generated ticket
+     *
+     * @param userEmail recipient of ticket
+     * @param t         the ticket to email
+     */
+    public void emailPurchasedTicket(String userEmail, Ticket t) {
+        Email e = Email.getInstance();
 
+        String subject = "ENSF-614 Movie App - Here's your ticket";
+        String body = e.getTemplate("ticket");
+        body.replace("#INSERTID#", String.valueOf(t.getId()));
+        body.replace("#INSERTAMOUNT#", String.format("%.2f", t.getPrice()));
+
+        e.sendEmail(userEmail, subject, body);
+    }
 }
