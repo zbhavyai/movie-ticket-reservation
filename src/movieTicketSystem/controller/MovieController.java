@@ -13,6 +13,20 @@ public class MovieController {
 		ArrayList<Movie> moviesdb =	db.selectAllMovies();
 		this.movies = moviesdb;
 	}
+	
+	
+	/**
+	 * Search for movie based on movieId. Returns a movie object
+	 *
+	 */
+	public ArrayList<Movie> selectAllReleasedMovies() {
+
+		ArrayList<Movie> moviesdb =	db.selectAllReleasedMovies();
+		return moviesdb;
+	}
+	
+	
+	
 
 	/**
 	 * Search for movie based on movieId. Returns a movie object
@@ -48,5 +62,10 @@ public class MovieController {
 
 	public ArrayList<Movie> getMovies() {
 		return movies;
+	}
+	
+	public static void main(String[] args) {
+	MovieController mvController = new MovieController();
+	mvController.selectAllReleasedMovies();
 	}
 }

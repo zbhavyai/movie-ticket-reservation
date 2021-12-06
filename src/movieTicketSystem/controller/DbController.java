@@ -90,34 +90,39 @@ public class DbController {
         }
         return movies;
     }
+    
+    
+    /**
+    *
+    * Get a list of all released movies users in the application
+    *
+    * @return an arraylist that contains all movies in the system.
+    */
+   public ArrayList<Movie> selectAllReleasedMovies() {
+       ArrayList<Movie> movies = new ArrayList<Movie>();
 
-    // /**
-    //  *
-    //  * Get a list of all registered users in the application
-    //  *
-    //  * @return an arraylist that contains all registered users in the system.
-    //  */
-    // public ArrayList<RegisteredUser> getAllResgiteredusers() {
-    //     ArrayList<RegisteredUser> movies = new ArrayList<RegisteredUser>();
+       try {
+           Statement myStmt = dbConnect.createStatement();
 
-    //     try {
-    //         Statement myStmt = dbConnect.createStatement();
+           // Execute SQL query
+           results = myStmt.executeQuery("SELECT * FROM MOVIE WHERE released");
 
-    //         // Execute SQL query
-    //         results = myStmt.executeQuery("SELECT * FROM registered_user");
+           // Process the results set
+           while (results.next()) {
+               Movie mvdb = new Movie(results.getString("title"), results.getInt("movieId"),
+                       results.getDouble("rating"));
+               movies.add(mvdb);
+           }
+           myStmt.close();
+       }
+       catch (SQLException ex) {
+           ex.printStackTrace();
+       }
+       return movies;
+   }
 
-    //         // Process the results set
-    //         while (results.next()) {
-    //             RegisteredUser mvdb = new RegisteredUser();
-    //             movies.add(mvdb);
-    //         }
-    //         myStmt.close();
-    //     }
-    //     catch (SQLException ex) {
-    //         ex.printStackTrace();
-    //     }
-    //     return movies;
-    // }
+
+
 
     /**
      *
