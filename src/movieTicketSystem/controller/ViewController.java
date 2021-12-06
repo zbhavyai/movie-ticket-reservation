@@ -122,9 +122,9 @@ public class ViewController {
         String subject = "ENSF-614 Movie App - Here's your coupon";
 
         String body = e.getTemplate("coupon");
-        body.replace("#INSERTCODE#", c.getCouponCode());
-        body.replace("#INSERTAMOUNT#", String.format("%.2f", c.getCouponAmount()));
-        body.replace("#INSERTEXPIRY#", c.getExpiry().toString());
+        body = body.replace("#INSERTCODE#", c.getCouponCode());
+        body = body.replace("#INSERTAMOUNT#", String.format("%.2f", c.getCouponAmount()));
+        body = body.replace("#INSERTEXPIRY#", c.getExpiry().toString());
 
         e.sendEmail(userEmail, subject, body);
     }
@@ -140,8 +140,8 @@ public class ViewController {
 
         String subject = "ENSF-614 Movie App - Here's your ticket";
         String body = e.getTemplate("ticket");
-        body.replace("#INSERTID#", String.valueOf(t.getId()));
-        body.replace("#INSERTAMOUNT#", String.format("%.2f", t.getPrice()));
+        body = body.replace("#INSERTID#", String.valueOf(t.getId()));
+        body = body.replace("#INSERTAMOUNT#", String.format("%.2f", t.getPrice()));
 
         e.sendEmail(userEmail, subject, body);
     }
