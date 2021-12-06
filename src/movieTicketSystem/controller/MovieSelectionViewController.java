@@ -199,6 +199,8 @@ public class MovieSelectionViewController {
                 coupon = viewController.getCoupon(couponCode);
             }
 
+            String email = "grady@gmail.com";  // REPLACE THIS WITH METHOD FROM VIEW
+
             // payment amount
             double totalAmount = theView.getTotalPrice();
             double grandTotal = theView.getGrandTotal();
@@ -229,6 +231,7 @@ public class MovieSelectionViewController {
                 newTicketList.add(viewController.makeTicket(movie, theatre, showTime));
                 viewController.makeSale(paymentId, newTicketList.get(i).getId());
             }
+
         }
     }
 
@@ -290,29 +293,30 @@ public class MovieSelectionViewController {
 
         @Override
         public void actionPerformed(ActionEvent e) {
+            String email = "grady@gmail.com";  // REPLACE THIS WITH METHOD FROM VIEW
 
-                int ticketId = Integer.parseInt(theView.getTicketCancellationID());
-                boolean registered = theView.getLoggedIn();
-                boolean showtimeCheck = viewController.checkShowtime(ticketId);
-                if(showtimeCheck == false){
-                    JOptionPane.showMessageDialog(theView, "Movie is playing in less than 72 hours, cannot cancel.",
-                            "Alert", JOptionPane.WARNING_MESSAGE);
-                    theView.setRefundCouponAmt("");
-                    theView.setRefundCouponCode("");
-                    return;
-                }
-                Coupon coupon = viewController.cancelTicket(ticketId, registered);
-                if(coupon == null){
-                    JOptionPane.showMessageDialog(theView, "Ticket Not Found.",
-                            "Alert", JOptionPane.WARNING_MESSAGE);
-                    theView.setRefundCouponAmt("");
-                    theView.setRefundCouponCode("");
-                    return;
-                }
+            int ticketId = Integer.parseInt(theView.getTicketCancellationID());
+            boolean registered = theView.getLoggedIn();
+            boolean showtimeCheck = viewController.checkShowtime(ticketId);
+            if(showtimeCheck == false){
+                JOptionPane.showMessageDialog(theView, "Movie is playing in less than 72 hours, cannot cancel.",
+                        "Alert", JOptionPane.WARNING_MESSAGE);
+                theView.setRefundCouponAmt("");
+                theView.setRefundCouponCode("");
+                return;
+            }
+            Coupon coupon = viewController.cancelTicket(ticketId, registered);
+            if(coupon == null){
+                JOptionPane.showMessageDialog(theView, "Ticket Not Found.",
+                        "Alert", JOptionPane.WARNING_MESSAGE);
+                theView.setRefundCouponAmt("");
+                theView.setRefundCouponCode("");
+                return;
+            }
 
-                // ticket is found
-                theView.setRefundCouponAmt(String.format("%.02f", coupon.getCouponAmount()));
-                theView.setRefundCouponCode(coupon.getCouponCode());
+            // ticket is found
+            theView.setRefundCouponAmt(String.format("%.02f", coupon.getCouponAmount()));
+            theView.setRefundCouponCode(coupon.getCouponCode());
 
         }
     }
