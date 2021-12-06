@@ -110,6 +110,10 @@ public class TheaterController {
 
 	}
 
+	public void createSeat(int row, int col, int ticketId){
+		db.saveSeat(row, col, ticketId);
+	}
+
 	/**
 	 * Reserve a seat for a specified showtime and seatNumber.
 	 */

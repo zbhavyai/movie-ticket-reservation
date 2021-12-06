@@ -57,16 +57,12 @@ public class ViewController {
 
     // *** LOGIN AND SIGNUP CONNECTION TO BACK END ***
 
-    public void signupPayment(String name, String cardNum, LocalDate cardExpiryDate) {
+    public void signupPayment(String name, String cardNum, String cardExpiryDate) {
         userController.addPayment(name, cardNum, cardExpiryDate);
     }
 
-    public void signup(String email, String password, String address, String cardNum, LocalDate cardExpiryDate, String name) {
+    public void signup(String email, String password, String address, String cardNum, String cardExpiryDate, String name) {
         userController.addUser(email, password, address, name, cardNum, cardExpiryDate);
-    }
-
-    public void addUser(String email, String password, String address, String holderName,String cardNumber, LocalDate expiry){
-        userController.addUser(email, password, address, holderName, cardNumber, expiry);
     }
 
     public RegisteredUser authenticateUser(String userName, String password){
@@ -83,7 +79,25 @@ public class ViewController {
     public double getTicketPrice(String showTime, String theatre, String movie, int row, int col) {
         return movieController.getPrice(movie);
     }
+    // *** PRICES AND COUPON CONNECTION TO BACK END ***
 
+    // *** PURCHASE CONNECTION TO BACK END ***
+    public int ticketPayment(String name, String cardNum, String cardExpiryDate) {
+        return userController.addPayment(name, cardNum, cardExpiryDate);
+    }
+
+    public Ticket makeTicket(String movie, String theatre, String showtime, int row, int col) {
+        Ticket newTicket = userController.createNewTicket(movie, theatre, showtime);
+        theaterController.createSeat(row, col, newTicket.getId());
+        return newTicket;
+    }
+
+    public void makeSale(int paymentId, int ticketId) {
+        userController.createSale(paymentId, ticketId);
+    }
+    // *** PURCHASE CONNECTION TO BACK END ***
+
+    // *** CANCELLATION CONNECTION TO BACK END ***
     public boolean checkShowtime(int ticketId){
         return theaterController.checkValidShowtime(ticketId);
     }
@@ -91,19 +105,6 @@ public class ViewController {
     public Coupon cancelTicket(int ticketID, boolean loggedIn) {
         return userController.createCoupon(ticketID, loggedIn);
     }
-    // *** PRICES AND COUPON CONNECITON TO BACK END ***
+    // *** CANCELLATION CONNECTION TO BACK END ***
 
-    // *** PURCHASE CONNECTION TO BACK END ***
-    public int ticketPayment(String name, String cardNum, LocalDate cardExpiryDate) {
-        return userController.addPayment(name, cardNum, cardExpiryDate);
-    }
-
-    public Ticket makeTicket(String movie, String theatre, String showtime) {
-        return userController.createNewTicket(movie, theatre, showtime);
-    }
-
-    public void makeSale(int paymentId, int ticketId) {
-        userController.createSale(paymentId, ticketId);
-    }
-    // *** PURCHASE CONNECTION TO BACK END ***
 }

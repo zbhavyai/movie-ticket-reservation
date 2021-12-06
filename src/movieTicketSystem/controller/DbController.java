@@ -10,6 +10,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Properties;
 import java.util.Random;
+import java.sql.Date;
 
 import com.mysql.cj.result.BufferedRowList;
 
@@ -260,7 +261,6 @@ public class DbController {
             while (results.next()) {
                 moviePrice = results.getDouble("price");
             }
-
             myStmt.close();
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -467,9 +467,9 @@ public class DbController {
      * @param price is the price to set for the ticket
      */
     public void createNewTicket(int showtimeId, double price) {
-        if (!validTicket(showtimeId)) {
-            throw new IllegalArgumentException("ticket id already exists.");
-        }
+        // if (!validTicket(showtimeId)) {
+        //     throw new IllegalArgumentException("ticket id already exists.");
+        // }
 
         try {
             String query = "INSERT INTO ticket (showtimeId, price) VALUES (?,?)";
@@ -477,9 +477,7 @@ public class DbController {
 
             myStmt.setInt(1, showtimeId);
             myStmt.setDouble(2, price);
-
-            int rowCount = myStmt.executeUpdate();
-            System.out.println(rowCount);
+            myStmt.executeUpdate();
             myStmt.close();
 
         }
@@ -498,7 +496,7 @@ public class DbController {
 
             // Process the results set
             while (results.next()) {
-                ticketId = results.getInt("ticketId");
+                ticketId = results.getInt("MAX(ticketId)");
             }
 
         }
@@ -637,6 +635,21 @@ public class DbController {
         return success;
 	}
 
+    public void saveSeat(int row, int col, int ticketId){
+        try {
+            String query = "INSERT INTO SEAT(seatRow, seatNum, ticketId) VALUES (?, ?, ?)";
+            PreparedStatement myStmt = dbConnect.prepareStatement(query);
+            myStmt.setInt(1, row);
+            myStmt.setInt(2, col);
+            myStmt.setInt(3, ticketId);
+            myStmt.executeUpdate();
+            myStmt.close();
+        }
+        catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
     /**
      * This method is used to return a grid of seats for a particular showtime. The
      * grid will show available seats as 1's and unavailable as 0's
@@ -740,8 +753,7 @@ public class DbController {
      * @param expiry     expiry date of the card
      * @return the RegisteredUser object saved, null if insertion is unsuccessful
      */
-    public RegisteredUser saveRegisteredUser(String email, String password, String address, String holderName,
-            String cardNumber, LocalDate expiry) {
+    public RegisteredUser saveRegisteredUser(String email, String password, String address, String holderName, String cardNumber, String expiry) {
         // if the email already exists, dont save
         if (this.getRegisteredUser(email, password) != null) {
             return null;
@@ -832,14 +844,14 @@ public class DbController {
         return null;
     }
 
-    public int getPaymentIdByNameCardNumAndExpiry(String name, String cardNum, LocalDate cardExpiryDate){
+    public int getPaymentIdByNameCardNumAndExpiry(String name, String cardNum, String cardExpiryDate){
         int paymentId = 0;
         try {
             String query = "SELECT paymentId FROM PAYMENT WHERE holderName =? AND cardNumber = ? AND expiry = ?)";
             PreparedStatement myStmt = this.dbConnect.prepareStatement(query);
             myStmt.setString(1, name);
             myStmt.setString(2, cardNum);
-            myStmt.setDate(3, (Date)Date.from(cardExpiryDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+            myStmt.setDate(3, Date.valueOf(cardExpiryDate));
         
             ResultSet results = myStmt.executeQuery();
 
@@ -861,7 +873,7 @@ public class DbController {
      * @param expiry     expiry date of the card
      * @return the Payment object saved, null if insertion is unsuccessful
      */
-    public Payment savePayment(String holderName, String cardNumber, LocalDate expiry) {
+    public Payment savePayment(String holderName, String cardNumber, String expiry) {
         try {
             String query = "INSERT INTO PAYMENT(holderName, cardNumber, expiry) VALUES (?, ?, ?)";
             PreparedStatement myStmt = this.dbConnect.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
@@ -879,7 +891,7 @@ public class DbController {
                     p.setId(rs.getInt(1));
                     p.setCardHolderName(holderName);
                     p.setCardNum(cardNumber);
-                    p.setExpiry(expiry);
+                    p.setExpiry(LocalDate.parse(expiry));
 
                     myStmt.close();
                     return p;
@@ -1056,7 +1068,9 @@ public class DbController {
     }
 
     public Coupon createCoupon(int ticketId, boolean loggedIn){
-        double price = getPrice(getMovieIdByShowtimeId(getShowtimeIdByTicketId(ticketId)));
+        int showtimeId = getShowtimeIdByTicketId(ticketId);
+        int movieId = getMovieIdByShowtimeId(showtimeId);
+        double price = getPrice(movieId);
         if(loggedIn == false){
             price = price * 0.85;
         }
@@ -1066,7 +1080,7 @@ public class DbController {
     public int getMovieIdByShowtimeId(int showtimeId){
         int movieId = 0;
         try {
-            String query = "SELECT movieId FROM shotime WHERE showtimeId = ?";
+            String query = "SELECT movieId FROM showtime WHERE showtimeId = ?";
             PreparedStatement myStmt = this.dbConnect.prepareStatement(query);
             myStmt.setDouble(1, showtimeId);
 

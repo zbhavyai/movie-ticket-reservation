@@ -45,11 +45,11 @@ public class UserController {
      * @return the RegisteredUser object if user is found and authenticated, null
      *         otherwise
      */
-    public void addUser(String email, String password, String address, String holderName, String cardNumber, LocalDate expiry){
+    public void addUser(String email, String password, String address, String holderName, String cardNumber, String expiry){
         this.db.saveRegisteredUser(email, password, address, holderName, cardNumber, expiry);
     }
 
-    public int addPayment(String name, String cardNum, LocalDate cardExpiryDate) {
+    public int addPayment(String name, String cardNum, String cardExpiryDate) {
         db.savePayment(name, cardNum, cardExpiryDate);
         return db.getPaymentIdByNameCardNumAndExpiry(name, cardNum, cardExpiryDate);
     }

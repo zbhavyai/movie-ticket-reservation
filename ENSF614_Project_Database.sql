@@ -38,12 +38,11 @@ CREATE TABLE IF NOT EXISTS TICKET
 
 
 CREATE TABLE IF NOT EXISTS SEAT
-    (seatId         int             NOT NULL,
+    (seatId         int             NOT NULL AUTO_INCREMENT,
      seatRow        int             NOT NULL,
      seatNum        int             NOT NULL,
      ticketId       int             NOT NULL,
-     primary key (seatId),
-     foreign key (ticketID) references TICKET(ticketId));
+     primary key (seatId));
 
 
 
@@ -77,30 +76,30 @@ VALUES (1,                1,                1,                '2022-05-01 09:23:
         (10,            5,                1,                '2021-12-01 20:50:00');
 
 
-INSERT INTO TICKET (ticketId, showtimeId, price)
-VALUES (1,                1, 15.5),
-        (2,                2, 17.5),
-        (3,                2, 14.5),
-        (4,                3, 15.5),
-        (5,                3, 15.5),
-        (6,                3, 13.5),
-        (7,                4, 15.5),
-        (8,                4, 15.5),
-        (9,                5, 20.5),
-        (10,            5, 15.5);
+INSERT INTO TICKET (showtimeId, price)
+VALUES (1, 15.5),
+        (2, 17.5),
+        (2, 14.5),
+        (3, 15.5),
+        (3, 15.5),
+        (3, 13.5),
+        (4, 15.5),
+        (4, 15.5),
+        (5, 20.5),
+        (5, 15.5);
 
 
-INSERT INTO SEAT (seatId, seatRow, seatNum, ticketId)
-VALUES (1,                1,                1,                1),
-        (2,                1,                2,                2),
-        (3,                2,                4,                3),
-        (4,                2,                8,                4),
-        (5,                3,                7,                5),
-        (6,                3,                8,                6),
-        (7,                4,                1,                7),
-        (8,                4,                2,                8),
-        (9,                4,                3,                9),
-        (10,            4,                4,                10);
+INSERT INTO SEAT (seatRow, seatNum, ticketId)
+VALUES (1,                1,                1),
+        (1,                2,                2),
+        (2,                4,                3),
+        (2,                8,                4),
+        (3,                7,                5),
+        (3,                8,                6),
+        (4,                1,                7),
+        (4,                2,                8),
+        (4,                3,                9),
+        (4,                4,                10);
 
 
 CREATE TABLE IF NOT EXISTS PAYMENT
