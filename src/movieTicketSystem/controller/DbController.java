@@ -856,13 +856,8 @@ public class DbController {
             PreparedStatement myStmt = this.dbConnect.prepareStatement(query);
             myStmt.setString(1, name);
             myStmt.setString(2, cardNum);
-<<<<<<< HEAD
-            myStmt.setDate(3, (Date)Date.from(cardExpiryDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
-
-=======
             myStmt.setDate(3, Date.valueOf(cardExpiryDate));
         
->>>>>>> cg
             ResultSet results = myStmt.executeQuery();
 
             while (results.next()) {

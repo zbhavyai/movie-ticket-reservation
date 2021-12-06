@@ -317,36 +317,9 @@ public class MovieSelectionViewController {
                 return;
             }
 
-<<<<<<< HEAD
             // ticket is found
             theView.setRefundCouponAmt(String.format("%.02f", coupon.getCouponAmount()));
             theView.setRefundCouponCode(coupon.getCouponCode());
-=======
-                int ticketId = Integer.parseInt(theView.getTicketCancellationID());
-                boolean registered = theView.getLoggedIn();
-                boolean showtimeCheck = viewController.checkShowtime(ticketId);
-                if(showtimeCheck == false){
-                    JOptionPane.showMessageDialog(theView, "Movie is playing in less than 72 hours, cannot cancel.",
-                            "Alert", JOptionPane.WARNING_MESSAGE);
-                    theView.setRefundCouponAmt("");
-                    theView.setRefundCouponCode("");
-                    return;
-                }
-                Coupon coupon = viewController.cancelTicket(ticketId, registered);
-                System.out.println(coupon.getCouponCode() + " code");
-                if(coupon == null){
-                    JOptionPane.showMessageDialog(theView, "Ticket Not Found.",
-                            "Alert", JOptionPane.WARNING_MESSAGE);
-                    theView.setRefundCouponAmt("");
-                    theView.setRefundCouponCode("");
-                    return;
-                }
-
-                // ticket is found
-                theView.setRefundCouponAmt(String.format("%.02f", coupon.getCouponAmount()));
-                theView.setRefundCouponCode(coupon.getCouponCode());
->>>>>>> cg
-
         }
     }
 
