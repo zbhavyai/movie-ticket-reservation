@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.sql.*;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Properties;
 import java.util.Random;
@@ -465,7 +466,7 @@ public class DbController {
      * @param showtimeId is the showtime selected
      * @param price is the price to set for the ticket
      */
-    public void createtNewTicket(int showtimeId, double price) {
+    public void createNewTicket(int showtimeId, double price) {
         if (!validTicket(showtimeId)) {
             throw new IllegalArgumentException("ticket id already exists.");
         }
@@ -482,10 +483,29 @@ public class DbController {
             myStmt.close();
 
         }
-
         catch (SQLException ex) {
             ex.printStackTrace();
         }
+    }
+
+    public int getTicketId(){
+        int ticketId = 0;
+        try {
+            String query = "SELECT MAX(ticketId) FROM ticket";
+            PreparedStatement myStmt = dbConnect.prepareStatement(query);
+
+            ResultSet results = myStmt.executeQuery();
+
+            // Process the results set
+            while (results.next()) {
+                ticketId = results.getInt("ticketId");
+            }
+
+        }
+        catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return ticketId;
     }
 
     /**
@@ -812,6 +832,27 @@ public class DbController {
         return null;
     }
 
+    public int getPaymentIdByNameCardNumAndExpiry(String name, String cardNum, LocalDate cardExpiryDate){
+        int paymentId = 0;
+        try {
+            String query = "SELECT paymentId FROM PAYMENT WHERE holderName =? AND cardNumber = ? AND expiry = ?)";
+            PreparedStatement myStmt = this.dbConnect.prepareStatement(query);
+            myStmt.setString(1, name);
+            myStmt.setString(2, cardNum);
+            myStmt.setDate(3, (Date)Date.from(cardExpiryDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        
+            ResultSet results = myStmt.executeQuery();
+
+            while (results.next()) {
+                paymentId = results.getInt("paymentId");
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return paymentId;
+    }
+
     /**
      * Writes an object of Payment to the DB
      *
@@ -856,6 +897,19 @@ public class DbController {
         }
 
         return null;
+    }
+
+    public void saveSale(int paymentId, int ticketId){
+        try {
+            String query = "INSERT INTO SALE(paymentId, ticketId) VALUES (?, ?)";
+            PreparedStatement myStmt = this.dbConnect.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            myStmt.setInt(1, paymentId);
+            myStmt.setInt(2, ticketId);
+            myStmt.executeUpdate();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

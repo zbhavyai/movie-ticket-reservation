@@ -49,12 +49,17 @@ public class UserController {
         this.db.saveRegisteredUser(email, password, address, holderName, cardNumber, expiry);
     }
 
-    public void addPayment(String name, String cardNum, LocalDate cardExpiryDate) {
+    public int addPayment(String name, String cardNum, LocalDate cardExpiryDate) {
         db.savePayment(name, cardNum, cardExpiryDate);
+        return db.getPaymentIdByNameCardNumAndExpiry(name, cardNum, cardExpiryDate);
     }
 
     public Coupon getCouponWithCode(String couponCode) {
         return db.getCoupon(couponCode);
+    }
+
+    public void createSale(int paymentId, int ticketId){
+        db.saveSale(paymentId, ticketId);
     }
 
     /**
@@ -71,5 +76,14 @@ public class UserController {
 
     public Coupon createCoupon(int ticketID, boolean loggedIn) {
         return db.createCoupon(ticketID, loggedIn);
+    }
+
+    public Ticket createNewTicket(String movie, String theatre, String showtime) {
+        int movieId = db.getMovieIdByName(movie);
+        int theatreId = db.getTheaterIdByName(theatre);
+        int showtimeId = db.getShowtimeIdByMovieAndTheatreAndShowtime(theatreId, movieId, showtime);
+        double price = db.getPrice(movieId);
+        db.createNewTicket(showtimeId, price);
+        return new Ticket(db.getTicketId(), showtimeId, price);
     }
 }

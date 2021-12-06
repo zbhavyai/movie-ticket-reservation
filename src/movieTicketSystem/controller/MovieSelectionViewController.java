@@ -5,6 +5,7 @@ import movieTicketSystem.model.Coupon;
 import movieTicketSystem.model.Payment;
 import movieTicketSystem.model.RegisteredUser;
 import movieTicketSystem.model.Seat;
+import movieTicketSystem.model.Ticket;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -202,15 +203,11 @@ public class MovieSelectionViewController {
             double totalAmount = theView.getTotalPrice();
             double grandTotal = theView.getGrandTotal();
 
-
-
             // Payment details
             String cardNumber = theView.getCreditCardNum();
             String CVC = theView.getCVC();
             String cardExpiryDate = theView.getCardExpiry();
             String cardHolderName = theView.getCardHolderName();
-
-
 
             //Figure out selected seats
             ArrayList<Seat> selectedSeats = new ArrayList<Seat>();
@@ -226,14 +223,12 @@ public class MovieSelectionViewController {
                 }
             }
 
-            // INSERT HERE:
-            // Based on the above calculated values (movie, theatre, showtime,
-            // coupon (null if does not exist), total amount, grand total, cardNumber, CVC,
-            // cardExpiryDate, cardHolderName, selectedSeats)
-            // talk to viewController, and put the purhcase through.
-            // RETURN AN ARRAYLIST OF TICKET OBJECTS
-            // I will use this arraylist of ticket objects and display it to the user.
-
+            int paymentId = viewController.ticketPayment(cardHolderName, cardNumber, LocalDate.parse(cardExpiryDate));
+            ArrayList<Ticket> newTicketList = new ArrayList<Ticket>();
+            for(int i = 0; i < selectedSeats.size(); i++){
+                newTicketList.add(viewController.makeTicket(movie, theatre, showTime));
+                viewController.makeSale(paymentId, newTicketList.get(i).getId());
+            }
         }
     }
 

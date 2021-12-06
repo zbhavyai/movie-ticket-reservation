@@ -75,7 +75,7 @@ public class ViewController {
     // *** LOGIN AND SIGNUP CONNECTION TO BACK END ***
 
 
-    // *** PRICES AND COUPON CONNECITON TO BACK END ***
+    // *** PRICES AND COUPON CONNECTION TO BACK END ***
     public Coupon getCoupon(String couponCode) {
         return userController.getCouponWithCode(couponCode);
     }
@@ -92,4 +92,18 @@ public class ViewController {
         return userController.createCoupon(ticketID, loggedIn);
     }
     // *** PRICES AND COUPON CONNECITON TO BACK END ***
+
+    // *** PURCHASE CONNECTION TO BACK END ***
+    public int ticketPayment(String name, String cardNum, LocalDate cardExpiryDate) {
+        return userController.addPayment(name, cardNum, cardExpiryDate);
+    }
+
+    public Ticket makeTicket(String movie, String theatre, String showtime) {
+        return userController.createNewTicket(movie, theatre, showtime);
+    }
+
+    public void makeSale(int paymentId, int ticketId) {
+        userController.createSale(paymentId, ticketId);
+    }
+    // *** PURCHASE CONNECTION TO BACK END ***
 }
