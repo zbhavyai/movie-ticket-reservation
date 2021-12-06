@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS MOVIE
      title                VARCHAR(30)        NOT NULL,
          rating                double            NOT NULL,
      theatreId            int            NOT NULL,
-     released           BOOLEAN        NOT NULL,
+     releasedate           date        NOT NULL,
      PRIMARY KEY (movieId),
      foreign key(theatreId) references THEATRE(theatreId)
 );
@@ -44,7 +44,14 @@ CREATE TABLE IF NOT EXISTS COUPON
      redeemedAmount double          NOT NULL,
      expiry         date            NOT NULL,
      primary key(couponId));
-
+     
+     
+CREATE TABLE IF NOT EXISTS RECEIPT
+    (id       int             NOT NULL AUTO_INCREMENT,
+     paymentCard     VARCHAR(255)    NOT NULL,
+     price   double          NOT NULL,
+     generationTime datetime          NOT NULL,
+     primary key(id));
 
 CREATE TABLE IF NOT EXISTS SEAT
     (seatId         int             NOT NULL AUTO_INCREMENT,
@@ -82,13 +89,13 @@ VALUES (1,                "Crowfoot Crossing"),
         (5,                "Eau Claire Market");
 
 
-INSERT INTO MOVIE (movieId, title, rating, theatreId,released)
-VALUES (1,                "Anchorman",                    4,1, true),
-        (2,                "The Lion King",                5,1, true),
-        (3,                "Titanic",                        5,2, true),
-        (4,                "Pulp Fiction",                    4,1, true),
-        (5,                "Finding Nemo",                    3,2, true),
-	(6,                "Dynasty Future",                    4,2, false);
+INSERT INTO MOVIE (movieId, title, rating, theatreId,releasedate)
+VALUES (1,                "Anchorman",                    4,1, '2021-12-01'),
+        (2,                "The Lion King",                5,1, '2021-12-02'),
+        (3,                "Titanic",                        5,2, '2021-12-01'),
+        (4,                "Pulp Fiction",                    4,1, '2021-11-01'),
+        (5,                "Finding Nemo",                    3,2, '2021-12-03'),
+	(6,                "Dynasty Future",                    4,2, '2021-12-29');
 ;
 
 
@@ -148,7 +155,6 @@ INSERT INTO PAYMENT (holderName,cardNumber,expiry) VALUES
 ("Romeo Sosa","5534346641931920","2023-06-01");
 
 
-<<<<<<< HEAD
 INSERT INTO RUser (username,password,email,address,card,lastPaid) VALUES
 ("romeo.sosa","password3","romeo.sosa@ucalgary.ca","721 Gates St. Lachute, QC J8H 8J8","10","2021-04-21"),
 ("jared.nash","password6","jared.nash@ucalgary.ca","8489 Tallwood St. Laval-sur-le-Lac, QC H7R 9L1","9","2021-03-17"),
@@ -168,11 +174,11 @@ INSERT INTO COUPON (couponCode,couponAmount,redeemedAmount,expiry) VALUES
 ("s57NlehWQh","26","4","2022-03-01"),
 ("A2kGUPhyR8","15","15","2022-04-01"),
 ("tCpLtqccCT","23","24","2022-05-01");
-=======
+
 INSERT INTO RECEIPT (paymentCard,price,generationTime) VALUES
 ("5355142077868730","34","2021-11-25 09:00:00"),
 ("5565149389994340","64","2021-12-09 09:00:00"),
 ("5119080811765270","12","2022-03-01 09:00:00"),
 ("5179341601731640","67","2022-04-01 09:00:00"),
 ("5113181095909820","98","2022-05-01 09:00:00");
->>>>>>> cg
+

@@ -16,13 +16,17 @@ public class MovieController {
 	
 	
 	/**
-	 * Search for movie based on movieId. Returns a movie object
+	 * Search for movie based on movieId. Returns a movie name list
 	 *
 	 */
-	public ArrayList<Movie> selectAllReleasedMovies() {
+	public ArrayList<String> selectAllReleasedMovies() {
 
 		ArrayList<Movie> moviesdb =	db.selectAllReleasedMovies();
-		return moviesdb;
+		ArrayList<String> movieNames = new ArrayList<String>();
+		for(int i = 0; i < moviesdb.size(); i++){
+			movieNames.add(moviesdb.get(i).getTitle());
+		}
+		return movieNames;
 	}
 	
 	
@@ -64,8 +68,6 @@ public class MovieController {
 		return movies;
 	}
 	
-	public static void main(String[] args) {
-	MovieController mvController = new MovieController();
-	mvController.selectAllReleasedMovies();
-	}
+	
+
 }

@@ -34,8 +34,13 @@ public class ViewController {
     }
 
     // *** MOVIE SELECTION CONNECTION TO BACK END ***
-    public ArrayList<String> getMovies() {
-        return movieController.getMovieNames();
+    public ArrayList<String> getMovies(boolean registered) {
+    	if(registered) {
+    		return movieController.getMovieNames();
+    	}else {
+    		return movieController.selectAllReleasedMovies();
+    	}
+        
     }
 
     public ArrayList<String> getTheatres() {

@@ -1,22 +1,29 @@
 package movieTicketSystem.controller;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+import movieTicketSystem.model.Movie;
 import movieTicketSystem.model.Theater;
 
 /**
  * TheaterController class to control system access to Theater, Showtime, and Seat classes.
  */
 public class TheaterController {
+	
+
 
 	private ArrayList<Theater> theaters = new ArrayList<Theater>();
 	DbController db = DbController.getInstance();
+	MovieController mvController = new MovieController();
 
 	public TheaterController() {
 		ArrayList<Theater> theatersdb =	db.selectAllTheatres();
         this.theaters = theatersdb;
 	}
+	
+	
 
 	/**
 	 * Search for theater based on theatreId.
@@ -97,9 +104,20 @@ public class TheaterController {
 	 * Search for the showtimeId based on the movieId, theaterId and showtime
 	 */
 	public int getShowtimeId(String[] searchValues){
+		
 		int theatreId = db.getTheaterIdByName(searchValues[0]);
 		int movieId = db.getMovieIdByName(searchValues[1]);
-		return db.getShowtimeIdByMovieAndTheatreAndShowtime(theatreId, movieId, searchValues[2]);
+		// check 10% here
+		int showtimeId = db.getShowtimeIdByMovieAndTheatreAndShowtime(theatreId, movieId, searchValues[2]);
+		if(mvController.searchMovieById(movieId).getReleaseDay().compareTo(LocalDate.now())>0) {
+			//future release
+			int count = db.getSeatCount(showtimeId);
+			// if more than 10% seat taken just return invalid id to front end
+			if(count/100>0.1) {
+				return -999;
+			}
+		}
+		return showtimeId;
 	}
 
 	/**

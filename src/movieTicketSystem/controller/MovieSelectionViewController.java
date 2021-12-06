@@ -2,6 +2,7 @@ package movieTicketSystem.controller;
 
 import movieTicketSystem.View.MovieSelectionView;
 import movieTicketSystem.model.Coupon;
+import movieTicketSystem.model.Movie;
 import movieTicketSystem.model.Payment;
 import movieTicketSystem.model.RegisteredUser;
 import movieTicketSystem.model.Seat;
@@ -11,6 +12,9 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import javax.swing.*;
+
+import com.sun.org.apache.bcel.internal.generic.NEW;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -31,6 +35,7 @@ public class MovieSelectionViewController {
 
     MovieSelectionView theView;
     ViewController viewController;
+    
 
     RegisteredUser loggedInUser;
 
@@ -62,7 +67,9 @@ public class MovieSelectionViewController {
         theView.addCancelTicketButtonListener(cancelTicketButtonListener);
         theView.addSignUpButtonListener(signUpButtonListener);
 
-        ArrayList<String> movieOptions = viewController.getMovies();
+        
+        // true means registered user,  false means ordinary user
+        ArrayList<String> movieOptions = viewController.getMovies(true);
         theView.setMovieOptions(movieOptions);
 
         theView.setVisible(true);
@@ -158,6 +165,9 @@ public class MovieSelectionViewController {
             System.out.println("Showtime Selected: "  + theView.getShowtimeInput());
             String[] showtimeSearch = {theater, movie, showtime};
             int showtimeId = viewController.getShowtimeId(showtimeSearch);
+            if(showtimeId<0) {
+            	// here should pop up window remind 10% exceed
+            }
             int[][] seats = viewController.getSeats(showtimeId);
 
             theView.setSeats(seats);}

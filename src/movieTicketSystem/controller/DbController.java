@@ -62,6 +62,36 @@ public class DbController {
             return instanceVar;
         }
     }
+    
+    
+    /**
+    *
+    * Get count of occupied seats in the specific showtime id
+    *
+    * @return count as int type
+    */
+   public int getSeatCount(int showtimeId) {
+       int sum = 0;
+       try {
+    	      String query = "SELECT * FROM TICKET WHERE showtimeId=?";
+              PreparedStatement myStmt = dbConnect.prepareStatement(query);
+          
+              myStmt.setInt(1, showtimeId);
+              
+              
+
+              ResultSet results = myStmt.executeQuery();
+              while (results.next()) {
+                  sum++;
+              }
+
+              myStmt.close();
+       }
+       catch (SQLException ex) {
+           ex.printStackTrace();
+       }
+       return sum;
+   }
 
     /**
      *
@@ -81,7 +111,7 @@ public class DbController {
             // Process the results set
             while (results.next()) {
                 Movie mvdb = new Movie(results.getString("title"), results.getInt("movieId"),
-                        results.getDouble("rating"));
+                        results.getDouble("rating"), results.getDate("releasedate").toLocalDate());
                 movies.add(mvdb);
             }
             myStmt.close();
@@ -106,12 +136,13 @@ public class DbController {
            Statement myStmt = dbConnect.createStatement();
 
            // Execute SQL query
-           results = myStmt.executeQuery("SELECT * FROM MOVIE WHERE released");
+           results = myStmt.executeQuery("select * from movie \r\n" + 
+           		"where releasedate <= cast(now() as date)");
 
            // Process the results set
            while (results.next()) {
                Movie mvdb = new Movie(results.getString("title"), results.getInt("movieId"),
-                       results.getDouble("rating"));
+                       results.getDouble("rating"), results.getDate("releasedate").toLocalDate());
                movies.add(mvdb);
            }
            myStmt.close();

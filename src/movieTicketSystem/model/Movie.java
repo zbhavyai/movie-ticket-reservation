@@ -1,20 +1,27 @@
 package movieTicketSystem.model;
 
 
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 
 
 public class Movie {
 
 	private int movieId;
 	private String title;
+	private LocalDate releaseDay; 
 	private ArrayList<Showtime> showtimes;
 	private double rating;
 
-	public Movie(String title, int movieId, double rating) {
+	public Movie(String title, int movieId, double rating, LocalDate releaseDay) {
 		this.setTitle(title);
 		this.setMovieId(movieId);
 		this.rating = rating;
+		this.releaseDay = releaseDay;
 	}
 	
 	/**
@@ -83,6 +90,20 @@ public class Movie {
 		return (m.getMovieId() == this.movieId);
 	}
 
+	public LocalDate getReleaseDay() {
+		return releaseDay;
+	}
+
+	public void setReleaseDay(LocalDate releaseDay) {
+		this.releaseDay = releaseDay;
+	}
+
+	
+//	
+//	public static void main(String[] args) {
+//		LocalDate date1 = LocalDate.parse("2021-11-22");
+//		System.out.println(date1.compareTo(LocalDate.now()));
+//	}
 
 
 	
