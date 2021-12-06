@@ -108,7 +108,7 @@ public class Email {
             MimeMessage message = new MimeMessage(session);
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
             message.setSubject(subject);
-            message.setText(body);
+            message.setContent(body, "text/html");
 
             Transport.send(message);
         }
