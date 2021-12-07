@@ -11,9 +11,10 @@ CREATE TABLE IF NOT EXISTS THEATRE
 CREATE TABLE IF NOT EXISTS MOVIE
     (movieId            int             NOT NULL,
      title                VARCHAR(30)        NOT NULL,
-         rating                double            NOT NULL,
+	rating                double            NOT NULL,
      theatreId            int            NOT NULL,
      releasedate           date        NOT NULL,
+     price                    double AS (rating * 3.5)    NOT NULL,
      PRIMARY KEY (movieId),
      foreign key(theatreId) references THEATRE(theatreId)
 );
@@ -69,7 +70,7 @@ CREATE TABLE IF NOT EXISTS PAYMENT
      primary key(paymentId));
 
 
-CREATE TABLE IF NOT EXISTS RUser
+CREATE TABLE IF NOT EXISTS REGISTERED_USER
     (userId         int             NOT NULL AUTO_INCREMENT,
      username       VARCHAR(255)    NOT NULL,
      password       VARCHAR(255)    NOT NULL,
@@ -101,10 +102,10 @@ VALUES (1,                "Anchorman",                    4,1, '2021-12-01'),
 
 
 INSERT INTO SHOWTIME (showtimeId, movieId, theatreId, showtime)
-VALUES (1,                1,                1,                '2021-12-01 09:23:00'),
-        (2,                1,                1,                '2021-12-01 14:20:00'),
-        (3,                1,                2,                '2021-12-01 10:25:00'),
-        (4,                2,                3,                '2021-12-01 13:50:00'),
+VALUES (1,                1,                1,                '2022-12-01 09:23:00'),
+        (2,                1,                1,                '2022-12-01 14:20:00'),
+        (3,                1,                2,                '2022-12-01 10:25:00'),
+        (4,                2,                3,                '2022-12-01 13:50:00'),
         (5,                3,                4,                '2021-12-01 07:00:00'),
         (6,                4,                4,                '2021-12-01 16:45:00'),
         (7,                4,                4,                '2021-12-01 22:10:00'),
@@ -155,7 +156,7 @@ INSERT INTO PAYMENT (holderName,cardNumber,expiry) VALUES
 ("Romeo Sosa","5534346641931920","2023-06-01");
 
 
-INSERT INTO RUser (username,password,email,address,card,lastPaid) VALUES
+INSERT INTO REGISTERED_USER (username,password,email,address,card,lastPaid) VALUES
 ("romeo.sosa","password3","romeo.sosa@ucalgary.ca","721 Gates St. Lachute, QC J8H 8J8","10","2021-04-21"),
 ("jared.nash","password6","jared.nash@ucalgary.ca","8489 Tallwood St. Laval-sur-le-Lac, QC H7R 9L1","9","2021-03-17"),
 ("salvador.cain","password9","salvador.cain@ucalgary.ca","469 Pennington St. Sainte-Julie, QC J3E 1J1","8","2021-04-30"),
