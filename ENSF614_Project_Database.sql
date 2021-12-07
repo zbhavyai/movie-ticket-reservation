@@ -42,11 +42,10 @@ CREATE TABLE IF NOT EXISTS COUPON
     (couponId       int             NOT NULL AUTO_INCREMENT,
      couponCode     VARCHAR(255)    NOT NULL,
      couponAmount   double          NOT NULL,
-     redeemedAmount double          NOT NULL,
      expiry         date            NOT NULL,
      primary key(couponId));
-     
-     
+
+
 CREATE TABLE IF NOT EXISTS RECEIPT
     (id       int             NOT NULL AUTO_INCREMENT,
      paymentCard     VARCHAR(255)    NOT NULL,
@@ -70,6 +69,12 @@ CREATE TABLE IF NOT EXISTS PAYMENT
      primary key(paymentId));
 
 
+CREATE TABLE IF NOT EXISTS SALE
+(
+     paymentId      int             NOT NULL,
+     ticketId       int             NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS REGISTERED_USER
     (userId         int             NOT NULL AUTO_INCREMENT,
      username       VARCHAR(255)    NOT NULL,
@@ -91,13 +96,11 @@ VALUES (1,                "Crowfoot Crossing"),
 
 
 INSERT INTO MOVIE (movieId, title, rating, theatreId,releasedate)
-VALUES (1,                "Anchorman",                    4,1, '2021-12-01'),
+VALUES (1,                "Anchorman",                    4,1, '2022-12-01'),
         (2,                "The Lion King",                5,1, '2021-12-02'),
         (3,                "Titanic",                        5,2, '2021-12-01'),
         (4,                "Pulp Fiction",                    4,1, '2021-11-01'),
-        (5,                "Finding Nemo",                    3,2, '2021-12-03'),
-	(6,                "Dynasty Future",                    4,2, '2021-12-29');
-;
+        (5,                "Finding Nemo",                    3,2, '2021-12-03');
 
 
 
@@ -111,10 +114,7 @@ VALUES (1,                1,                1,                '2022-12-01 09:23:
         (7,                4,                4,                '2021-12-01 22:10:00'),
         (8,                5,                5,                '2021-12-01 11:15:00'),
         (9,                5,                5,                '2021-12-01 15:00:00'),
-        (10,            5,                1,                '2021-12-01 20:50:00'),
-        (11,                6,                5,                '2021-12-20 11:15:00'),
-        (12,                6,                5,                '2021-12-20 15:00:00'),
-        (13,            6,                1,                '2021-12-20 20:50:00');
+        (10,            5,                1,                '2021-12-01 20:50:00');
 
 
 INSERT INTO TICKET (showtimeId, price)
@@ -169,12 +169,12 @@ INSERT INTO REGISTERED_USER (username,password,email,address,card,lastPaid) VALU
 ("lizeth.cowan","password30","lizeth.cowan@ucalgary.ca","400 Aspen Dr. Rock Forest, QC J1N 8X5","1","2021-04-03");
 
 
-INSERT INTO COUPON (couponCode,couponAmount,redeemedAmount,expiry) VALUES 
-("SaTs1pKnCg","39","0","2021-11-25"),
-("QnXfvFTrBo","24","0","2021-12-09"),
-("s57NlehWQh","26","4","2022-03-01"),
-("A2kGUPhyR8","15","15","2022-04-01"),
-("tCpLtqccCT","23","24","2022-05-01");
+INSERT INTO COUPON (couponCode,couponAmount,expiry) VALUES
+("SaTs1pKnCg","39","2021-11-25"),
+("QnXfvFTrBo","24","2021-12-09"),
+("s57NlehWQh","26","2022-03-01"),
+("A2kGUPhyR8","15","2022-04-01"),
+("tCpLtqccCT","23","2022-05-01");
 
 INSERT INTO RECEIPT (paymentCard,price,generationTime) VALUES
 ("5355142077868730","34","2021-11-25 09:00:00"),

@@ -19,6 +19,9 @@ public class OrdinaryUser {
     public Coupon cancelTicket(Ticket t, OrdinaryUser user) {
         DbController db = DbController.getInstance();
 
+        // TODO: not just delete ticket, make sure to use release the seat as well
+        // use method by calvin cancelTicket() that calls theaterController.makeSeatAvailable
+
         if(db.deleteTicket(t.getId()) == false) {
             return null;
         }

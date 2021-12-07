@@ -1,8 +1,6 @@
 package movieTicketSystem.controller;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
-
 import movieTicketSystem.model.*;
 
 /**
@@ -10,16 +8,7 @@ import movieTicketSystem.model.*;
  */
 public class UserController {
     private static UserController instanceVar;
-	DbController db = DbController.getInstance();
-    // private ArrayList<RegisteredUser> registeredUserIdList;
-
-    // /**
-    //  * Private constructor enforcing singleton design pattern
-    //  */
-    // private UserController() {
-    //     this.db = DbController.getInstance();
-    //     registeredUserIdList = db.getAllRegisteredUserIds();
-    // }
+    DbController db = DbController.getInstance();
 
     /**
      * Returns the one and only instance of UserController
@@ -45,7 +34,8 @@ public class UserController {
      * @return the RegisteredUser object if user is found and authenticated, null
      *         otherwise
      */
-    public void addUser(String email, String password, String address, String holderName, String cardNumber, String expiry){
+    public void addUser(String email, String password, String address, String holderName, String cardNumber,
+            String expiry) {
         this.db.saveRegisteredUser(email, password, address, holderName, cardNumber, expiry);
     }
 
@@ -58,7 +48,7 @@ public class UserController {
         return db.getCoupon(couponCode);
     }
 
-    public void createSale(int paymentId, int ticketId){
+    public void createSale(int paymentId, int ticketId) {
         db.saveSale(paymentId, ticketId);
     }
 
@@ -85,5 +75,75 @@ public class UserController {
         double price = db.getPrice(movieId);
         db.createNewTicket(showtimeId, price);
         return new Ticket(db.getTicketId(), showtimeId, price);
+    }
+
+        /**
+     * Emails the generated coupon
+     *
+     * @param userEmail recipient of coupon
+     * @param c         the coupon to email
+     */
+    public void emailCancelledCoupon(String userEmail, Coupon c) {
+        Email e = Email.getInstance();
+
+        String subject = "ENSF-614 Movie App - Here's your coupon";
+
+        String body = e.getTemplate("coupon");
+        body = body.replace("#INSERTCODE#", c.getCouponCode());
+        body = body.replace("#INSERTAMOUNT#", String.format("%.2f", c.getCouponAmount()));
+        body = body.replace("#INSERTEXPIRY#", c.getExpiry().toString());
+
+        e.sendEmail(userEmail, subject, body);
+    }
+
+    /**
+     * Emails the generated list of tickets
+     *
+     * @param userEmail recipient of tickets
+     * @param t         the list of tickets to email
+     */
+    public void emailPurchasedTicket(String userEmail, ArrayList<Ticket> t) {
+        Email e = Email.getInstance();
+
+        String subject = "ENSF-614 Movie App - Here's your ticket";
+
+        if(t.size() > 1) {
+            subject += "s";
+        }
+
+        String list_of_units = "";
+        String unit = e.getTemplate("ticket_unit");
+
+        for (int i = 0; i < t.size(); i++) {
+            String tempUnit = unit.replace("#INSERTID#", String.valueOf(t.get(i).getId()));
+            tempUnit = tempUnit.replace("#INSERTPRICE#", String.format("%.2f", t.get(i).getPrice()));
+
+            String[] movieShowtime = DbController.getInstance().getMovieAndShowtime(t.get(i).getId());
+            tempUnit = tempUnit.replace("#INSERTMOVIE#", movieShowtime[0]);
+            tempUnit = tempUnit.replace("#INSERTSHOWTIME#", movieShowtime[1]);
+
+            list_of_units += tempUnit;
+        }
+
+        String body = e.getTemplate("ticket");
+        body = body.replace("#LISTGOESHERE#", list_of_units);
+        e.sendEmail(userEmail, subject, body);
+    }
+
+    public static void main(String[] args) {
+        UserController uc = new UserController();
+        // Coupon cou = new Coupon();
+        // cou.setCouponCode(cou.generateUniqueCouponCode());
+        // cou.setExpiry(LocalDate.now().plusYears(1));
+        // cou.setCouponAmount(23.56);
+        // uc.emailCancelledCoupon("ensfmovieapp@gmail.com", cou);
+
+
+        ArrayList<Ticket> tickets = new ArrayList<>();
+        tickets.add(new Ticket(5, 3, 15.5));
+        tickets.add(new Ticket(8, 4, 15.5));
+        tickets.add(new Ticket(10, 5, 20.5));
+
+        uc.emailPurchasedTicket("ensfmovieapp@gmail.com", tickets);
     }
 }

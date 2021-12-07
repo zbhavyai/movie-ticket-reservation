@@ -7,6 +7,7 @@ import java.sql.*;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Properties;
 import java.util.Random;
@@ -129,7 +130,7 @@ public class DbController {
             Statement myStmt = dbConnect.createStatement();
 
             // Execute SQL query
-            results = myStmt.executeQuery("select * from movie \r\n" +
+            results = myStmt.executeQuery("select * from MOVIE \r\n" +
                     "where releasedate <= cast(now() as date)");
 
             // Process the results set
@@ -268,7 +269,6 @@ public class DbController {
     }
 
     /**
-     *
      * This method is used to get the price of a movie
      *
      * @param movieId is the Id of the movie to search
@@ -293,6 +293,35 @@ public class DbController {
         }
 
         return moviePrice;
+    }
+
+    /**
+     * This method is used to get the price of a ticket
+     *
+     * @param ticketId is the Id of the movie to search
+     * @return the price of the ticket as a double
+     */
+    public double getPriceFromTicket(int ticketId) {
+        double ticketPrice = 0.0;
+
+        try {
+            String query = "SELECT price FROM TICKET Where ticketId = ?";
+            PreparedStatement myStmt = dbConnect.prepareStatement(query);
+            myStmt.setInt(1, ticketId);
+
+            ResultSet results = myStmt.executeQuery();
+
+            while (results.next()) {
+                ticketPrice = results.getDouble("price");
+            }
+            myStmt.close();
+        }
+
+        catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return ticketPrice;
     }
 
     /**
@@ -501,7 +530,7 @@ public class DbController {
         // }
 
         try {
-            String query = "INSERT INTO ticket (showtimeId, price) VALUES (?,?)";
+            String query = "INSERT INTO TICKET (showtimeId, price) VALUES (?,?)";
             PreparedStatement myStmt = dbConnect.prepareStatement(query);
 
             myStmt.setInt(1, showtimeId);
@@ -545,18 +574,20 @@ public class DbController {
             PreparedStatement myStmt = this.dbConnect.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             myStmt.setInt(1, ticketId);
             int rowAffected = myStmt.executeUpdate();
-            if (rowAffected == 1) {
+
+            if (rowAffected != 1) {
                 myStmt.close();
-                return true;
+                return false;
             }
 
             query = "DELETE FROM TICKET WHERE ticketId = ?";
             myStmt = this.dbConnect.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             myStmt.setInt(1, ticketId);
             rowAffected = myStmt.executeUpdate();
-            if (rowAffected == 1) {
+
+            if (rowAffected != 1) {
                 myStmt.close();
-                return true;
+                return false;
             }
         }
 
@@ -564,7 +595,7 @@ public class DbController {
             ex.printStackTrace();
         }
 
-        return false;
+        return true;
     }
 
     /**
@@ -873,7 +904,7 @@ public class DbController {
     public int getPaymentIdByNameCardNumAndExpiry(String name, String cardNum, String cardExpiryDate) {
         int paymentId = 0;
         try {
-            String query = "SELECT paymentId FROM PAYMENT WHERE holderName =? AND cardNumber = ? AND expiry = ?)";
+            String query = "SELECT paymentId FROM PAYMENT WHERE holderName =? AND cardNumber = ? AND expiry = ?";
             PreparedStatement myStmt = this.dbConnect.prepareStatement(query);
             myStmt.setString(1, name);
             myStmt.setString(2, cardNum);
@@ -904,7 +935,11 @@ public class DbController {
             PreparedStatement myStmt = this.dbConnect.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             myStmt.setString(1, holderName);
             myStmt.setString(2, cardNumber);
-            myStmt.setDate(3, java.sql.Date.valueOf(expiry));
+            // myStmt.setDate(3, java.sql.Date.valueOf(expiry));
+            // myStmt.setDate(3, LocalDate.parse(expiry, dateformatter));
+            myStmt.setDate(3, Date.valueOf(expiry));
+
+
 
             int rowAffected = myStmt.executeUpdate();
 
@@ -1126,19 +1161,20 @@ public class DbController {
     }
 
     public Coupon createCoupon(int ticketId, boolean loggedIn) {
-        int showtimeId = getShowtimeIdByTicketId(ticketId);
-        int movieId = getMovieIdByShowtimeId(showtimeId);
-        double price = getPrice(movieId);
+        // int showtimeId = getShowtimeIdByTicketId(ticketId);
+        double price = getPriceFromTicket(ticketId);
+
         if (loggedIn == false) {
             price = price * 0.85;
         }
+
         return saveCoupon(createCouponCode(), price, LocalDate.now().plusYears(1));
     }
 
     public int getMovieIdByShowtimeId(int showtimeId) {
         int movieId = 0;
         try {
-            String query = "SELECT movieId FROM showtime WHERE showtimeId = ?";
+            String query = "SELECT movieId FROM SHOWTIME WHERE showtimeId = ?";
             PreparedStatement myStmt = this.dbConnect.prepareStatement(query);
             myStmt.setDouble(1, showtimeId);
 
@@ -1166,10 +1202,12 @@ public class DbController {
             return null;
         }
 
+        double finalAmount = c.getCouponAmount() - amount;
+
         try {
             String query = "UPDATE COUPON SET couponAmount = ? WHERE couponId = ?";
             PreparedStatement myStmt = this.dbConnect.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-            myStmt.setDouble(1, amount);
+            myStmt.setDouble(1, finalAmount);
             myStmt.setInt(2, c.getId());
 
             int rowAffected = myStmt.executeUpdate();

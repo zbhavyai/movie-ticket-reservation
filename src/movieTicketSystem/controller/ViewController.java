@@ -107,8 +107,11 @@ public class ViewController {
         return theaterController.checkValidShowtime(ticketId);
     }
 
-    public Coupon cancelTicket(int ticketID, boolean loggedIn) {
-        return userController.createCoupon(ticketID, loggedIn);
+    public Coupon cancelTicket(int ticketId, boolean loggedIn) {
+        Coupon c = userController.createCoupon(ticketId, loggedIn);
+        theaterController.cancelTicket(ticketId);
+
+        return c;
     }
     // *** CANCELLATION CONNECTION TO BACK END ***
 
@@ -118,7 +121,7 @@ public class ViewController {
      * @param userEmail recipient of coupon
      * @param c         the coupon to email
      */
-    public void emailCancelledCoupon(String userEmail, Coupon c) {
+    public void emailCoupon(String userEmail, Coupon c) {
         Email e = Email.getInstance();
 
         String subject = "ENSF-614 Movie App - Here's your coupon";
@@ -163,5 +166,13 @@ public class ViewController {
         String body = e.getTemplate("ticket");
         body = body.replace("#LISTGOESHERE#", list_of_units);
         e.sendEmail(userEmail, subject, body);
+    }
+
+    public int getSeatCount(String[] showtimeSearch) {
+        return theaterController.geteSeatsTaken(showtimeSearch);
+    }
+
+    public boolean checkShowtimeReleased(String[] showtimeSearch){
+        return theaterController.checkShowtimeReleased(showtimeSearch);
     }
 }
