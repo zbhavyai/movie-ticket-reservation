@@ -1,18 +1,11 @@
 package movieTicketSystem.controller;
 
 import movieTicketSystem.View.MovieSelectionView;
-import movieTicketSystem.model.Coupon;
-import movieTicketSystem.model.Movie;
-import movieTicketSystem.model.Payment;
-import movieTicketSystem.model.RegisteredUser;
-import movieTicketSystem.model.Seat;
-import movieTicketSystem.model.Ticket;
-
+import movieTicketSystem.model.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import javax.swing.*;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -325,11 +318,8 @@ public class MovieSelectionViewController {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-<<<<<<< HEAD
-=======
             String email = "gwhall@ualberta.ca";  // REPLACE THIS WITH METHOD FROM VIEW
 
->>>>>>> 39ea9fd72c377d99276179d5276032d56fa8a900
             int ticketId = Integer.parseInt(theView.getTicketCancellationID());
             boolean registered = theView.getLoggedIn();
             boolean showtimeCheck = viewController.checkShowtime(ticketId);
