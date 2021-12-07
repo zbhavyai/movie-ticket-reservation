@@ -359,18 +359,20 @@ public class MovieSelectionViewController {
         @Override
         public void actionPerformed(ActionEvent e) {
             double totalPrice =0;
+            int seatCountPurchased = 0;
 
             //**** FOR EACH SELECTED SEAT, SEND ROW, COL, MOVIE, THEATRE, SHOWTIME TO BACK END FOR PURCHASE ****
             JButton[][] seats = theView.getSeats();
+            String movie = theView.getMovieInput();
+            String theatre = theView.getTheatreInput();
+            String showTime = theView.getShowtimeInput();
+
             for(int i=0; i<10; i++){
                 for(int j=0; j<10; j++){
                     Color seatBackground = seats[i][j].getBackground();
                     if(seatBackground == Color.green){
                         int row = i+1;
                         int col = j+1;
-                        String movie = theView.getMovieInput();
-                        String theatre = theView.getTheatreInput();
-                        String showTime = theView.getShowtimeInput();
                         System.out.println(
                                 "\nPURCHASE INFO:"
                                         + "\n row: " + row
@@ -380,10 +382,26 @@ public class MovieSelectionViewController {
                                         + "\n showtime: " + showTime
                         );
                         totalPrice += viewController.getTicketPrice(showTime, theatre, movie, row, col);
-
+                        seatCountPurchased++;
                     }
                 }
             }
+            String[] showtimeSearch = {theatre, movie, showTime};
+
+            boolean movieReleased = viewController.checkShowtimeReleased(showtimeSearch);
+            if(!movieReleased){
+                int countTaken = viewController.getSeatCount(showtimeSearch);
+                if ((countTaken + seatCountPurchased) > 10){
+                    System.out.println("10% exceeded");
+                    JOptionPane.showMessageDialog(theView,
+                            "Maximum 10% of reserved seats have been exceeded. " +
+                                    "Please limit seats purchased to " + (10-countTaken),
+                            "Alert", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+
+            }
+
             if(loggedInUser==null){
                 theView.populatePurchaseTab(totalPrice);
             }else{

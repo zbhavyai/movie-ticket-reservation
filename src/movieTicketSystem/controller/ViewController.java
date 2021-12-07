@@ -167,4 +167,12 @@ public class ViewController {
         body = body.replace("#LISTGOESHERE#", list_of_units);
         e.sendEmail(userEmail, subject, body);
     }
+
+    public int getSeatCount(String[] showtimeSearch) {
+        return theaterController.geteSeatsTaken(showtimeSearch);
+    }
+
+    public boolean checkShowtimeReleased(String[] showtimeSearch){
+        return theaterController.checkShowtimeReleased(showtimeSearch);
+    }
 }

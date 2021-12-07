@@ -113,12 +113,36 @@ public class TheaterController {
 			//future release
 			int count = db.getSeatCount(showtimeId);
 			// if more than 10% seat taken just return invalid id to front end
-			if(count/100>0.1) {
+			if((count/100.00)>0.1) {
 				return -999;
 			}
 		}
 		return showtimeId;
 	}
+
+	public boolean checkShowtimeReleased(String[] searchValues){
+
+		int theatreId = db.getTheaterIdByName(searchValues[0]);
+		int movieId = db.getMovieIdByName(searchValues[1]);
+		// check 10% here
+		int showtimeId = db.getShowtimeIdByMovieAndTheatreAndShowtime(theatreId, movieId, searchValues[2]);
+		return mvController.searchMovieById(movieId).getReleaseDay().compareTo(LocalDate.now()) < 0;
+	}
+
+	// return a count of seats taken for a given showtime
+	public int geteSeatsTaken(String[] searchValues){
+
+		int theatreId = db.getTheaterIdByName(searchValues[0]);
+		int movieId = db.getMovieIdByName(searchValues[1]);
+		// check 10% here
+		int showtimeId = db.getShowtimeIdByMovieAndTheatreAndShowtime(theatreId, movieId, searchValues[2]);
+		//future release
+		int count = db.getSeatCount(showtimeId);
+		return count;
+
+
+	}
+
 
 	/**
 	 * Search for all showtimes that match the specified movie id and theater id/movieId.
