@@ -309,8 +309,6 @@ public class MovieSelectionViewController {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            String email = "grady@gmail.com";  // REPLACE THIS WITH METHOD FROM VIEW
-
             int ticketId = Integer.parseInt(theView.getTicketCancellationID());
             boolean registered = theView.getLoggedIn();
             boolean showtimeCheck = viewController.checkShowtime(ticketId);

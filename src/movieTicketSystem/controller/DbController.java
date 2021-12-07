@@ -993,6 +993,7 @@ public class DbController {
      * @return the Coupon object saved, null if insertion is unsuccessful
      */
     public Coupon saveCoupon(String couponCode, double couponAmount, LocalDate expiry) {
+        System.out.println(couponAmount);
         try {
             String query = "INSERT INTO COUPON(couponCode, couponAmount, expiry) VALUES (?, ?, ?)";
             PreparedStatement myStmt = this.dbConnect.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
