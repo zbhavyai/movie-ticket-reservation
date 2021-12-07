@@ -739,7 +739,7 @@ public class DbController {
      */
     public RegisteredUser getRegisteredUser(String email, String password) {
         try {
-            String query = "SELECT * FROM RUser WHERE email = ? AND password = ?";
+            String query = "SELECT * FROM REGISTERED_USER WHERE email = ? AND password = ?";
             PreparedStatement myStmt = this.dbConnect.prepareStatement(query);
             myStmt.setString(1, email);
             myStmt.setString(2, password);
@@ -795,7 +795,7 @@ public class DbController {
 
             LocalDate now = LocalDate.now();
 
-            String query = "INSERT INTO RUser(email, password, address, card, lastPaid) VALUES (?, ?, ?, ?, ?)";
+            String query = "INSERT INTO REGISTERED_USER(email, password, address, card, lastPaid) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement myStmt = this.dbConnect.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             myStmt.setString(1, email);
             myStmt.setString(2, password);
