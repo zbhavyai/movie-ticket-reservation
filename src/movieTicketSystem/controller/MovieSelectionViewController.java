@@ -13,7 +13,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import javax.swing.*;
 
-import com.sun.org.apache.bcel.internal.generic.NEW;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -69,7 +68,7 @@ public class MovieSelectionViewController {
 
         
         // true means registered user,  false means ordinary user
-        ArrayList<String> movieOptions = viewController.getMovies(true);
+        ArrayList<String> movieOptions = viewController.getMovies(false);
         theView.setMovieOptions(movieOptions);
 
         theView.setVisible(true);
@@ -166,7 +165,11 @@ public class MovieSelectionViewController {
             String[] showtimeSearch = {theater, movie, showtime};
             int showtimeId = viewController.getShowtimeId(showtimeSearch);
             if(showtimeId<0) {
-            	// here should pop up window remind 10% exceed
+                System.out.println("10% exceeded");
+                JOptionPane.showMessageDialog(theView,
+                        "Maximum 10% of reserved seats have been sold for this unreleased movie's showtime." +
+                                "Please select another showtime.",
+                        "Alert", JOptionPane.WARNING_MESSAGE);
             }
             int[][] seats = viewController.getSeats(showtimeId);
 
@@ -184,8 +187,9 @@ public class MovieSelectionViewController {
             String cardNum = theView.getSignUpCardNum();
             String cardExpiryDate = theView.getSignUpCardExp();
             String name = theView.getSignUpCardName();
+            String cvc = theView.getSignUpCVC();
+            System.out.println(cvc);
             theView.clearSignUpForm();
-            String cvc = "123";  // ADD CVC TO SIGN UP FORM SO THEY CAN PAY
 
             viewController.signupPayment(name, cardNum, cardExpiryDate);
             viewController.signup(email, password, address, cardNum, cardExpiryDate, name);
