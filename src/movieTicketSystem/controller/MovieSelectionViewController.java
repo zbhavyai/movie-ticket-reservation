@@ -67,7 +67,7 @@ public class MovieSelectionViewController {
 
 
         // true means registered user,  false means ordinary user
-        ArrayList<String> movieOptions = viewController.getMovies(false);
+        ArrayList<String> movieOptions = viewController.getMovies(true);
         theView.setMovieOptions(movieOptions);
 
         theView.setVisible(true);
