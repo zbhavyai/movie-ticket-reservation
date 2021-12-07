@@ -17,6 +17,7 @@ public class Email {
     private Properties loginDetails;
     private String couponTemplate;
     private String ticketTemplate;
+    private String ticketUnitTemplate;
 
     /**
      * Private constructor enforcing singleton design pattern
@@ -49,6 +50,9 @@ public class Email {
 
             Path ticketFile = Path.of("config/template_ticket.html");
             this.ticketTemplate = Files.readString(ticketFile);
+
+            Path ticketUnitFile = Path.of("config/template_ticket_unit.html");
+            this.ticketUnitTemplate = Files.readString(ticketUnitFile);
         }
 
         catch (IOException e) {
@@ -75,7 +79,7 @@ public class Email {
     /**
      * Returns the email template to use while sending email
      *
-     * @param type "coupon" or "ticket"
+     * @param type "coupon" or "ticket" or "ticket_unit"
      * @return respective HTML template
      */
     public String getTemplate(String type) {
@@ -83,8 +87,16 @@ public class Email {
             return this.couponTemplate;
         }
 
-        else {
+        else if (type.equalsIgnoreCase("ticket")) {
             return this.ticketTemplate;
+        }
+
+        else if (type.equalsIgnoreCase("ticket_unit")) {
+            return this.ticketUnitTemplate;
+        }
+
+        else {
+            return "";
         }
     }
 

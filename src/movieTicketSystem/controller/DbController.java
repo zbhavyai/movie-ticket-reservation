@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Properties;
 import java.util.Random;
 import java.sql.Date;
-
 import com.mysql.cj.result.BufferedRowList;
 
 import movieTicketSystem.model.*;
@@ -62,36 +61,32 @@ public class DbController {
             return instanceVar;
         }
     }
-    
-    
+
     /**
-    *
-    * Get count of occupied seats in the specific showtime id
-    *
-    * @return count as int type
-    */
-   public int getSeatCount(int showtimeId) {
-       int sum = 0;
-       try {
-    	      String query = "SELECT * FROM TICKET WHERE showtimeId=?";
-              PreparedStatement myStmt = dbConnect.prepareStatement(query);
-          
-              myStmt.setInt(1, showtimeId);
-              
-              
+     *
+     * Get count of occupied seats in the specific showtime id
+     *
+     * @return count as int type
+     */
+    public int getSeatCount(int showtimeId) {
+        int sum = 0;
+        try {
+            String query = "SELECT * FROM TICKET WHERE showtimeId=?";
+            PreparedStatement myStmt = dbConnect.prepareStatement(query);
 
-              ResultSet results = myStmt.executeQuery();
-              while (results.next()) {
-                  sum++;
-              }
+            myStmt.setInt(1, showtimeId);
 
-              myStmt.close();
-       }
-       catch (SQLException ex) {
-           ex.printStackTrace();
-       }
-       return sum;
-   }
+            ResultSet results = myStmt.executeQuery();
+            while (results.next()) {
+                sum++;
+            }
+
+            myStmt.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return sum;
+    }
 
     /**
      *
@@ -115,46 +110,40 @@ public class DbController {
                 movies.add(mvdb);
             }
             myStmt.close();
-        }
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
             ex.printStackTrace();
         }
         return movies;
     }
-    
-    
+
     /**
-    *
-    * Get a list of all released movies users in the application
-    *
-    * @return an arraylist that contains all movies in the system.
-    */
-   public ArrayList<Movie> selectAllReleasedMovies() {
-       ArrayList<Movie> movies = new ArrayList<Movie>();
+     *
+     * Get a list of all released movies users in the application
+     *
+     * @return an arraylist that contains all movies in the system.
+     */
+    public ArrayList<Movie> selectAllReleasedMovies() {
+        ArrayList<Movie> movies = new ArrayList<Movie>();
 
-       try {
-           Statement myStmt = dbConnect.createStatement();
+        try {
+            Statement myStmt = dbConnect.createStatement();
 
-           // Execute SQL query
-           results = myStmt.executeQuery("select * from movie \r\n" + 
-           		"where releasedate <= cast(now() as date)");
+            // Execute SQL query
+            results = myStmt.executeQuery("select * from movie \r\n" +
+                    "where releasedate <= cast(now() as date)");
 
-           // Process the results set
-           while (results.next()) {
-               Movie mvdb = new Movie(results.getString("title"), results.getInt("movieId"),
-                       results.getDouble("rating"), results.getDate("releasedate").toLocalDate());
-               movies.add(mvdb);
-           }
-           myStmt.close();
-       }
-       catch (SQLException ex) {
-           ex.printStackTrace();
-       }
-       return movies;
-   }
-
-
-
+            // Process the results set
+            while (results.next()) {
+                Movie mvdb = new Movie(results.getString("title"), results.getInt("movieId"),
+                        results.getDouble("rating"), results.getDate("releasedate").toLocalDate());
+                movies.add(mvdb);
+            }
+            myStmt.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return movies;
+    }
 
     /**
      *
@@ -189,7 +178,8 @@ public class DbController {
 
     /**
      *
-     * Method is used to get a list of all the theatres that are showing a selected movie
+     * Method is used to get a list of all the theatres that are showing a selected
+     * movie
      *
      * @param movieId is the Id of the movie that has been selected
      * @return is an arraylist of all theatres playing the selected movie
@@ -341,17 +331,17 @@ public class DbController {
         return showtimeId;
     }
 
-    public boolean checkValidShowtime(int ticketId){
+    public boolean checkValidShowtime(int ticketId) {
         boolean validShowtime = true;
         LocalDate showtime = getShowtimeByTicketId(ticketId).toLocalDate();
         LocalDate now = LocalDate.now().plusDays(3);
-        if(now.isAfter(showtime)){
+        if (now.isAfter(showtime)) {
             validShowtime = false;
         }
         return validShowtime;
     }
 
-    public Date getShowtimeByTicketId(int ticketId){
+    public Date getShowtimeByTicketId(int ticketId) {
         Date showtime = null;
         int showtimeId = 0;
         try {
@@ -380,12 +370,10 @@ public class DbController {
                 }
 
                 myStmt.close();
-            }
-            catch (SQLException ex) {
+            } catch (SQLException ex) {
                 ex.printStackTrace();
             }
-        }
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
             ex.printStackTrace();
         }
         return showtime;
@@ -393,11 +381,13 @@ public class DbController {
 
     /**
      *
-     * Method is used to find showtimes that are available for the selected movie and theatre
+     * Method is used to find showtimes that are available for the selected movie
+     * and theatre
      *
-     * @param movieId is the movie that has been selected
+     * @param movieId   is the movie that has been selected
      * @param theatreId is the theatre that has been selected
-     * @return a list of showtimes that are available for the movie and theatre selected
+     * @return a list of showtimes that are available for the movie and theatre
+     *         selected
      */
     public ArrayList<String> searchShowtimesByMovieAndTheatre(int movieId, int theatreId) {
 
@@ -430,7 +420,8 @@ public class DbController {
 
     /**
      *
-     * Method is used to return the date/time of the showtime when providing the unique Id
+     * Method is used to return the date/time of the showtime when providing the
+     * unique Id
      *
      * @param showTimeId is the unique Id of the showtime that has been selected
      * @return the showtime that corresponds to the unique showtime id
@@ -463,7 +454,8 @@ public class DbController {
 
     /**
      *
-     * Method is used to retrieve the movies and theatres that correspond to the showtime selected
+     * Method is used to retrieve the movies and theatres that correspond to the
+     * showtime selected
      *
      * @param showTimeId is the showtime that has been selected
      * @return an arraylist of movie and theatre Id's related to the showtime
@@ -497,14 +489,15 @@ public class DbController {
 
     /**
      *
-     * Method is used to make a new ticket depending on what the showtime selection was and the price
+     * Method is used to make a new ticket depending on what the showtime selection
+     * was and the price
      *
      * @param showtimeId is the showtime selected
-     * @param price is the price to set for the ticket
+     * @param price      is the price to set for the ticket
      */
     public void createNewTicket(int showtimeId, double price) {
         // if (!validTicket(showtimeId)) {
-        //     throw new IllegalArgumentException("ticket id already exists.");
+        // throw new IllegalArgumentException("ticket id already exists.");
         // }
 
         try {
@@ -516,13 +509,12 @@ public class DbController {
             myStmt.executeUpdate();
             myStmt.close();
 
-        }
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
             ex.printStackTrace();
         }
     }
 
-    public int getTicketId(){
+    public int getTicketId() {
         int ticketId = 0;
         try {
             String query = "SELECT MAX(ticketId) FROM TICKET";
@@ -535,8 +527,7 @@ public class DbController {
                 ticketId = results.getInt("MAX(ticketId)");
             }
 
-        }
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
             ex.printStackTrace();
         }
         return ticketId;
@@ -610,7 +601,8 @@ public class DbController {
 
     /**
      *
-     * This method finds all tickets that have been created for a particular showtime
+     * This method finds all tickets that have been created for a particular
+     * showtime
      *
      * @param showtimeId is the showtime to search for tickets in
      * @return a list of tickets that have been created for the given showtime
@@ -647,11 +639,11 @@ public class DbController {
      * @param ticketId is the ticket to get rid of
      * @return a boolean of whether the ticket was deleted or not
      */
-	public boolean makeSeatAvailable(int ticketId){
+    public boolean makeSeatAvailable(int ticketId) {
         boolean success = false;
         int foundTicket = 0;
 
-        try{
+        try {
             String query = "SELECT ticketId FROM TICKET WHERE ticketId = ?";
             PreparedStatement myStmt = dbConnect.prepareStatement(query);
             myStmt.setInt(1, ticketId);
@@ -660,18 +652,17 @@ public class DbController {
                 foundTicket = results.getInt("ticketId");
             }
             myStmt.close();
-            if(foundTicket != 0){
+            if (foundTicket != 0) {
                 deleteTicket(ticketId);
                 success = true;
             }
-        }
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
             ex.printStackTrace();
         }
         return success;
-	}
+    }
 
-    public void saveSeat(int row, int col, int ticketId){
+    public void saveSeat(int row, int col, int ticketId) {
         try {
             String query = "INSERT INTO SEAT(seatRow, seatNum, ticketId) VALUES (?, ?, ?)";
             PreparedStatement myStmt = dbConnect.prepareStatement(query);
@@ -680,8 +671,7 @@ public class DbController {
             myStmt.setInt(3, ticketId);
             myStmt.executeUpdate();
             myStmt.close();
-        }
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
             ex.printStackTrace();
         }
     }
@@ -749,7 +739,7 @@ public class DbController {
      */
     public RegisteredUser getRegisteredUser(String email, String password) {
         try {
-            String query = "SELECT * FROM REGISTERED_USER WHERE email = ? AND password = ?";
+            String query = "SELECT * FROM RUser WHERE email = ? AND password = ?";
             PreparedStatement myStmt = this.dbConnect.prepareStatement(query);
             myStmt.setString(1, email);
             myStmt.setString(2, password);
@@ -770,8 +760,7 @@ public class DbController {
                     return ru;
                 }
             }
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -789,7 +778,8 @@ public class DbController {
      * @param expiry     expiry date of the card
      * @return the RegisteredUser object saved, null if insertion is unsuccessful
      */
-    public RegisteredUser saveRegisteredUser(String email, String password, String address, String holderName, String cardNumber, String expiry) {
+    public RegisteredUser saveRegisteredUser(String email, String password, String address, String holderName,
+            String cardNumber, String expiry) {
         // if the email already exists, dont save
         if (this.getRegisteredUser(email, password) != null) {
             return null;
@@ -805,7 +795,7 @@ public class DbController {
 
             LocalDate now = LocalDate.now();
 
-            String query = "INSERT INTO REGISTERED_USER(email, password, address, card, lastPaid) VALUES (?, ?, ?, ?, ?)";
+            String query = "INSERT INTO RUser(email, password, address, card, lastPaid) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement myStmt = this.dbConnect.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             myStmt.setString(1, email);
             myStmt.setString(2, password);
@@ -880,7 +870,7 @@ public class DbController {
         return null;
     }
 
-    public int getPaymentIdByNameCardNumAndExpiry(String name, String cardNum, String cardExpiryDate){
+    public int getPaymentIdByNameCardNumAndExpiry(String name, String cardNum, String cardExpiryDate) {
         int paymentId = 0;
         try {
             String query = "SELECT paymentId FROM PAYMENT WHERE holderName =? AND cardNumber = ? AND expiry = ?)";
@@ -888,14 +878,13 @@ public class DbController {
             myStmt.setString(1, name);
             myStmt.setString(2, cardNum);
             myStmt.setDate(3, Date.valueOf(cardExpiryDate));
-        
+
             ResultSet results = myStmt.executeQuery();
 
             while (results.next()) {
                 paymentId = results.getInt("paymentId");
             }
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return paymentId;
@@ -947,15 +936,14 @@ public class DbController {
         return null;
     }
 
-    public void saveSale(int paymentId, int ticketId){
+    public void saveSale(int paymentId, int ticketId) {
         try {
             String query = "INSERT INTO SALE(paymentId, ticketId) VALUES (?, ?)";
             PreparedStatement myStmt = this.dbConnect.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             myStmt.setInt(1, paymentId);
             myStmt.setInt(2, ticketId);
             myStmt.executeUpdate();
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -1042,7 +1030,43 @@ public class DbController {
         return null;
     }
 
-    private boolean checkCode(String couponCode){
+    /**
+     * Fetches movie name and showtime from ticket id
+     *
+     * @param ticketId the ticketId
+     * @return array of strings containing movie title and showtime
+     */
+    public String[] getMovieAndShowtime(int ticketId) {
+        String[] movieShowtime = new String[2];
+
+        try {
+            String query = "SELECT M.title, S.showtime FROM TICKET T, SHOWTIME S, MOVIE M WHERE T.showtimeId=S.showtimeId AND S.movieId=M.movieId AND T.ticketId=?";
+            PreparedStatement myStmt = this.dbConnect.prepareStatement(query);
+            myStmt.setInt(1, ticketId);
+
+            ResultSet results = myStmt.executeQuery();
+
+            if (results.next()) {
+                movieShowtime[0] = results.getString("title");
+                movieShowtime[1] = results.getTimestamp("showtime").toString();
+
+                myStmt.close();
+                return movieShowtime;
+            }
+
+            else {
+                throw new SQLException(String.format("[FAIL] Couldn't fetch movie title and showtime%n"));
+            }
+        }
+
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    private boolean checkCode(String couponCode) {
         boolean goodCode = true;
         ArrayList<String> codesTaken = new ArrayList<String>();
         try {
@@ -1054,34 +1078,32 @@ public class DbController {
             while (results.next()) {
                 codesTaken.add(results.getString("couponCode"));
             }
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-        for(int i = 0; i < codesTaken.size(); i++){
-            if(couponCode.equals(codesTaken.get(i))){
+        for (int i = 0; i < codesTaken.size(); i++) {
+            if (couponCode.equals(codesTaken.get(i))) {
                 goodCode = false;
             }
         }
         return goodCode;
     }
 
-    private String createCouponCode(){
+    private String createCouponCode() {
         StringBuffer b = new StringBuffer();
-        for(int i = 0; i < 10; i++){
+        for (int i = 0; i < 10; i++) {
             Random r = new Random();
             b.append((char) ('a' + r.nextInt(26)));
         }
-        if(checkCode(b.toString()) == true){
+        if (checkCode(b.toString()) == true) {
             return b.toString();
-        }
-        else{
+        } else {
             createCouponCode();
         }
         return "";
     }
 
-    public int getShowtimeIdByTicketId(int ticketId){
+    public int getShowtimeIdByTicketId(int ticketId) {
         int showtimeId = 0;
         try {
             String query = "SELECT showtimeId FROM TICKET Where ticketId = ?";
@@ -1096,24 +1118,23 @@ public class DbController {
             }
 
             myStmt.close();
-        }
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
             ex.printStackTrace();
         }
         return showtimeId;
     }
 
-    public Coupon createCoupon(int ticketId, boolean loggedIn){
+    public Coupon createCoupon(int ticketId, boolean loggedIn) {
         int showtimeId = getShowtimeIdByTicketId(ticketId);
         int movieId = getMovieIdByShowtimeId(showtimeId);
         double price = getPrice(movieId);
-        if(loggedIn == false){
+        if (loggedIn == false) {
             price = price * 0.85;
         }
         return saveCoupon(createCouponCode(), price, LocalDate.now().plusYears(1));
     }
 
-    public int getMovieIdByShowtimeId(int showtimeId){
+    public int getMovieIdByShowtimeId(int showtimeId) {
         int movieId = 0;
         try {
             String query = "SELECT movieId FROM showtime WHERE showtimeId = ?";
@@ -1125,8 +1146,7 @@ public class DbController {
             while (results.next()) {
                 movieId = results.getInt("movieId");
             }
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return movieId;
