@@ -11,7 +11,7 @@ import movieTicketSystem.model.Theater;
  * TheaterController class to control system access to Theater, Showtime, and Seat classes.
  */
 public class TheaterController {
-	
+
 
 
 	private ArrayList<Theater> theaters = new ArrayList<Theater>();
@@ -22,8 +22,8 @@ public class TheaterController {
 		ArrayList<Theater> theatersdb =	db.selectAllTheatres();
         this.theaters = theatersdb;
 	}
-	
-	
+
+
 
 	/**
 	 * Search for theater based on theatreId.
@@ -39,9 +39,9 @@ public class TheaterController {
 	}
 
 	/**
-	 * 
+	 *
 	 * Search for theatres based on movie Id
-	 * 
+	 *
 	 * @param movieId
 	 * @return list of theatres playing the selected movie
 	 */
@@ -61,9 +61,9 @@ public class TheaterController {
 	}
 
 	/**
-	 * 
+	 *
 	 * Method gets a list of theatre names available in the system
-	 * 
+	 *
 	 * @return an arraylist of theatre names
 	 */
 	public ArrayList<String> getTheaterNames() {
@@ -79,9 +79,9 @@ public class TheaterController {
 	}
 
 	/**
-	 * 
+	 *
 	 * Method gets a list of showtimes that are available from the selected movie and theatre
-	 * 
+	 *
 	 * @param movieName is the name of the movie that has been chosen
 	 * @param theaterName is the name of the theatre that has been chosen
 	 * @return a list of showtimes for the selected movie and theatre
@@ -104,7 +104,7 @@ public class TheaterController {
 	 * Search for the showtimeId based on the movieId, theaterId and showtime
 	 */
 	public int getShowtimeId(String[] searchValues){
-		
+
 		int theatreId = db.getTheaterIdByName(searchValues[0]);
 		int movieId = db.getMovieIdByName(searchValues[1]);
 		// check 10% here
@@ -147,10 +147,10 @@ public class TheaterController {
 	}
 
 	/**
-	 * 
+	 *
 	 * Cancels the ticket and deletes it in the database
-	 * 
-	 * @param ticketId is the ticket to cancel 
+	 *
+	 * @param ticketId is the ticket to cancel
 	 * @return true if success and false if not
 	 */
 	public boolean makeSeatAvailable(int ticketId){
@@ -159,5 +159,9 @@ public class TheaterController {
 			success = true;
 		}
 		return success;
+	}
+
+	public void cancelTicket(int ticketId) {
+		db.deleteTicket(ticketId);
 	}
 }

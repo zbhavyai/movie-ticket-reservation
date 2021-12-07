@@ -33,7 +33,7 @@ public class MovieSelectionViewController {
 
     MovieSelectionView theView;
     ViewController viewController;
-    
+
 
     RegisteredUser loggedInUser;
 
@@ -65,7 +65,7 @@ public class MovieSelectionViewController {
         theView.addCancelTicketButtonListener(cancelTicketButtonListener);
         theView.addSignUpButtonListener(signUpButtonListener);
 
-        
+
         // true means registered user,  false means ordinary user
         ArrayList<String> movieOptions = viewController.getMovies(false);
         theView.setMovieOptions(movieOptions);
@@ -211,11 +211,12 @@ public class MovieSelectionViewController {
                 coupon = viewController.getCoupon(couponCode);
             }
 
-            String email = "grady@gmail.com";  // REPLACE THIS WITH METHOD FROM VIEW
+            String email = "gwhall@ualberta.ca";  // REPLACE THIS WITH METHOD FROM VIEW
 
             // payment amount
             double totalAmount = theView.getTotalPrice();
             double grandTotal = theView.getGrandTotal();
+            double couponCharge = totalAmount - grandTotal;
 
             // Payment details
             String cardNumber = theView.getCreditCardNum();
@@ -237,9 +238,23 @@ public class MovieSelectionViewController {
             }
 
             int paymentId = 0;
-            if(theView.getCouponButtonText().equals("Apply Coupon")){
-                paymentId = viewController.ticketPayment(cardHolderName, cardNumber, cardExpiryDate);
+
+            if(grandTotal != 0) {
+                if(theView.getCouponButtonText().equals("Apply Coupon")){
+                    paymentId = viewController.ticketPayment(cardHolderName, cardNumber, cardExpiryDate);
+                }
+
+                if(theView.getCouponButtonText().equals("Remove Coupon")){
+                    DbController.getInstance().updateCoupon(coupon, couponCharge);
+                    paymentId = viewController.ticketPayment(cardHolderName, cardNumber, cardExpiryDate);
+                }
             }
+
+            else {
+                DbController.getInstance().updateCoupon(coupon, couponCharge);
+            }
+
+
             ArrayList<Ticket> newTicketList = new ArrayList<Ticket>();
             for(int i = 0; i < selectedSeats.size(); i++){
                 newTicketList.add(viewController.makeTicket(movie, theatre, showTime, selectedSeats.get(i).getRowNumber(), selectedSeats.get(i).getColNumber()));
@@ -248,6 +263,7 @@ public class MovieSelectionViewController {
                 }
             }
 
+            viewController.emailPurchasedTicket(email, newTicketList);
         }
     }
 
@@ -309,7 +325,7 @@ public class MovieSelectionViewController {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            String email = "grady@gmail.com";  // REPLACE THIS WITH METHOD FROM VIEW
+            String email = "gwhall@ualberta.ca";  // REPLACE THIS WITH METHOD FROM VIEW
 
             int ticketId = Integer.parseInt(theView.getTicketCancellationID());
             boolean registered = theView.getLoggedIn();
@@ -333,6 +349,8 @@ public class MovieSelectionViewController {
             // ticket is found
             theView.setRefundCouponAmt(String.format("%.02f", coupon.getCouponAmount()));
             theView.setRefundCouponCode(coupon.getCouponCode());
+
+            viewController.emailCoupon(email, coupon);
         }
     }
 
