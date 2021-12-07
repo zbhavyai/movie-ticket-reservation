@@ -102,7 +102,6 @@ VALUES (1,                "Anchorman",                    4,1, '2021-12-01'),
         (4,                "Pulp Fiction",                    4,1, '2021-11-01'),
         (5,                "Finding Nemo",                    3,2, '2021-12-03'),
 	(6,                "Dynasty Future",                    4,2, '2021-12-29');
-;
 
 
 
