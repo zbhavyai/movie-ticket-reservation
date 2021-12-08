@@ -386,6 +386,12 @@ public class MovieSelectionViewController {
 
         @Override
         public void actionPerformed(ActionEvent e) {
+
+            // validate form first
+            if(!theView.validateCancelForm()){
+                return;
+            }
+
             String email = theView.getCancellationEmail();
 
             int ticketId = Integer.parseInt(theView.getTicketCancellationID());

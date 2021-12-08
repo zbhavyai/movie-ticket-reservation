@@ -742,6 +742,32 @@ public class MovieSelectionView extends JFrame {
         return true;
     }
 
+    public boolean validateCancelForm() {
+
+        //ticket # field
+        if (ticketCancellationTF.getText().equals("")) {
+            missingFieldMessage("ticket #");
+            return false;
+        }
+
+        // validate it's an integer
+        try{
+            var test = Integer.parseInt(ticketCancellationTF.getText());
+        }catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Ticket ID must be an integer",
+                    "Alert", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+
+        // email field
+        if (!isValidEmailAddress(registeredUserEmailField.getText())) {
+            return false;
+        }
+
+
+        return true;
+    }
+
     private boolean isValidDate(String d) {
         try {
             new SimpleDateFormat("yyyy-MM-dd").parse(d);
@@ -758,7 +784,7 @@ public class MovieSelectionView extends JFrame {
                 "Alert", JOptionPane.WARNING_MESSAGE);
     }
 
-    public boolean isValidEmailAddress(String email) {
+    private boolean isValidEmailAddress(String email) {
         String ePattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
         Pattern p = Pattern.compile(ePattern);
         Matcher m = p.matcher(email);
