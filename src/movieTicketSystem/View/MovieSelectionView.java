@@ -6,6 +6,7 @@ import com.intellij.uiDesigner.core.Spacer;
 import movieTicketSystem.model.Coupon;
 import movieTicketSystem.model.RegisteredUser;
 
+import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -671,40 +672,43 @@ public class MovieSelectionView extends JFrame {
     // ****************** FORM VALIDATION METHODS ************************
     public boolean validateSignupForm() {
 
+        //email
         if (!isValidEmailAddress(registeredUserEmailField.getText())) {
             return false;
         }
 
+        // password
         if (registeredUserPasswordField.getText().equals("")) {
             missingFieldMessage("password");
             return false;
         }
 
-
+        // email
         if (registeredUserAddressField.getText().equals("")) {
             missingFieldMessage("address");
             return false;
         }
 
-        if (registeredUserCreditCardField.getText().equals("")) {
-            missingFieldMessage("credit card number");
+        //card # field
+        if (!isValidCreditCardNum(registeredUserCreditCardField.getText())) {
             return false;
         }
 
+        // card expiry
         if (!isValidDate(registeredUserCardExpiryField.getText())) {
             return false;
         }
 
+        // name
         if (registeredUserNameField.getText().equals("")) {
             missingFieldMessage("name");
             return false;
         }
 
-        if (signUpCVCTextField.getText().equals("")) {
-            missingFieldMessage("cvc");
+        // cvc
+        if (!isValidCVC(signUpCVCTextField.getText())) {
             return false;
         }
-
 
         return true;
     }
@@ -712,14 +716,12 @@ public class MovieSelectionView extends JFrame {
     public boolean validatePurchaseForm() {
 
         //card # field
-        if (purchasingCreditCardNumTF.getText().equals("")) {
-            missingFieldMessage("credit card number");
+        if (!isValidCreditCardNum(purchasingCreditCardNumTF.getText())) {
             return false;
         }
 
-        //cvc field
-        if (purchasingCVCTF.getText().equals("")) {
-            missingFieldMessage("cvc");
+        // cvc
+        if (!isValidCVC(purchasingCVCTF.getText())) {
             return false;
         }
 
@@ -765,6 +767,42 @@ public class MovieSelectionView extends JFrame {
         }
 
 
+        return true;
+    }
+
+    private boolean isValidCVC(String c) {
+        if (!isInteger(c) || c.length() != 3) {
+            JOptionPane.showMessageDialog(this, "Invalid input: CVC must be 3 digit integer.",
+                    "Alert", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isValidCreditCardNum(String c) {
+        if (!isBigInteger(c) || c.length() != 16) {
+            JOptionPane.showMessageDialog(this, "Invalid input: credit card number must be a 16 digit integer.",
+                    "Alert", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isInteger(String s) {
+        try {
+            Integer.parseInt(s);
+        } catch (NumberFormatException | NullPointerException e) {
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isBigInteger(String s) {
+        try {
+            BigInteger b = new BigInteger(s);
+        } catch (Exception e) {
+            return false;
+        }
         return true;
     }
 
