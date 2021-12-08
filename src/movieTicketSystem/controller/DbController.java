@@ -369,6 +369,7 @@ public class DbController {
         Date showtimedate = getShowtimeByTicketId(ticketId);
         LocalDate showtime;
 
+        // means that it was not found
         if (showtimedate == null) {
             return false;
         }
@@ -386,6 +387,23 @@ public class DbController {
 
     /**
      * Get the date of the showtime from the ticketId
+     *
+     * @param ticketId the id of the ticket
+     * @return true if associated showtime is found in the db, false otherwise
+     */
+    public boolean checkValidTicket(int ticketId) {
+        boolean validShowtime = true;
+        // LocalDate showtime = getShowtimeByTicketId(ticketId).toLocalDate();
+        Date showtimedate = getShowtimeByTicketId(ticketId);
+        LocalDate showtime;
+
+        // means that it was not found
+        return showtimedate != null;
+
+    }
+
+    /**
+     * Gets the id of the showtime from ticketId
      *
      * @param ticketId the id of the ticket
      * @return the date of the showtime
@@ -1233,6 +1251,7 @@ public class DbController {
 
     /**
      * Gets the movie id from the id of the showtime
+     *
      * @param showtimeId the id of the showtime
      * @return the id of the movie
      */
@@ -1300,7 +1319,6 @@ public class DbController {
 
         return null;
     }
-
 
     /**
      * Closes the db connection

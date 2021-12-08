@@ -100,6 +100,10 @@ public class TheaterController {
 
 	}
 
+	public boolean checkValidTicket(int ticketId){
+		return db.checkValidTicket(ticketId);
+	}
+
 	/**
 	 * Search for the showtimeId based on the movieId, theaterId and showtime
 	 */

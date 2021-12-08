@@ -89,6 +89,9 @@ public class MovieSelectionView extends JFrame {
     private JPanel signUpDetailsPanel;
 
 
+    /**
+     * Constructor for view
+     */
     public MovieSelectionView() {
 
         // set default values
@@ -121,6 +124,9 @@ public class MovieSelectionView extends JFrame {
 
     }
 
+    /**
+     * Setup dropdown menus on main movie selection form
+     */
     private void dropdownMenuSetup() {
         // setup dropdown menus
         movieSelectorComboBox.setModel(new DefaultComboBoxModel(movieOptions.toArray()));
@@ -139,6 +145,9 @@ public class MovieSelectionView extends JFrame {
         showtimeSelectorComboBox.setEnabled(false);
     }
 
+    /**
+     * Show/hide form for logging in
+     */
     public void toggleLoginForm() {
         if (loginFormShowing) {
             loginPanel.setVisible(false);
@@ -152,6 +161,10 @@ public class MovieSelectionView extends JFrame {
         loginFormShowing = !loginFormShowing;
     }
 
+    /**
+     * Sets the form be formatted based on if a user is logged in.
+     * @param user
+     */
     public void setLoggedIn(RegisteredUser user) {
         this.loggedIn = (user != null);
 
@@ -173,6 +186,10 @@ public class MovieSelectionView extends JFrame {
         }
     }
 
+    /**
+     * Populate the sign up tab with a users info (will be called account settings tab)
+     * @param user
+     */
     private void populateSignUpTab(RegisteredUser user) {
         tabbedPane.setTitleAt(SIGNUP_TAB_INDEX, "Account Settings");
         signUpNavButton.setText("Account Settings");
@@ -197,6 +214,9 @@ public class MovieSelectionView extends JFrame {
 
     }
 
+    /**
+     * clear inputs on sign up tab and rename tab to "sign up"
+     */
     private void clearSignUpTab() {
         registeredUserEmailField.setText("");
         registeredUserPasswordField.setText("");
@@ -221,7 +241,12 @@ public class MovieSelectionView extends JFrame {
         signUpCVCTextField.setText("");
     }
 
-    // method one, if a user is logged in
+
+    /**
+     * Populate the purchase tab with info when a user is logged in
+     * @param user
+     * @param price
+     */
     public void populatePurchaseTab(RegisteredUser user, double price) {
         totalPriceTF.setText(String.format("%.02f", price));
         totalPriceTF.setEnabled(false);
@@ -238,7 +263,11 @@ public class MovieSelectionView extends JFrame {
         purchasingCVCTF.setText("");
     }
 
-    // if a user is not logged in
+    /**
+     * Populate the purchase tab with info when a user is not logged in
+     * @param user
+     * @param price
+     */
     public void populatePurchaseTab(double price) {
         totalPriceTF.setText(String.format("%.02f", price));
         totalPriceTF.setEnabled(false);
@@ -255,6 +284,9 @@ public class MovieSelectionView extends JFrame {
         purchasingCVCTF.setText("");
     }
 
+    /**
+     * clear fields on purchase tab
+     */
     public void clearPurchaseTab() {
         totalPriceTF.setText("");
         totalPriceTF.setEnabled(false);
@@ -271,6 +303,9 @@ public class MovieSelectionView extends JFrame {
         purchasingCVCTF.setText("");
     }
 
+    /**
+     * create array of JButtons which will represent the seats on our form
+     */
     public void createSeats() {
         int width = 60;
         int height = 30;
@@ -295,6 +330,9 @@ public class MovieSelectionView extends JFrame {
     }
 
 
+    /**
+     * Set all seats to disabled
+     */
     public void disableAllSeats() {
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
@@ -304,6 +342,11 @@ public class MovieSelectionView extends JFrame {
         }
     }
 
+
+    /**
+     * set seats based on an input grid that shows if each seat is taken or not.
+     * @param showtimeSeats
+     */
     public void setSeats(int[][] showtimeSeats) {
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
@@ -314,6 +357,10 @@ public class MovieSelectionView extends JFrame {
     }
 
 
+    /**
+     * Set options in theatre dropdown list
+     * @param theatreOptions
+     */
     public void setTheatreOptions(ArrayList<String> theatreOptions) {
         this.theatreOptions = theatreOptions;
         theatreSelectionComboBox.setModel(new DefaultComboBoxModel(theatreOptions.toArray()));
@@ -321,6 +368,10 @@ public class MovieSelectionView extends JFrame {
         theatreSelectionComboBox.setEnabled(true);
     }
 
+    /**
+     * Set options in showtime dropdown list
+     * @param timeOptions
+     */
     public void setTimeOptions(ArrayList<String> timeOptions) {
         this.timeOptions = timeOptions;
         showtimeSelectorComboBox.setModel(new DefaultComboBoxModel(timeOptions.toArray()));
@@ -328,6 +379,10 @@ public class MovieSelectionView extends JFrame {
         showtimeSelectorComboBox.setEnabled(true);
     }
 
+
+    /**
+     * clear options in showtime dropdown list
+     */
     public void clearShowtimeOptions() {
         this.timeOptions = new ArrayList<String>();
         showtimeSelectorComboBox.setModel(new DefaultComboBoxModel(timeOptions.toArray()));
@@ -335,6 +390,9 @@ public class MovieSelectionView extends JFrame {
         showtimeSelectorComboBox.setEnabled(false);
     }
 
+    /**
+     * clear options in theatre dropdown list
+     */
     public void clearTheatreOptions() {
         this.theatreOptions = new ArrayList<String>();
         theatreSelectionComboBox.setModel(new DefaultComboBoxModel(theatreOptions.toArray()));
@@ -342,6 +400,10 @@ public class MovieSelectionView extends JFrame {
         theatreSelectionComboBox.setEnabled(false);
     }
 
+    /**
+     * set options for movie dropdown list
+     * @param movieOptions
+     */
     public void setMovieOptions(ArrayList<String> movieOptions) {
         this.movieOptions = movieOptions;
         movieSelectorComboBox.setModel(new DefaultComboBoxModel(movieOptions.toArray()));
@@ -349,6 +411,10 @@ public class MovieSelectionView extends JFrame {
         movieSelectorComboBox.setEnabled(true);
     }
 
+    /**
+     * sets which tab should be visible
+     * @param viewName the view we want to see (either "main", "signup", "purchase", or "cancel"
+     */
     public void setView(String viewName) {
         switch (viewName) {
             case "main":
@@ -382,6 +448,9 @@ public class MovieSelectionView extends JFrame {
         }
     }
 
+    /**
+     * clear fields on the signup form
+     */
     public void clearSignUpForm() {
         registeredUserEmailField.setText("");
         registeredUserPasswordField.setText("");
@@ -393,6 +462,9 @@ public class MovieSelectionView extends JFrame {
         setView("main");
     }
 
+    /**
+     * clear fields on the cancel tab
+     */
     public void clearCancelTab() {
         cancellationEmailTextField.setText("");
         refundCouponCode.setText("");
@@ -400,6 +472,10 @@ public class MovieSelectionView extends JFrame {
         ticketCancellationTF.setText("");
     }
 
+    /**
+     * set whether fields in the payment tab are enabled
+     * @param b true to have all fields enabled
+     */
     public void setPaymentDetailsEnabled(boolean b) {
         for (Component c : paymentPanel.getComponents()) {
             c.setEnabled(b);
@@ -409,7 +485,7 @@ public class MovieSelectionView extends JFrame {
         purchaseEmailTextField.setEnabled(true);
     }
 
-    // ****************** Getters and Setters *************************
+    // ****************** Getters and Setters for the class*************************
     public String getMovieInput() {
         return (movieSelectorComboBox.getSelectedItem() == null) ? "null" : movieSelectorComboBox.getSelectedItem().toString();
     }
@@ -583,7 +659,7 @@ public class MovieSelectionView extends JFrame {
     }
 
 
-    // ******************* ACTION LISTENERS **************************
+    // ******************* methods to add/remove action listeners **************************
     public void addMovieComboBoxActionListener(ActionListener a) {
         movieSelectorComboBox.addActionListener(a);
     }
@@ -637,6 +713,7 @@ public class MovieSelectionView extends JFrame {
     }
 
 
+    // ************************ Action listeners ****************************
     class seatButtonColorChangeListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -670,6 +747,12 @@ public class MovieSelectionView extends JFrame {
     }
 
     // ****************** FORM VALIDATION METHODS ************************
+
+
+    /**
+     * ensure all input in form is valid
+     * @return true if form is valid
+     */
     public boolean validateSignupForm() {
 
         //email
@@ -713,6 +796,10 @@ public class MovieSelectionView extends JFrame {
         return true;
     }
 
+    /**
+     * ensure all input in form is valid
+     * @return true if form is valid
+     */
     public boolean validatePurchaseForm() {
 
         //card # field
@@ -744,6 +831,10 @@ public class MovieSelectionView extends JFrame {
         return true;
     }
 
+    /**
+     * ensure all input in form is valid
+     * @return true if form is valid
+     */
     public boolean validateCancelForm() {
 
         //ticket # field
@@ -770,6 +861,12 @@ public class MovieSelectionView extends JFrame {
         return true;
     }
 
+
+    /**
+     * ensures CVC is valid 3 digit integer
+     * @param c CVC
+     * @return true if CVC is valid
+     */
     private boolean isValidCVC(String c) {
         if (!isInteger(c) || c.length() != 3) {
             JOptionPane.showMessageDialog(this, "Invalid input: CVC must be 3 digit integer.",
@@ -779,6 +876,11 @@ public class MovieSelectionView extends JFrame {
         return true;
     }
 
+    /**
+     * ensures credit card # is valid 16 digit integer
+     * @param c credit card #
+     * @return true if credit card # is valid
+     */
     private boolean isValidCreditCardNum(String c) {
         if (!isBigInteger(c) || c.length() != 16) {
             JOptionPane.showMessageDialog(this, "Invalid input: credit card number must be a 16 digit integer.",
@@ -788,6 +890,12 @@ public class MovieSelectionView extends JFrame {
         return true;
     }
 
+
+    /**
+     * check if String s is an ingeger
+     * @param s integer as string
+     * @return true if s is an integer
+     */
     private boolean isInteger(String s) {
         try {
             Integer.parseInt(s);
@@ -797,6 +905,11 @@ public class MovieSelectionView extends JFrame {
         return true;
     }
 
+    /**
+     * check if String s is a big ingeger
+     * @param s big integer as string
+     * @return true if s is a big integer
+     */
     private boolean isBigInteger(String s) {
         try {
             BigInteger b = new BigInteger(s);
@@ -806,6 +919,12 @@ public class MovieSelectionView extends JFrame {
         return true;
     }
 
+
+    /**
+     * Check if date is of form "yyyy-MM-dd"
+     * @param d date to check
+     * @return true if date of form "yyyy-MM-dd"
+     */
     private boolean isValidDate(String d) {
         try {
             new SimpleDateFormat("yyyy-MM-dd").parse(d);
@@ -817,12 +936,24 @@ public class MovieSelectionView extends JFrame {
         }
     }
 
+
+    /**
+     * Display message to say field s is missing
+     * @param s message to display
+     */
     private void missingFieldMessage(String s) {
         JOptionPane.showMessageDialog(this, "Missing Required Field: " + s,
                 "Alert", JOptionPane.WARNING_MESSAGE);
     }
 
+
+    /**
+     * Validates if an email address is valid
+     * @param email address to check
+     * @return true if address is valid
+     */
     private boolean isValidEmailAddress(String email) {
+        // source: https://stackoverflow.com/questions/624581/what-is-the-best-java-email-address-validation-method
         String ePattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
         Pattern p = Pattern.compile(ePattern);
         Matcher m = p.matcher(email);
