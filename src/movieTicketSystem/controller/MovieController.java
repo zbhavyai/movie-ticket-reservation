@@ -14,7 +14,6 @@ public class MovieController {
 		this.movies = moviesdb;
 	}
 	
-	
 	/**
 	 * Search for movie based on movieId. Returns a movie name list
 	 *
@@ -28,9 +27,7 @@ public class MovieController {
 		}
 		return movieNames;
 	}
-	
-	
-	
+
 
 	/**
 	 * Search for movie based on movieId. Returns a movie object
@@ -46,6 +43,13 @@ public class MovieController {
 		return null;
 	}
 
+	/**
+	 * 
+	 * Method is used to get the price of a movie by providing the name of the movie.
+	 * 
+	 * @param movieName is the name of the the movie to get the price for
+	 * @return a double which is the price of the movie
+	 */
 	public double getPrice(String movieName){
 		return db.getPrice(db.getMovieIdByName(movieName));
 	}
@@ -64,10 +68,13 @@ public class MovieController {
 		return movieNames;
 	}
 
+	/**
+	 * 
+	 * This method is used to return a list of movies
+	 * 
+	 * @return an arraylist of movie objects
+	 */
 	public ArrayList<Movie> getMovies() {
 		return movies;
 	}
-	
-	
-
 }
