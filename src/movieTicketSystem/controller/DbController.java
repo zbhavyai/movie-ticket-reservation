@@ -362,7 +362,18 @@ public class DbController {
 
     public boolean checkValidShowtime(int ticketId) {
         boolean validShowtime = true;
-        LocalDate showtime = getShowtimeByTicketId(ticketId).toLocalDate();
+        // LocalDate showtime = getShowtimeByTicketId(ticketId).toLocalDate();
+        Date showtimedate = getShowtimeByTicketId(ticketId);
+        LocalDate showtime;
+
+        if(showtimedate == null) {
+            return false;
+        }
+
+        else {
+            showtime = showtimedate.toLocalDate();
+        }
+
         LocalDate now = LocalDate.now().plusDays(3);
         if (now.isAfter(showtime)) {
             validShowtime = false;
@@ -381,8 +392,12 @@ public class DbController {
 
             ResultSet results = myStmt.executeQuery();
 
-            while (results.next()) {
+            if (results.next()) {
                 showtimeId = results.getInt("showtimeId");
+            }
+
+            else {
+                return null;
             }
 
             myStmt.close();

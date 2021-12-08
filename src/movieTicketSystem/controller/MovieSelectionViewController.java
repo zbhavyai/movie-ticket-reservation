@@ -405,6 +405,7 @@ public class MovieSelectionViewController {
 
             int ticketId = Integer.parseInt(theView.getTicketCancellationID());
             boolean registered = theView.getLoggedIn();
+
             boolean showtimeCheck = viewController.checkShowtime(ticketId);
             if (showtimeCheck == false) {
                 JOptionPane.showMessageDialog(theView, "Movie is playing in less than 72 hours, cannot cancel.",
