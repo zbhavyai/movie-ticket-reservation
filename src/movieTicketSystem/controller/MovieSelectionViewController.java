@@ -71,9 +71,9 @@ public class MovieSelectionViewController {
         theView.setVisible(true);
     }
 
-    
+
     /**
-     * 
+     *
      *  CancelTicketNavButtonListener to listen to cancel ticket button
      *
      */
@@ -93,7 +93,7 @@ public class MovieSelectionViewController {
     }
 
     /**
-     * 
+     *
      * LoginButtonListener to listen to login button
      *
      */
@@ -160,9 +160,9 @@ public class MovieSelectionViewController {
         }
     }
 
-    
+
     /**
-     * 
+     *
      * MovieComboBoxListener to listen to movie selection change
      *
      */
@@ -191,7 +191,7 @@ public class MovieSelectionViewController {
     }
 
     /**
-     * 
+     *
      * TheatreComboBoxListener to listen to theater selection change
      *
      */
@@ -217,7 +217,7 @@ public class MovieSelectionViewController {
     }
 
     /**
-     * 
+     *
      * ShowtimeComboBoxListener to listen to show time selection change
      *
      */
@@ -245,7 +245,7 @@ public class MovieSelectionViewController {
         }
     }
 
-    
+
     /**
      * SignUpButtonListener to listen to register/signup button
      *
@@ -390,7 +390,7 @@ public class MovieSelectionViewController {
         }
     }
 
-    
+
     /**
      * CouponButtonListener to listen to remove/apply coupon button
      *
@@ -412,7 +412,15 @@ public class MovieSelectionViewController {
                     JOptionPane.showMessageDialog(theView, "Coupon Not found.",
                             "Alert", JOptionPane.WARNING_MESSAGE);
                     return;
-                } else {
+                }
+
+                else if(coupon.isExpired()) {
+                    JOptionPane.showMessageDialog(theView, "Coupon is expired.",
+                            "Alert", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+
+                else {
                     double couponAmount = coupon.getCouponAmount();
                     if (couponAmount > grandTotal) {
                         grandTotal = 0;
@@ -448,7 +456,7 @@ public class MovieSelectionViewController {
         }
     }
 
-    
+
     /**
      * CancelTicketButtonListener to listen cancel ticket button
      *
@@ -511,9 +519,9 @@ public class MovieSelectionViewController {
         }
     }
 
-    
-    
-    
+
+
+
     /**
      * PurchaseButtonListener to listen purchase button
      *
