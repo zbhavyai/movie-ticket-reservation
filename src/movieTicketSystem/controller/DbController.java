@@ -1,19 +1,12 @@
 package movieTicketSystem.controller;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.sql.*;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Properties;
 import java.util.Random;
 import java.sql.Date;
-import com.mysql.cj.result.BufferedRowList;
-
 import movieTicketSystem.model.*;
 
 /**
@@ -64,10 +57,10 @@ public class DbController {
     }
 
     /**
-     *
      * Get count of occupied seats in the specific showtime id
      *
-     * @return count as int type
+     * @param showtimeId id of the showtime
+     * @return seat count
      */
     public int getSeatCount(int showtimeId) {
         int sum = 0;
@@ -90,10 +83,9 @@ public class DbController {
     }
 
     /**
+     * Get a list of all movies in the application
      *
-     * Get a list of all movies users in the application
-     *
-     * @return an arraylist that contains all movies in the system.
+     * @return an arraylist that contains all movies in the application
      */
     public ArrayList<Movie> selectAllMovies() {
         ArrayList<Movie> movies = new ArrayList<Movie>();
@@ -111,17 +103,19 @@ public class DbController {
                 movies.add(mvdb);
             }
             myStmt.close();
-        } catch (SQLException ex) {
+        }
+
+        catch (SQLException ex) {
             ex.printStackTrace();
         }
+
         return movies;
     }
 
     /**
+     * Get a list of all released movies in the application
      *
-     * Get a list of all released movies users in the application
-     *
-     * @return an arraylist that contains all movies in the system.
+     * @return an arraylist that contains all movies in the application
      */
     public ArrayList<Movie> selectAllReleasedMovies() {
         ArrayList<Movie> movies = new ArrayList<Movie>();
@@ -232,7 +226,9 @@ public class DbController {
                 theaterId = results.getInt("theatreId");
             }
             myStmt.close();
-        } catch (SQLException ex) {
+        }
+
+        catch (SQLException ex) {
             ex.printStackTrace();
         }
 
@@ -261,7 +257,9 @@ public class DbController {
             }
 
             myStmt.close();
-        } catch (SQLException ex) {
+        }
+
+        catch (SQLException ex) {
             ex.printStackTrace();
         }
 
@@ -360,13 +358,18 @@ public class DbController {
         return showtimeId;
     }
 
+    /**
+     * Check if there is any showtime related to the ticketid
+     *
+     * @param ticketId the id of the ticket
+     * @return true if showtime is found, false otherwise
+     */
     public boolean checkValidShowtime(int ticketId) {
         boolean validShowtime = true;
-        // LocalDate showtime = getShowtimeByTicketId(ticketId).toLocalDate();
         Date showtimedate = getShowtimeByTicketId(ticketId);
         LocalDate showtime;
 
-        if(showtimedate == null) {
+        if (showtimedate == null) {
             return false;
         }
 
@@ -381,6 +384,12 @@ public class DbController {
         return validShowtime;
     }
 
+    /**
+     * Get the date of the showtime from the ticketId
+     *
+     * @param ticketId the id of the ticket
+     * @return the date of the showtime
+     */
     public Date getShowtimeByTicketId(int ticketId) {
         Date showtime = null;
         int showtimeId = 0;
@@ -414,17 +423,20 @@ public class DbController {
                 }
 
                 myStmt.close();
-            } catch (SQLException ex) {
+            }
+
+            catch (SQLException ex) {
                 ex.printStackTrace();
             }
-        } catch (SQLException ex) {
+        }
+
+        catch (SQLException ex) {
             ex.printStackTrace();
         }
         return showtime;
     }
 
     /**
-     *
      * Method is used to find showtimes that are available for the selected movie
      * and theatre
      *
@@ -463,7 +475,6 @@ public class DbController {
     }
 
     /**
-     *
      * Method is used to return the date/time of the showtime when providing the
      * unique Id
      *
@@ -497,7 +508,6 @@ public class DbController {
     }
 
     /**
-     *
      * Method is used to retrieve the movies and theatres that correspond to the
      * showtime selected
      *
@@ -532,7 +542,6 @@ public class DbController {
     }
 
     /**
-     *
      * Method is used to make a new ticket depending on what the showtime selection
      * was and the price
      *
@@ -558,6 +567,11 @@ public class DbController {
         }
     }
 
+    /**
+     * Returns the max of ticketId in the db
+     *
+     * @return the maximum ticketid present in the db
+     */
     public int getTicketId() {
         int ticketId = 0;
         try {
@@ -614,7 +628,6 @@ public class DbController {
     }
 
     /**
-     *
      * Method is used to verify if a ticket is valid or not
      *
      * @param showtimeId is the showtime to check validity for
@@ -646,7 +659,6 @@ public class DbController {
     }
 
     /**
-     *
      * This method finds all tickets that have been created for a particular
      * showtime
      *
@@ -679,7 +691,6 @@ public class DbController {
     }
 
     /**
-     *
      * Searches for the ticket in the database and calls for it to be deleted
      *
      * @param ticketId is the ticket to get rid of
@@ -708,6 +719,13 @@ public class DbController {
         return success;
     }
 
+    /**
+     * Marks the seat as booked in the db
+     *
+     * @param row      the row number of the seat
+     * @param col      the column number of the seat
+     * @param ticketId the id of the ticket that is booking the seat
+     */
     public void saveSeat(int row, int col, int ticketId) {
         try {
             String query = "INSERT INTO SEAT(seatRow, seatNum, ticketId) VALUES (?, ?, ?)";
@@ -773,7 +791,7 @@ public class DbController {
             ex.printStackTrace();
         }
 
-        if(tickets.size() == 0){
+        if (tickets.size() == 0) {
             for (int i = 0; i < 10; i++) {
                 for (int j = 0; j < 10; j++) {
                     seatGrid[i][j] = 1;
@@ -832,7 +850,8 @@ public class DbController {
      * @param expiry     expiry date of the card
      * @return the RegisteredUser object saved, null if insertion is unsuccessful
      */
-    public RegisteredUser saveRegisteredUser(String username, String email, String password, String address, String holderName, String cardNumber, String expiry) {
+    public RegisteredUser saveRegisteredUser(String username, String email, String password, String address,
+            String holderName, String cardNumber, String expiry) {
         // if the email already exists, dont save
         if (this.getRegisteredUser(email, password) != null) {
             return null;
@@ -925,6 +944,14 @@ public class DbController {
         return null;
     }
 
+    /**
+     * Fetches the payment id using the card details
+     *
+     * @param name           holder name of the card
+     * @param cardNum        number of the card
+     * @param cardExpiryDate expiry date of the card
+     * @return payment id in the system that matches the card details
+     */
     public int getPaymentIdByNameCardNumAndExpiry(String name, String cardNum, String cardExpiryDate) {
         int paymentId = 0;
         try {
@@ -962,8 +989,6 @@ public class DbController {
             // myStmt.setDate(3, java.sql.Date.valueOf(expiry));
             // myStmt.setDate(3, LocalDate.parse(expiry, dateformatter));
             myStmt.setDate(3, Date.valueOf(expiry));
-
-
 
             int rowAffected = myStmt.executeUpdate();
 
@@ -1113,6 +1138,12 @@ public class DbController {
         return null;
     }
 
+    /**
+     * Verifies if the coupon code is valid
+     *
+     * @param couponCode the coupon code generated during cancellation
+     * @return true if coupon code is found in the Db, false otherwise
+     */
     private boolean checkCode(String couponCode) {
         boolean goodCode = true;
         ArrayList<String> codesTaken = new ArrayList<String>();
@@ -1136,6 +1167,11 @@ public class DbController {
         return goodCode;
     }
 
+    /**
+     * Creates a random coupon code
+     *
+     * @return a randomly generated coupon code
+     */
     private String createCouponCode() {
         StringBuffer b = new StringBuffer();
         for (int i = 0; i < 10; i++) {
@@ -1150,6 +1186,12 @@ public class DbController {
         return "";
     }
 
+    /**
+     * Gets the id of the showtime for which ticket was bought
+     *
+     * @param ticketId the id of ticket
+     * @return the id of the showtime
+     */
     public int getShowtimeIdByTicketId(int ticketId) {
         int showtimeId = 0;
         try {
@@ -1171,6 +1213,13 @@ public class DbController {
         return showtimeId;
     }
 
+    /**
+     * Creates a coupon object and returns it
+     *
+     * @param ticketId the ticket that is getting cancelled
+     * @param loggedIn flag to identify is user was logged in during cancellation
+     * @return the coupon object
+     */
     public Coupon createCoupon(int ticketId, boolean loggedIn) {
         // int showtimeId = getShowtimeIdByTicketId(ticketId);
         double price = getPriceFromTicket(ticketId);
@@ -1182,6 +1231,11 @@ public class DbController {
         return saveCoupon(createCouponCode(), price, LocalDate.now().plusYears(1));
     }
 
+    /**
+     * Gets the movie id from the id of the showtime
+     * @param showtimeId the id of the showtime
+     * @return the id of the movie
+     */
     public int getMovieIdByShowtimeId(int showtimeId) {
         int movieId = 0;
         try {
@@ -1247,6 +1301,10 @@ public class DbController {
         return null;
     }
 
+
+    /**
+     * Closes the db connection
+     */
     public void close() {
         try {
             results.close();
