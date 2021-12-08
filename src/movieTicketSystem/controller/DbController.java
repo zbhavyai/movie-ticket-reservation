@@ -817,8 +817,7 @@ public class DbController {
      * @param expiry     expiry date of the card
      * @return the RegisteredUser object saved, null if insertion is unsuccessful
      */
-    public RegisteredUser saveRegisteredUser(String username, String email, String password, String address, String holderName,
-            String cardNumber, String expiry) {
+    public RegisteredUser saveRegisteredUser(String username, String email, String password, String address, String holderName, String cardNumber, String expiry) {
         // if the email already exists, dont save
         if (this.getRegisteredUser(email, password) != null) {
             return null;

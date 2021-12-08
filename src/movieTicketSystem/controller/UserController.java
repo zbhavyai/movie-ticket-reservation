@@ -26,17 +26,8 @@ public class UserController {
         }
     }
 
-    /**
-     * Adds registered user
-     *
-     * @param email    email of the user supplied during registration
-     * @param password password of the user supplied during registration
-     * @return the RegisteredUser object if user is found and authenticated, null
-     *         otherwise
-     */
-    public void addUser(String username, String email, String password, String address, String holderName, String cardNumber,
-            String expiry) {
-        this.db.saveRegisteredUser(username, email, password, address, holderName, cardNumber, expiry);
+    public void addUser(String username, String email, String password, String address, String holderName, String cardNumber, String expiry) {
+            RegisteredUser ru = db.saveRegisteredUser(username, email, password, address, holderName, cardNumber, expiry);
     }
 
     public int addPayment(String name, String cardNum, String cardExpiryDate) {
