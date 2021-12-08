@@ -270,7 +270,7 @@ public class MovieSelectionViewController {
             System.out.println(cvc);
             theView.clearSignUpForm();
 
-            viewController.signupPayment(name, cardNum, cardExpiryDate);
+            // viewController.signupPayment(name, cardNum, cardExpiryDate);
             viewController.signup(username, email, password, address, cardNum, cardExpiryDate, name);
 
             JOptionPane.showMessageDialog(theView,
