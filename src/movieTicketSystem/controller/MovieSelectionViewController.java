@@ -9,6 +9,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 
+
+/**
+ * Controller class to control selection and views in the front end
+ */
 public class MovieSelectionViewController {
 
     MovieComboBoxListener movieListener;
@@ -28,6 +32,11 @@ public class MovieSelectionViewController {
 
     RegisteredUser loggedInUser;
 
+    /**
+     * public constructor initialize the view, view controller and listeners
+     * @param theView
+     * @param viewController
+     */
     public MovieSelectionViewController(MovieSelectionView theView, ViewController viewController) {
         this.theView = theView;
         this.viewController = viewController;
@@ -62,6 +71,12 @@ public class MovieSelectionViewController {
         theView.setVisible(true);
     }
 
+    
+    /**
+     * 
+     *  CancelTicketNavButtonListener to listen to cancel ticket button
+     *
+     */
     class CancelTicketNavButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -77,6 +92,11 @@ public class MovieSelectionViewController {
         }
     }
 
+    /**
+     * 
+     * LoginButtonListener to listen to login button
+     *
+     */
     // login button
     class LoginButtonListener implements ActionListener {
         @Override
@@ -105,6 +125,9 @@ public class MovieSelectionViewController {
         }
     }
 
+    /**
+     * method to populate movie selection box
+     */
     private void populateMovieComboBox() {
         ArrayList<String> movieOptions = viewController.getMovies(theView.getLoggedIn());
         theView.removeMovieComboBoxActionListener(movieListener);
@@ -126,6 +149,10 @@ public class MovieSelectionViewController {
 
     }
 
+    /**
+     * method to toggle on/off login form
+     *
+     */
     class ShowLoginButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -133,6 +160,12 @@ public class MovieSelectionViewController {
         }
     }
 
+    
+    /**
+     * 
+     * MovieComboBoxListener to listen to movie selection change
+     *
+     */
     class MovieComboBoxListener implements ActionListener {
 
         @Override
@@ -157,6 +190,11 @@ public class MovieSelectionViewController {
         }
     }
 
+    /**
+     * 
+     * TheatreComboBoxListener to listen to theater selection change
+     *
+     */
     class TheatreComboBoxListener implements ActionListener {
 
         @Override
@@ -178,6 +216,11 @@ public class MovieSelectionViewController {
         }
     }
 
+    /**
+     * 
+     * ShowtimeComboBoxListener to listen to show time selection change
+     *
+     */
     class ShowtimeComboBoxListener implements ActionListener {
 
         @Override
@@ -202,6 +245,11 @@ public class MovieSelectionViewController {
         }
     }
 
+    
+    /**
+     * SignUpButtonListener to listen to register/signup button
+     *
+     */
     class SignUpButtonListener implements ActionListener {
 
         @Override
@@ -235,6 +283,10 @@ public class MovieSelectionViewController {
         }
     }
 
+    /**
+     * CompletePaymentButtonListener to listen to complete payment button
+     *
+     */
     class CompletePaymentButtonListener implements ActionListener {
 
         @Override
@@ -338,6 +390,11 @@ public class MovieSelectionViewController {
         }
     }
 
+    
+    /**
+     * CouponButtonListener to listen to remove/apply coupon button
+     *
+     */
     class CouponButtonListener implements ActionListener {
 
         @Override
@@ -391,6 +448,11 @@ public class MovieSelectionViewController {
         }
     }
 
+    
+    /**
+     * CancelTicketButtonListener to listen cancel ticket button
+     *
+     */
     class CancelTicketButtonListener implements ActionListener {
 
         @Override
@@ -449,6 +511,13 @@ public class MovieSelectionViewController {
         }
     }
 
+    
+    
+    
+    /**
+     * PurchaseButtonListener to listen purchase button
+     *
+     */
     class PurchaseButtonListener implements ActionListener {
 
         @Override
