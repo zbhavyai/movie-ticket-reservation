@@ -729,7 +729,7 @@ public class MovieSelectionView extends JFrame {
         }
 
         // email field
-        if (!isValidEmailAddress(registeredUserEmailField.getText())) {
+        if (!isValidEmailAddress(purchaseEmailTextField.getText())) {
             return false;
         }
 
