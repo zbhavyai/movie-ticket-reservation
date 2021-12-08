@@ -130,7 +130,7 @@ public class Email {
         }
 
         catch (RuntimeException e) {
-            e.printStackTrace();
+            // ignore the error
         }
     }
 }
