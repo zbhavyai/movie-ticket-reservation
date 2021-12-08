@@ -14,7 +14,7 @@ public class BillingSystem {
      * @param cvc card CVC number
      * @return true if details are valid, false otherwise
      */
-    public static boolean verifyCard(Payment p, int cvc) {
+    private static boolean verifyCard(Payment p, String cvc) {
         // check if card is expired
         if (p.isExpired()) {
             return false;
@@ -35,6 +35,15 @@ public class BillingSystem {
             return false;
         }
 
+        // check of cvc is only numbers
+        try {
+            Integer.parseInt(cvc);
+        }
+
+        catch(NumberFormatException e) {
+            return false;
+        }
+
         return true;
     }
 
@@ -46,7 +55,7 @@ public class BillingSystem {
      * @param charge the amount to charge to the card
      * @return true if payment is successfully processed, false otherwise
      */
-    public static boolean verifyPayment(Payment p, int cvc, double charge) {
+    public static boolean verifyPayment(Payment p, String cvc, double charge) {
         if (BillingSystem.verifyCard(p, cvc) == false) {
             return false;
         }

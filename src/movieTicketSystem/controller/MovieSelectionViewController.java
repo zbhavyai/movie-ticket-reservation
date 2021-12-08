@@ -1,17 +1,13 @@
 package movieTicketSystem.controller;
 
 import movieTicketSystem.View.MovieSelectionView;
-import movieTicketSystem.model.Coupon;
-import movieTicketSystem.model.RegisteredUser;
-import movieTicketSystem.model.Seat;
-import movieTicketSystem.model.Ticket;
-
+import movieTicketSystem.model.*;
 import java.util.ArrayList;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import java.time.LocalDate;
 
 public class MovieSelectionViewController {
 
@@ -27,14 +23,10 @@ public class MovieSelectionViewController {
     SignUpButtonListener signUpButtonListener;
     CancelTicketNavButtonListener cancelTicketNavButtonListener;
 
-
     MovieSelectionView theView;
     ViewController viewController;
 
-
     RegisteredUser loggedInUser;
-
-
 
     public MovieSelectionViewController(MovieSelectionView theView, ViewController viewController) {
         this.theView = theView;
@@ -64,7 +56,6 @@ public class MovieSelectionViewController {
         theView.addSignUpButtonListener(signUpButtonListener);
         theView.addCancelNavigationButtonListener(cancelTicketNavButtonListener);
 
-
         // populate movie combo box
         populateMovieComboBox();
 
@@ -74,11 +65,11 @@ public class MovieSelectionViewController {
     class CancelTicketNavButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            theView.clearCancelTab();  // clear pre-filled out fields
+            theView.clearCancelTab(); // clear pre-filled out fields
 
-            if(theView.getLoggedIn()){
+            if (theView.getLoggedIn()) {
                 theView.setCancellationEmail(loggedInUser.getEmail());
-            } else{
+            } else {
                 theView.setCancellationEmail("");
             }
 
@@ -91,20 +82,19 @@ public class MovieSelectionViewController {
         @Override
         public void actionPerformed(ActionEvent e) {
             boolean loggedIn = theView.getLoggedIn();
-            if(!loggedIn){
+            if (!loggedIn) {
                 // attempt to log in
                 String userName = theView.getUserName();
                 String password = theView.getPassword();
 
                 loggedInUser = viewController.authenticateUser(userName, password);
-                if(loggedInUser == null){
+                if (loggedInUser == null) {
                     JOptionPane.showMessageDialog(theView, "Invalid Credentials.",
                             "Alert", JOptionPane.WARNING_MESSAGE);
-                            theView.setLoggedIn(null);
+                    theView.setLoggedIn(null);
                 }
                 theView.setLoggedIn(loggedInUser);
-            }
-            else{
+            } else {
                 // log out
                 theView.setLoggedIn(null);
                 loggedInUser = null;
@@ -115,7 +105,7 @@ public class MovieSelectionViewController {
         }
     }
 
-    private void populateMovieComboBox(){
+    private void populateMovieComboBox() {
         ArrayList<String> movieOptions = viewController.getMovies(theView.getLoggedIn());
         theView.removeMovieComboBoxActionListener(movieListener);
         theView.setMovieOptions(movieOptions);
@@ -148,7 +138,7 @@ public class MovieSelectionViewController {
         @Override
         public void actionPerformed(ActionEvent e) {
 
-            System.out.println("Movie Selected: "  + theView.getMovieInput());
+            System.out.println("Movie Selected: " + theView.getMovieInput());
             ArrayList<String> theatreOptions = viewController.getTheatres();
 
             // clear any previous showtime options
@@ -174,10 +164,10 @@ public class MovieSelectionViewController {
 
             String theater = theView.getTheatreInput();
             String movie = theView.getMovieInput();
-            System.out.println("Theatre Selected: "  + theater);
+            System.out.println("Theatre Selected: " + theater);
             ArrayList<String> timeOptions = viewController.getShowTimes(movie, theater);
 
-            //disable any previously selected seats for a different showtime
+            // disable any previously selected seats for a different showtime
             theView.disableAllSeats();
 
             // add showtimes for this theatre / movie combo
@@ -196,10 +186,10 @@ public class MovieSelectionViewController {
             String showtime = theView.getShowtimeInput();
             String movie = theView.getMovieInput();
             String theater = theView.getTheatreInput();
-            System.out.println("Showtime Selected: "  + theView.getShowtimeInput());
-            String[] showtimeSearch = {theater, movie, showtime};
+            System.out.println("Showtime Selected: " + theView.getShowtimeInput());
+            String[] showtimeSearch = { theater, movie, showtime };
             int showtimeId = viewController.getShowtimeId(showtimeSearch);
-            if(showtimeId<0) {
+            if (showtimeId < 0) {
                 System.out.println("10% exceeded");
                 JOptionPane.showMessageDialog(theView,
                         "Maximum 10% of reserved seats have been sold for this unreleased movie's showtime." +
@@ -208,7 +198,8 @@ public class MovieSelectionViewController {
             }
             int[][] seats = viewController.getSeats(showtimeId);
 
-            theView.setSeats(seats);}
+            theView.setSeats(seats);
+        }
     }
 
     class SignUpButtonListener implements ActionListener {
@@ -216,10 +207,10 @@ public class MovieSelectionViewController {
         @Override
         public void actionPerformed(ActionEvent e) {
             // check form is valid first
-            if(!theView.validateSignupForm()){
+            if (!theView.validateSignupForm()) {
                 return;
             }
-            
+
             String username = theView.getUserName();
             String email = theView.getSignUpEmail();
             String password = theView.getSignUpPassword();
@@ -250,10 +241,9 @@ public class MovieSelectionViewController {
         public void actionPerformed(ActionEvent e) {
 
             // check form is valid
-            if(!theView.validatePurchaseForm()){
+            if (!theView.validatePurchaseForm()) {
                 return;
             }
-
 
             String movie = theView.getMovieInput();
             String theatre = theView.getTheatreInput();
@@ -261,12 +251,11 @@ public class MovieSelectionViewController {
 
             // check if a valid coupon has been applied
             Coupon coupon = null;
-            if(theView.getCouponButtonText().equals("Remove Coupon")){
+            if (theView.getCouponButtonText().equals("Remove Coupon")) {
                 String couponCode = theView.getCouponCode();
                 coupon = viewController.getCoupon(couponCode);
             }
 
-//            String email = "gwhall@ualberta.ca";  // REPLACE THIS WITH METHOD FROM VIEW
             String email = theView.getPaymentEmail();
 
             // payment amount
@@ -280,29 +269,48 @@ public class MovieSelectionViewController {
             String cardExpiryDate = theView.getPaymentCardExpiry();
             String cardHolderName = theView.getCardHolderName();
 
-            //Figure out selected seats
+            // Figure out selected seats
             ArrayList<Seat> selectedSeats = new ArrayList<Seat>();
             JButton[][] seats = theView.getSeats();
-            for(int i=0; i<10; i++){
-                for(int j=0; j<10; j++){
+            for (int i = 0; i < 10; i++) {
+                for (int j = 0; j < 10; j++) {
                     Color seatBackground = seats[i][j].getBackground();
-                    if(seatBackground == Color.green){
-                        Seat dummySeat = new Seat(i+1, j+1);
+                    if (seatBackground == Color.green) {
+                        Seat dummySeat = new Seat(i + 1, j + 1);
                         selectedSeats.add(dummySeat);
                     }
                 }
             }
 
-            int paymentId = 0;
+            Payment p = new Payment();
+            p.setCardHolderName(cardHolderName);
+            p.setCardNum(cardNumber);
+            p.setExpiry(LocalDate.parse(cardExpiryDate));
+            boolean paymentSuccess = true;
 
-            if(grandTotal != 0) {
-                if(theView.getCouponButtonText().equals("Apply Coupon")){
-                    paymentId = viewController.ticketPayment(cardHolderName, cardNumber, cardExpiryDate);
+            if (grandTotal != 0) {
+                if (theView.getCouponButtonText().equals("Apply Coupon")) {
+                    paymentSuccess = BillingSystem.verifyPayment(p, CVC, grandTotal);
+
+                    if (paymentSuccess == false) {
+                        JOptionPane.showMessageDialog(theView,
+                                "Payment failed! Please check your payment details and try again.",
+                                "Alert", JOptionPane.WARNING_MESSAGE);
+                    }
                 }
 
-                if(theView.getCouponButtonText().equals("Remove Coupon")){
-                    DbController.getInstance().updateCoupon(coupon, couponCharge);
-                    paymentId = viewController.ticketPayment(cardHolderName, cardNumber, cardExpiryDate);
+                if (theView.getCouponButtonText().equals("Remove Coupon")) {
+                    paymentSuccess = BillingSystem.verifyPayment(p, CVC, grandTotal);
+
+                    if (paymentSuccess == false) {
+                        JOptionPane.showMessageDialog(theView,
+                                "Payment failed! Please check your payment details and try again.",
+                                "Alert", JOptionPane.WARNING_MESSAGE);
+                    }
+
+                    else {
+                        DbController.getInstance().updateCoupon(coupon, couponCharge);
+                    }
                 }
             }
 
@@ -310,21 +318,23 @@ public class MovieSelectionViewController {
                 DbController.getInstance().updateCoupon(coupon, couponCharge);
             }
 
+            if(paymentSuccess == true) {
+                ArrayList<Ticket> newTicketList = new ArrayList<Ticket>();
 
-            ArrayList<Ticket> newTicketList = new ArrayList<Ticket>();
-            for(int i = 0; i < selectedSeats.size(); i++){
-                newTicketList.add(viewController.makeTicket(movie, theatre, showTime, selectedSeats.get(i).getRowNumber(), selectedSeats.get(i).getColNumber()));
+                for (int i = 0; i < selectedSeats.size(); i++) {
+                    newTicketList.add(viewController.makeTicket(movie, theatre, showTime,
+                            selectedSeats.get(i).getRowNumber(), selectedSeats.get(i).getColNumber()));
+                }
+
+                viewController.emailPurchasedTicket(email, newTicketList);
+
+                JOptionPane.showMessageDialog(theView,
+                        "Purchase succesful! Please check your email for tickets.",
+                        "information", JOptionPane.INFORMATION_MESSAGE);
+
+                theView.clearPurchaseTab();
+                theView.setView("main");
             }
-
-            viewController.emailPurchasedTicket(email, newTicketList);
-
-            JOptionPane.showMessageDialog(theView,
-                    "Purchase succesful! Please check your email for tickets.",
-                    "information", JOptionPane.INFORMATION_MESSAGE);
-
-            theView.clearPurchaseTab();
-            theView.setView("main");
-
         }
     }
 
@@ -335,23 +345,22 @@ public class MovieSelectionViewController {
             double totalPrice = theView.getTotalPrice();
 
             String couponAction = theView.getCouponButtonText();
-            if (couponAction.equals("Apply Coupon")){
+            if (couponAction.equals("Apply Coupon")) {
                 String couponCode = theView.getCouponCode();
                 double grandTotal = totalPrice;
                 double couponAmountRemaining = 0;
 
                 Coupon coupon = viewController.getCoupon(couponCode);
-                if(coupon == null){
+                if (coupon == null) {
                     JOptionPane.showMessageDialog(theView, "Coupon Not found.",
                             "Alert", JOptionPane.WARNING_MESSAGE);
                     return;
-                }
-                else{
+                } else {
                     double couponAmount = coupon.getCouponAmount();
-                    if(couponAmount > grandTotal){
+                    if (couponAmount > grandTotal) {
                         grandTotal = 0;
                         couponAmountRemaining = couponAmount - totalPrice;
-                    }else{
+                    } else {
                         grandTotal = totalPrice - couponAmount;
                     }
 
@@ -362,13 +371,13 @@ public class MovieSelectionViewController {
                     theView.setCouponCodeEnabled(false);
 
                     // if total is 0 no need to enter payment details
-                    if(grandTotal==0){
+                    if (grandTotal == 0) {
                         theView.setPaymentDetailsEnabled(false);
-                    } else{
+                    } else {
                         theView.setPaymentDetailsEnabled(true);
                     }
                 }
-            } else{
+            } else {
                 // Remove Coupon
                 theView.setCouponAmount(String.format("0.00"));
                 theView.setGrandTotal(String.format("%.02f", totalPrice));
@@ -388,7 +397,7 @@ public class MovieSelectionViewController {
         public void actionPerformed(ActionEvent e) {
 
             // validate form first
-            if(!theView.validateCancelForm()){
+            if (!theView.validateCancelForm()) {
                 return;
             }
 
@@ -397,7 +406,7 @@ public class MovieSelectionViewController {
             int ticketId = Integer.parseInt(theView.getTicketCancellationID());
             boolean registered = theView.getLoggedIn();
             boolean showtimeCheck = viewController.checkShowtime(ticketId);
-            if(showtimeCheck == false){
+            if (showtimeCheck == false) {
                 JOptionPane.showMessageDialog(theView, "Movie is playing in less than 72 hours, cannot cancel.",
                         "Alert", JOptionPane.WARNING_MESSAGE);
                 theView.setRefundCouponAmt("");
@@ -406,7 +415,7 @@ public class MovieSelectionViewController {
             }
 
             Coupon coupon = viewController.cancelTicket(ticketId, registered);
-            if(coupon == null){
+            if (coupon == null) {
                 JOptionPane.showMessageDialog(theView, "Ticket Not Found.",
                         "Alert", JOptionPane.WARNING_MESSAGE);
                 theView.setRefundCouponAmt("");
@@ -426,7 +435,8 @@ public class MovieSelectionViewController {
                             "\nAmount: $" + String.format("%.02f", coupon.getCouponAmount()),
                     "information", JOptionPane.INFORMATION_MESSAGE);
 
-            populateMovieComboBox();;
+            populateMovieComboBox();
+            ;
             theView.setView("main");
         }
     }
@@ -435,44 +445,44 @@ public class MovieSelectionViewController {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            double totalPrice =0;
+            double totalPrice = 0;
             int seatCountPurchased = 0;
 
-            //**** FOR EACH SELECTED SEAT, SEND ROW, COL, MOVIE, THEATRE, SHOWTIME TO BACK END FOR PURCHASE ****
+            // **** FOR EACH SELECTED SEAT, SEND ROW, COL, MOVIE, THEATRE, SHOWTIME TO BACK
+            // END FOR PURCHASE ****
             JButton[][] seats = theView.getSeats();
             String movie = theView.getMovieInput();
             String theatre = theView.getTheatreInput();
             String showTime = theView.getShowtimeInput();
 
-            for(int i=0; i<10; i++){
-                for(int j=0; j<10; j++){
+            for (int i = 0; i < 10; i++) {
+                for (int j = 0; j < 10; j++) {
                     Color seatBackground = seats[i][j].getBackground();
-                    if(seatBackground == Color.green){
-                        int row = i+1;
-                        int col = j+1;
+                    if (seatBackground == Color.green) {
+                        int row = i + 1;
+                        int col = j + 1;
                         System.out.println(
                                 "\nPURCHASE INFO:"
                                         + "\n row: " + row
                                         + "\n col: " + col
                                         + "\n movie: " + movie
                                         + "\n theatre: " + theatre
-                                        + "\n showtime: " + showTime
-                        );
+                                        + "\n showtime: " + showTime);
                         totalPrice += viewController.getTicketPrice(showTime, theatre, movie, row, col);
                         seatCountPurchased++;
                     }
                 }
             }
-            String[] showtimeSearch = {theatre, movie, showTime};
+            String[] showtimeSearch = { theatre, movie, showTime };
 
             boolean movieReleased = viewController.checkShowtimeReleased(showtimeSearch);
-            if(!movieReleased){
+            if (!movieReleased) {
                 int countTaken = viewController.getSeatCount(showtimeSearch);
-                if ((countTaken + seatCountPurchased) > 10){
+                if ((countTaken + seatCountPurchased) > 10) {
                     System.out.println("10% exceeded");
                     JOptionPane.showMessageDialog(theView,
                             "Maximum 10% of reserved seats have been exceeded. " +
-                                    "Please limit seats purchased to " + (10-countTaken)
+                                    "Please limit seats purchased to " + (10 - countTaken)
                                     + " or select a different showtime. Thanks!",
                             "Alert", JOptionPane.WARNING_MESSAGE);
                     return;
@@ -480,9 +490,9 @@ public class MovieSelectionViewController {
 
             }
 
-            if(loggedInUser==null){
+            if (loggedInUser == null) {
                 theView.populatePurchaseTab(totalPrice);
-            }else{
+            } else {
                 theView.populatePurchaseTab(loggedInUser, totalPrice);
             }
 
