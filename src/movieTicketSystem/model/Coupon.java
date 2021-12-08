@@ -5,6 +5,9 @@ import java.util.Random;
 
 import movieTicketSystem.controller.DbController;
 
+/**
+ * Represents a coupon in the system, that gets generated during ticket cancellation
+ */
 public class Coupon {
     private int id;
     private String couponCode;

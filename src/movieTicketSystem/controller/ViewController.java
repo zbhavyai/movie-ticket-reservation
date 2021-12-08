@@ -9,11 +9,21 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+/**
+ * Controls the view of the application
+ */
 public class ViewController {
     UserController userController;
     TheaterController theaterController;
     MovieController movieController;
 
+    /**
+     * Contructor
+     *
+     * @param userController    controller for user
+     * @param theaterController controller for theatre
+     * @param movieController   controller for movie
+     */
     public ViewController(UserController userController, TheaterController theaterController,
             MovieController movieController) {
         this.userController = userController;
@@ -21,7 +31,12 @@ public class ViewController {
         this.movieController = movieController;
     }
 
-    // *** MOVIE SELECTION CONNECTION TO BACK END ***
+    /**
+     * Gets the list of movies
+     *
+     * @param registered flag to check if user is logged in
+     * @return list of movies
+     */
     public ArrayList<String> getMovies(boolean registered) {
         if (registered) {
             return movieController.getMovieNames();
@@ -54,7 +69,8 @@ public class ViewController {
         userController.addPayment(name, cardNum, cardExpiryDate);
     }
 
-    public void signup(String username, String email, String password, String address, String cardNum, String cardExpiryDate,
+    public void signup(String username, String email, String password, String address, String cardNum,
+            String cardExpiryDate,
             String name) {
         userController.addUser(username, email, password, address, name, cardNum, cardExpiryDate);
     }
@@ -129,7 +145,7 @@ public class ViewController {
 
         String subject = "ENSF-614 Movie App - Here's your ticket";
 
-        if(t.size() > 1) {
+        if (t.size() > 1) {
             subject += "s";
         }
 
@@ -156,11 +172,11 @@ public class ViewController {
         return theaterController.geteSeatsTaken(showtimeSearch);
     }
 
-    public boolean checkShowtimeReleased(String[] showtimeSearch){
+    public boolean checkShowtimeReleased(String[] showtimeSearch) {
         return theaterController.checkShowtimeReleased(showtimeSearch);
     }
 
-    public boolean checkValidTicket(int ticketId){
+    public boolean checkValidTicket(int ticketId) {
         return theaterController.checkValidTicket(ticketId);
     }
 }

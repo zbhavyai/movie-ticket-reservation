@@ -1,55 +1,59 @@
 package movieTicketSystem.model;
 
-
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 
-
+/**
+ * Represents a movie in the system
+ */
 public class Movie {
-
 	private int movieId;
 	private String title;
-	private LocalDate releaseDay; 
+	private LocalDate releaseDay;
 	private ArrayList<Showtime> showtimes;
 	private double rating;
 
+	/**
+	 * Constructor
+	 *
+	 * @param title      title of the movie
+	 * @param movieId    id of the movie
+	 * @param rating     critic rating of the movie
+	 * @param releaseDay release date of the movie
+	 */
 	public Movie(String title, int movieId, double rating, LocalDate releaseDay) {
 		this.setTitle(title);
 		this.setMovieId(movieId);
 		this.rating = rating;
 		this.releaseDay = releaseDay;
 	}
-	
+
 	/**
-	 * 
 	 * Method to add a showtime
-	 * 
+	 *
 	 * @param showtime
 	 */
 	public void addShowTimes(Showtime showtime) {
-		if(this.movieId!=showtime.getMovieId()) {
+		if (this.movieId != showtime.getMovieId()) {
 			System.out.println("movieId must match before adding");
 			return;
 		}
 		// if not match time
-		if(!this.showtimes.stream().anyMatch(t->t.getTime().equals(showtime.getTime()))) {
+		if (!this.showtimes.stream().anyMatch(t -> t.getTime().equals(showtime.getTime()))) {
 			this.showtimes.add(showtime);
 		}
 	}
-	
+
+
 	public void removeShowTimes(Showtime showtime) {
-		if(this.movieId!=showtime.getMovieId()) {
+		if (this.movieId != showtime.getMovieId()) {
 			System.out.println("movieId must match before remove");
 			return;
 		}
 		// if match time
-		if(this.showtimes.parallelStream().anyMatch(t->t.getTime().equals(showtime.getTime()))) {
+		if (this.showtimes.parallelStream().anyMatch(t -> t.getTime().equals(showtime.getTime()))) {
 			this.showtimes.remove(showtime);
-		}	
+		}
 	}
 
 	public ArrayList<Showtime> getShowtimes() {
@@ -97,15 +101,5 @@ public class Movie {
 	public void setReleaseDay(LocalDate releaseDay) {
 		this.releaseDay = releaseDay;
 	}
-
-	
-//	
-//	public static void main(String[] args) {
-//		LocalDate date1 = LocalDate.parse("2021-11-22");
-//		System.out.println(date1.compareTo(LocalDate.now()));
-//	}
-
-
-	
 
 }

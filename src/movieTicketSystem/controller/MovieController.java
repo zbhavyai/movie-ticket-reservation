@@ -3,17 +3,21 @@ package movieTicketSystem.controller;
 import java.util.ArrayList;
 import movieTicketSystem.model.Movie;
 
+/**
+ * Handles functions related to movie
+ */
 public class MovieController {
-
 	private ArrayList<Movie> movies;
-
 	DbController db = DbController.getInstance();
 
+	/**
+	 * Default Contructor
+	 */
 	public MovieController() {
 		ArrayList<Movie> moviesdb =	db.selectAllMovies();
 		this.movies = moviesdb;
 	}
-	
+
 	/**
 	 * Search for movie based on movieId. Returns a movie name list
 	 *
@@ -44,9 +48,9 @@ public class MovieController {
 	}
 
 	/**
-	 * 
+	 *
 	 * Method is used to get the price of a movie by providing the name of the movie.
-	 * 
+	 *
 	 * @param movieName is the name of the the movie to get the price for
 	 * @return a double which is the price of the movie
 	 */
@@ -55,9 +59,9 @@ public class MovieController {
 	}
 
 	/**
-	 * 
+	 *
 	 * Method used to get a list of all movies by their names, available in the system
-	 * 
+	 *
 	 * @return an arraylist of movie names
 	 */
 	public ArrayList<String> getMovieNames() {
@@ -69,9 +73,8 @@ public class MovieController {
 	}
 
 	/**
-	 * 
 	 * This method is used to return a list of movies
-	 * 
+	 *
 	 * @return an arraylist of movie objects
 	 */
 	public ArrayList<Movie> getMovies() {
