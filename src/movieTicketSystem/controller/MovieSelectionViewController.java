@@ -8,7 +8,6 @@ import movieTicketSystem.model.Ticket;
 
 import java.util.ArrayList;
 import javax.swing.*;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -315,9 +314,6 @@ public class MovieSelectionViewController {
             ArrayList<Ticket> newTicketList = new ArrayList<Ticket>();
             for(int i = 0; i < selectedSeats.size(); i++){
                 newTicketList.add(viewController.makeTicket(movie, theatre, showTime, selectedSeats.get(i).getRowNumber(), selectedSeats.get(i).getColNumber()));
-                if(paymentId != 0){
-                    viewController.makeSale(paymentId, newTicketList.get(i).getId());
-                }
             }
 
             viewController.emailPurchasedTicket(email, newTicketList);

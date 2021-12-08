@@ -752,11 +752,18 @@ public class DbController {
                     }
                 }
             }
-
         }
 
         catch (SQLException ex) {
             ex.printStackTrace();
+        }
+
+        if(tickets.size() == 0){
+            for (int i = 0; i < 10; i++) {
+                for (int j = 0; j < 10; j++) {
+                    seatGrid[i][j] = 1;
+                }
+            }
         }
 
         return seatGrid;
@@ -971,18 +978,6 @@ public class DbController {
         return null;
     }
 
-    public void saveSale(int paymentId, int ticketId) {
-        try {
-            String query = "INSERT INTO SALE(paymentId, ticketId) VALUES (?, ?)";
-            PreparedStatement myStmt = this.dbConnect.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-            myStmt.setInt(1, paymentId);
-            myStmt.setInt(2, ticketId);
-            myStmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
     /**
      * Fetches an object of Coupon from DB using couponCode
      *
@@ -1028,6 +1023,7 @@ public class DbController {
      * @return the Coupon object saved, null if insertion is unsuccessful
      */
     public Coupon saveCoupon(String couponCode, double couponAmount, LocalDate expiry) {
+        System.out.println(couponAmount);
         try {
             String query = "INSERT INTO COUPON(couponCode, couponAmount, expiry) VALUES (?, ?, ?)";
             PreparedStatement myStmt = this.dbConnect.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);

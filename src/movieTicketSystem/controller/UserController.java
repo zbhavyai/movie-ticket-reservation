@@ -48,10 +48,6 @@ public class UserController {
         return db.getCoupon(couponCode);
     }
 
-    public void createSale(int paymentId, int ticketId) {
-        db.saveSale(paymentId, ticketId);
-    }
-
     /**
      * Verifies the registered user
      *
