@@ -21,18 +21,6 @@ public class ViewController {
         this.movieController = movieController;
     }
 
-    public static void main(String[] args) {
-        UserController userController = UserController.getInstance();
-        TheaterController theaterController = new TheaterController();
-        MovieController movieController = new MovieController();
-
-        ViewController viewController = new ViewController(userController, theaterController, movieController);
-
-        MovieSelectionView movieSelectionView = new MovieSelectionView();
-        MovieSelectionViewController movieSelectionViewController = new MovieSelectionViewController(movieSelectionView,
-                viewController);
-    }
-
     // *** MOVIE SELECTION CONNECTION TO BACK END ***
     public ArrayList<String> getMovies(boolean registered) {
         if (registered) {
