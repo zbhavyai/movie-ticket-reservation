@@ -74,6 +74,13 @@ public class TheaterController {
 		return theaterNames;
 	}
 
+	/**
+	 * 
+	 * Method is used to check if the showtime is valid or not by sending the ticketId number
+	 * 
+	 * @param ticketId is the ticket that will be searched to see if it's associated showtime is valid
+	 * @return true if the showtime is valid or false if not
+	 */
 	public boolean checkValidShowtime(int ticketId){
 		return db.checkValidShowtime(ticketId);
 	}
@@ -100,6 +107,13 @@ public class TheaterController {
 
 	}
 
+	/**
+	 * 
+	 * Method used to check if a ticket is valid
+	 *  
+	 * @param ticketId is the id number of the ticket to check for
+	 * @return true if the ticket is valid and false if not
+	 */
 	public boolean checkValidTicket(int ticketId){
 		return db.checkValidTicket(ticketId);
 	}
@@ -124,6 +138,13 @@ public class TheaterController {
 		return showtimeId;
 	}
 
+	/**
+	 * 
+	 * Method used to check if the showtime has been released or not
+	 * 
+	 * @param searchValues is an array of the theater and movie to check the release date for
+	 * @return true if the movie has been release and false if not
+	 */
 	public boolean checkShowtimeReleased(String[] searchValues){
 
 		int theatreId = db.getTheaterIdByName(searchValues[0]);
@@ -133,7 +154,13 @@ public class TheaterController {
 		return mvController.searchMovieById(movieId).getReleaseDay().compareTo(LocalDate.now()) < 0;
 	}
 
-	// return a count of seats taken for a given showtime
+	/**
+	 * 
+	 * Method used to get the number of seats taken at the theater and movie entered
+	 * 
+	 * @param searchValues is an array of the theater and movie to check the release date for
+	 * @return a count of the tickets that have been taken for the movie and theater selected
+	 */
 	public int geteSeatsTaken(String[] searchValues){
 
 		int theatreId = db.getTheaterIdByName(searchValues[0]);
@@ -143,8 +170,6 @@ public class TheaterController {
 		//future release
 		int count = db.getSeatCount(showtimeId);
 		return count;
-
-
 	}
 
 
@@ -156,6 +181,14 @@ public class TheaterController {
 
 	}
 
+	/**
+	 * 
+	 * Method is used to add a seat with the corresponding ticket id number and selected row and column values
+	 * 
+	 * @param row is the row of the seat
+	 * @param col is the column of the seat 
+	 * @param ticketId is the ticket id number for the seat
+	 */
 	public void createSeat(int row, int col, int ticketId){
 		db.saveSeat(row, col, ticketId);
 	}
@@ -189,6 +222,12 @@ public class TheaterController {
 		return success;
 	}
 
+	/**
+	 * 
+	 * Method used to cancel a ticket with it's specific id number
+	 * 
+	 * @param ticketId is the specific ticket to cancel
+	 */
 	public void cancelTicket(int ticketId) {
 		db.deleteTicket(ticketId);
 	}
