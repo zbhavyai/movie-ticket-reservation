@@ -37,7 +37,7 @@ Please refer to the [project description document](docs/Project_Description.pdf)
 
 5. To compile the source code, run the below command
    ```bash
-   $ javac -cp ".;lib/*" -sourcepath "src" -d "bin" src/movieTicketSystem/controller/*java src/movieTicketSystem/model/*java src/movieTicketSystem/view/*java
+   $ javac -cp ".;lib/*" -sourcepath "src" -d "bin" src/movieTicketSystem/*java src/movieTicketSystem/controller/*java src/movieTicketSystem/model/*java src/movieTicketSystem/view/*java
    ```
 
 6. To run the source code, run the below command
