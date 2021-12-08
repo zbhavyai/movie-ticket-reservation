@@ -265,7 +265,6 @@ public class MovieSelectionView extends JFrame {
 
     /**
      * Populate the purchase tab with info when a user is not logged in
-     * @param user
      * @param price
      */
     public void populatePurchaseTab(double price) {
@@ -1233,9 +1232,6 @@ public class MovieSelectionView extends JFrame {
         panel5.add(cancellationEmailTextField, new GridConstraints(3, 1, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
     }
 
-    /**
-     * @noinspection ALL
-     */
     public JComponent $$$getRootComponent$$$() {
         return tabbedPane;
     }
