@@ -159,4 +159,8 @@ public class ViewController {
     public boolean checkShowtimeReleased(String[] showtimeSearch){
         return theaterController.checkShowtimeReleased(showtimeSearch);
     }
+
+    public boolean checkValidTicket(int ticketId){
+        return theaterController.checkValidTicket(ticketId);
+    }
 }

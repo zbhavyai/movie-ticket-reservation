@@ -366,6 +366,7 @@ public class DbController {
         Date showtimedate = getShowtimeByTicketId(ticketId);
         LocalDate showtime;
 
+        // means that it was not found
         if(showtimedate == null) {
             return false;
         }
@@ -380,6 +381,19 @@ public class DbController {
         }
         return validShowtime;
     }
+
+    public boolean checkValidTicket(int ticketId) {
+        boolean validShowtime = true;
+        // LocalDate showtime = getShowtimeByTicketId(ticketId).toLocalDate();
+        Date showtimedate = getShowtimeByTicketId(ticketId);
+        LocalDate showtime;
+
+        // means that it was not found
+        return showtimedate != null;
+
+
+    }
+
 
     public Date getShowtimeByTicketId(int ticketId) {
         Date showtime = null;

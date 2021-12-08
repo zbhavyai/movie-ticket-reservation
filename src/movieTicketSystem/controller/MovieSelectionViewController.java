@@ -406,6 +406,13 @@ public class MovieSelectionViewController {
             int ticketId = Integer.parseInt(theView.getTicketCancellationID());
             boolean registered = theView.getLoggedIn();
 
+            // check that ticket exists
+            if(!viewController.checkValidTicket(ticketId)){
+                JOptionPane.showMessageDialog(theView, "Error: Ticket not found with this ID.",
+                        "Alert", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
             boolean showtimeCheck = viewController.checkShowtime(ticketId);
             if (showtimeCheck == false) {
                 JOptionPane.showMessageDialog(theView, "Movie is playing in less than 72 hours, cannot cancel.",
