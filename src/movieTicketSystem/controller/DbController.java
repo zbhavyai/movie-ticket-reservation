@@ -978,18 +978,6 @@ public class DbController {
         return null;
     }
 
-    public void saveSale(int paymentId, int ticketId) {
-        try {
-            String query = "INSERT INTO SALE(paymentId, ticketId) VALUES (?, ?)";
-            PreparedStatement myStmt = this.dbConnect.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-            myStmt.setInt(1, paymentId);
-            myStmt.setInt(2, ticketId);
-            myStmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
     /**
      * Fetches an object of Coupon from DB using couponCode
      *

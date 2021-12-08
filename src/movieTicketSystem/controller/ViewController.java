@@ -96,10 +96,6 @@ public class ViewController {
         theaterController.createSeat(row, col, newTicket.getId());
         return newTicket;
     }
-
-    public void makeSale(int paymentId, int ticketId) {
-        userController.createSale(paymentId, ticketId);
-    }
     // *** PURCHASE CONNECTION TO BACK END ***
 
     // *** CANCELLATION CONNECTION TO BACK END ***

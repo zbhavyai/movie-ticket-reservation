@@ -45,14 +45,6 @@ CREATE TABLE IF NOT EXISTS COUPON
      expiry         date            NOT NULL,
      primary key(couponId));
 
-
-CREATE TABLE IF NOT EXISTS RECEIPT
-    (id       int             NOT NULL AUTO_INCREMENT,
-     paymentCard     VARCHAR(255)    NOT NULL,
-     price   double          NOT NULL,
-     generationTime datetime          NOT NULL,
-     primary key(id));
-
 CREATE TABLE IF NOT EXISTS SEAT
     (seatId         int             NOT NULL AUTO_INCREMENT,
      seatRow        int             NOT NULL,
@@ -68,12 +60,6 @@ CREATE TABLE IF NOT EXISTS PAYMENT
      expiry         date            NOT NULL,
      primary key(paymentId));
 
-
-CREATE TABLE IF NOT EXISTS SALE
-(
-     paymentId      int             NOT NULL,
-     ticketId       int             NOT NULL
-);
 
 CREATE TABLE IF NOT EXISTS REGISTERED_USER
     (userId         int             NOT NULL AUTO_INCREMENT,
@@ -175,11 +161,4 @@ INSERT INTO COUPON (couponCode,couponAmount,expiry) VALUES
 ("s57NlehWQh","26","2022-03-01"),
 ("A2kGUPhyR8","15","2022-04-01"),
 ("tCpLtqccCT","23","2022-05-01");
-
-INSERT INTO RECEIPT (paymentCard,price,generationTime) VALUES
-("5355142077868730","34","2021-11-25 09:00:00"),
-("5565149389994340","64","2021-12-09 09:00:00"),
-("5119080811765270","12","2022-03-01 09:00:00"),
-("5179341601731640","67","2022-04-01 09:00:00"),
-("5113181095909820","98","2022-05-01 09:00:00");
 
