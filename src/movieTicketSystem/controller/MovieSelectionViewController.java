@@ -215,17 +215,12 @@ public class MovieSelectionViewController {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-<<<<<<< HEAD
-            
-            String username = theView.getUserName();
-=======
-
             // check form is valid first
             if(!theView.validateSignupForm()){
                 return;
             }
-
->>>>>>> main
+            
+            String username = theView.getUserName();
             String email = theView.getSignUpEmail();
             String password = theView.getSignUpPassword();
             String address = theView.getSignUpAddress();
@@ -237,10 +232,7 @@ public class MovieSelectionViewController {
             theView.clearSignUpForm();
 
             viewController.signupPayment(name, cardNum, cardExpiryDate);
-<<<<<<< HEAD
             viewController.signup(username, email, password, address, cardNum, cardExpiryDate, name);
-=======
-            viewController.signup(email, password, address, cardNum, cardExpiryDate, name);
 
             JOptionPane.showMessageDialog(theView,
                     "Sign up successful, thank you for joining! ",
@@ -248,7 +240,6 @@ public class MovieSelectionViewController {
 
             populateMovieComboBox();
             theView.setView("main");
->>>>>>> main
             return;
         }
     }
