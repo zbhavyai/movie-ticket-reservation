@@ -751,16 +751,16 @@ public class MovieSelectionView extends JFrame {
         }
 
         // validate it's an integer
-        try{
+        try {
             var test = Integer.parseInt(ticketCancellationTF.getText());
-        }catch (NumberFormatException ex) {
+        } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(this, "Ticket ID must be an integer",
                     "Alert", JOptionPane.WARNING_MESSAGE);
             return false;
         }
 
         // email field
-        if (!isValidEmailAddress(registeredUserEmailField.getText())) {
+        if (!isValidEmailAddress(cancellationEmailTextField.getText())) {
             return false;
         }
 
