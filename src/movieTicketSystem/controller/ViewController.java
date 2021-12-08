@@ -66,7 +66,7 @@ public class ViewController {
         userController.addPayment(name, cardNum, cardExpiryDate);
     }
 
-    public void signup(String email, String password, String address, String cardNum, String cardExpiryDate,
+    public void signup(String username, String email, String password, String address, String cardNum, String cardExpiryDate,
             String name) {
         userController.addUser(email, password, address, name, cardNum, cardExpiryDate);
     }
