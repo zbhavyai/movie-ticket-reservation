@@ -713,6 +713,8 @@ public class MovieSelectionView extends JFrame {
     }
 
 
+
+
     // ************************ Action listeners ****************************
     class seatButtonColorChangeListener implements ActionListener {
         @Override
@@ -828,6 +830,15 @@ public class MovieSelectionView extends JFrame {
             return false;
         }
 
+        return true;
+    }
+
+
+    public boolean validatePurchaseEmail() {
+        // email field
+        if (!isValidEmailAddress(purchaseEmailTextField.getText())) {
+            return false;
+        }
         return true;
     }
 

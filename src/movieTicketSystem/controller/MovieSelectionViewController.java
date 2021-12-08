@@ -292,10 +292,22 @@ public class MovieSelectionViewController {
         @Override
         public void actionPerformed(ActionEvent e) {
 
-            // check form is valid
-            if (!theView.validatePurchaseForm()) {
-                return;
+            // payment amount
+            double totalAmount = theView.getTotalPrice();
+            double grandTotal = theView.getGrandTotal();
+            double couponCharge = totalAmount - grandTotal;
+
+            // check form is valid (as long as grand total not 0)
+            if(grandTotal!=0){
+                if (!theView.validatePurchaseForm()) {
+                    return;
+                }
+            } else{
+                if(!theView.validatePurchaseEmail()){
+                    return;
+                }
             }
+
 
             String movie = theView.getMovieInput();
             String theatre = theView.getTheatreInput();
@@ -310,17 +322,6 @@ public class MovieSelectionViewController {
 
             String email = theView.getPaymentEmail();
 
-            // payment amount
-            double totalAmount = theView.getTotalPrice();
-            double grandTotal = theView.getGrandTotal();
-            double couponCharge = totalAmount - grandTotal;
-
-            // Payment details
-            String cardNumber = theView.getCreditCardNum();
-            String CVC = theView.getCVC();
-            String cardExpiryDate = theView.getPaymentCardExpiry();
-            String cardHolderName = theView.getCardHolderName();
-
             // Figure out selected seats
             ArrayList<Seat> selectedSeats = new ArrayList<Seat>();
             JButton[][] seats = theView.getSeats();
@@ -334,13 +335,22 @@ public class MovieSelectionViewController {
                 }
             }
 
-            Payment p = new Payment();
-            p.setCardHolderName(cardHolderName);
-            p.setCardNum(cardNumber);
-            p.setExpiry(LocalDate.parse(cardExpiryDate));
             boolean paymentSuccess = true;
 
             if (grandTotal != 0) {
+                // Payment details
+                String cardNumber = theView.getCreditCardNum();
+                String CVC = theView.getCVC();
+                String cardExpiryDate = theView.getPaymentCardExpiry();
+                String cardHolderName = theView.getCardHolderName();
+
+                Payment p = new Payment();
+                p.setCardHolderName(cardHolderName);
+                p.setCardNum(cardNumber);
+                p.setExpiry(LocalDate.parse(cardExpiryDate));
+
+
+
                 if (theView.getCouponButtonText().equals("Apply Coupon")) {
                     paymentSuccess = BillingSystem.verifyPayment(p, CVC, grandTotal);
 
