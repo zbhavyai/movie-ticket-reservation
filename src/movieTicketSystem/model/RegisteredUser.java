@@ -8,6 +8,7 @@ import java.util.List;
  */
 public class RegisteredUser extends OrdinaryUser {
     private int id;
+    private String username;
     private String password;
     private String email;
     private String address;
@@ -15,6 +16,14 @@ public class RegisteredUser extends OrdinaryUser {
     private List<Receipt> receipts;
     private Payment card;
     private LocalDate lastFeePaid;
+
+    public String getUsername(){
+        return this.username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     public int getId(){
         return this.id;

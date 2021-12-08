@@ -172,7 +172,8 @@ public class MovieSelectionViewController {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-
+            
+            String username = theView.getUserName();
             String email = theView.getSignUpEmail();
             String password = theView.getSignUpPassword();
             String address = theView.getSignUpAddress();
@@ -184,7 +185,7 @@ public class MovieSelectionViewController {
             theView.clearSignUpForm();
 
             viewController.signupPayment(name, cardNum, cardExpiryDate);
-            viewController.signup(email, password, address, cardNum, cardExpiryDate, name);
+            viewController.signup(username, email, password, address, cardNum, cardExpiryDate, name);
             return;
         }
     }

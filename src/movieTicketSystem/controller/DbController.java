@@ -788,6 +788,7 @@ public class DbController {
                 if (results.getString("email").equals(email) && results.getString("password").equals(password)) {
                     RegisteredUser ru = new RegisteredUser();
                     ru.setId(results.getInt("userId"));
+                    ru.setUsername(results.getString("username"));
                     ru.setPassword(results.getString("password"));
                     ru.setEmail(email);
                     ru.setAddress(results.getString("address"));
@@ -816,7 +817,7 @@ public class DbController {
      * @param expiry     expiry date of the card
      * @return the RegisteredUser object saved, null if insertion is unsuccessful
      */
-    public RegisteredUser saveRegisteredUser(String email, String password, String address, String holderName,
+    public RegisteredUser saveRegisteredUser(String username, String email, String password, String address, String holderName,
             String cardNumber, String expiry) {
         // if the email already exists, dont save
         if (this.getRegisteredUser(email, password) != null) {
@@ -833,13 +834,14 @@ public class DbController {
 
             LocalDate now = LocalDate.now();
 
-            String query = "INSERT INTO REGISTERED_USER(email, password, address, card, lastPaid) VALUES (?, ?, ?, ?, ?)";
+            String query = "INSERT INTO REGISTERED_USER(username, password, email, address, card, lastPaid) VALUES (?, ?, ?, ?, ?, ?)";
             PreparedStatement myStmt = this.dbConnect.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-            myStmt.setString(1, email);
+            myStmt.setString(1, username);
             myStmt.setString(2, password);
-            myStmt.setString(3, address);
-            myStmt.setInt(4, card.getId());
-            myStmt.setDate(5, java.sql.Date.valueOf(now));
+            myStmt.setString(3, email);
+            myStmt.setString(4, address);
+            myStmt.setInt(5, card.getId());
+            myStmt.setDate(6, java.sql.Date.valueOf(now));
 
             int rowAffected = myStmt.executeUpdate();
 
@@ -849,6 +851,7 @@ public class DbController {
                 if (rs.next()) {
                     RegisteredUser ru = new RegisteredUser();
                     ru.setId(rs.getInt(1));
+                    ru.setUsername(username);
                     ru.setEmail(email);
                     ru.setPassword(password);
                     ru.setAddress(address);
@@ -1023,7 +1026,6 @@ public class DbController {
      * @return the Coupon object saved, null if insertion is unsuccessful
      */
     public Coupon saveCoupon(String couponCode, double couponAmount, LocalDate expiry) {
-        System.out.println(couponAmount);
         try {
             String query = "INSERT INTO COUPON(couponCode, couponAmount, expiry) VALUES (?, ?, ?)";
             PreparedStatement myStmt = this.dbConnect.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
