@@ -1,77 +1,95 @@
-DROP DATABASE IF EXISTS ENSF614PROJECT;
-CREATE DATABASE IF NOT EXISTS ENSF614PROJECT;
-USE ENSF614PROJECT;
+DROP DATABASE IF EXISTS moviedb;
+CREATE DATABASE moviedb;
+CREATE USER IF NOT EXISTS 'movieapp'@'%' IDENTIFIED BY 'moviepassword';
+GRANT ALL ON moviedb.* TO 'movieapp'@'%';
+USE moviedb;
+
 
 CREATE TABLE IF NOT EXISTS THEATRE
-    (theatreId            int                NOT NULL,
-     theatreName        VARCHAR(30)     NOT NULL,
-     primary key(theatreId));
+(
+    theatreId      int             NOT NULL,
+    theatreName    VARCHAR(30)     NOT NULL,
+    primary key(theatreId)
+);
 
 
 CREATE TABLE IF NOT EXISTS MOVIE
-    (movieId            int             NOT NULL,
-     title                VARCHAR(30)        NOT NULL,
-	rating                double            NOT NULL,
-     theatreId            int            NOT NULL,
-     releasedate           date        NOT NULL,
-     price                    double AS (rating * 3.5)    NOT NULL,
-     PRIMARY KEY (movieId),
-     foreign key(theatreId) references THEATRE(theatreId)
+(
+    movieId        int             NOT NULL,
+    title          VARCHAR(30)     NOT NULL,
+    rating         double          NOT NULL,
+    theatreId      int             NOT NULL,
+    releasedate    date            NOT NULL,
+    price          double AS (rating * 3.5)    NOT NULL,
+    PRIMARY KEY (movieId),
+    foreign key(theatreId) references THEATRE(theatreId)
 );
 
 
 CREATE TABLE IF NOT EXISTS SHOWTIME
-    (showtimeId         int                NOT NULL,
-     movieId            int                NOT NULL,
-     theatreId            int                NOT NULL,
-     showtime            datetime        NOT NULL,
-     primary key(showtimeId),
-     foreign key(movieId) references MOVIE(movieId),
-     foreign key(theatreId) references THEATRE(theatreId));
+(
+    showtimeId     int             NOT NULL,
+    movieId        int             NOT NULL,
+    theatreId      int             NOT NULL,
+    showtime       datetime        NOT NULL,
+    primary key(showtimeId),
+    foreign key(movieId) references MOVIE(movieId),
+    foreign key(theatreId) references THEATRE(theatreId)
+);
 
 
 CREATE TABLE IF NOT EXISTS TICKET
-    (ticketId            int                NOT NULL AUTO_INCREMENT,
-     showtimeId            int                NOT NULL,
-     price              double          NOT NULL,
-     primary key(ticketId),
-     foreign key(showtimeId) references SHOWTIME(showtimeId));
+(
+    ticketId       int             NOT NULL AUTO_INCREMENT,
+    showtimeId     int             NOT NULL,
+    price          double          NOT NULL,
+    primary key(ticketId),
+    foreign key(showtimeId) references SHOWTIME(showtimeId)
+);
 
 
 CREATE TABLE IF NOT EXISTS COUPON
-    (couponId       int             NOT NULL AUTO_INCREMENT,
-     couponCode     VARCHAR(255)    NOT NULL,
-     couponAmount   double          NOT NULL,
-     expiry         date            NOT NULL,
-     primary key(couponId));
+(
+    couponId       int             NOT NULL AUTO_INCREMENT,
+    couponCode     VARCHAR(255)    NOT NULL,
+    couponAmount   double          NOT NULL,
+    expiry         date            NOT NULL,
+    primary key(couponId)
+);
 
 
 CREATE TABLE IF NOT EXISTS SEAT
-    (seatId         int             NOT NULL AUTO_INCREMENT,
-     seatRow        int             NOT NULL,
-     seatNum        int             NOT NULL,
-     ticketId       int             NOT NULL,
-     primary key (seatId));
+(
+    seatId         int             NOT NULL AUTO_INCREMENT,
+    seatRow        int             NOT NULL,
+    seatNum        int             NOT NULL,
+    ticketId       int             NOT NULL,
+    primary key (seatId)
+);
 
 
 CREATE TABLE IF NOT EXISTS PAYMENT
-    (paymentId      int             NOT NULL AUTO_INCREMENT,
-     holderName     VARCHAR(255)    NOT NULL,
-     cardNumber     VARCHAR(255)    NOT NULL,
-     expiry         date            NOT NULL,
-     primary key(paymentId));
+(
+    paymentId      int             NOT NULL AUTO_INCREMENT,
+    holderName     VARCHAR(255)    NOT NULL,
+    cardNumber     VARCHAR(255)    NOT NULL,
+    expiry         date            NOT NULL,
+    primary key(paymentId)
+);
 
 
 CREATE TABLE IF NOT EXISTS REGISTERED_USER
-    (userId         int             NOT NULL AUTO_INCREMENT,
-     username       VARCHAR(255)    NOT NULL,
-     password       VARCHAR(255)    NOT NULL,
-     email          VARCHAR(255)    NOT NULL,
-     address        VARCHAR(255)    NOT NULL,
-     card           int             NOT NULL,
-     lastPaid       date            NOT NULL,
-     primary key(userId),
-     foreign key (card) references PAYMENT(paymentId));
+(
+    userId         int             NOT NULL AUTO_INCREMENT,
+    username       VARCHAR(255)    NOT NULL,
+    password       VARCHAR(255)    NOT NULL,
+    email          VARCHAR(255)    NOT NULL,
+    address        VARCHAR(255)    NOT NULL,
+    card           int             NOT NULL,
+    lastPaid       date            NOT NULL,
+    primary key(userId),
+    foreign key (card) references PAYMENT(paymentId)
+);
 
 
 INSERT INTO THEATRE (theatreId,theatreName) VALUES
